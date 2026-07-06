@@ -80,7 +80,7 @@
     <div class="bg-nexora-slate-200 rounded-xl px-4 py-3 border border-nexora-corporate/50">
         <p class="text-xs text-nexora-navy-mid mb-1 flex items-center gap-1">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 0 2-2h2a2 2 0 0 0 2 2"/></svg>
-            Active work orders
+            Active Work Orders
         </p>
         <p class="text-3xl font-heading font-medium text-nexora-deep-navy">{{ $active }}</p>
         <p class="text-xs text-nexora-navy-mid mt-1">{{ $building }} building · {{ $qcCheck }} in QC · {{ $pending }} queued</p>
@@ -90,7 +90,7 @@
     <div class="bg-nexora-slate-200 rounded-xl px-4 py-3 border border-nexora-corporate/50">
         <p class="text-xs text-nexora-navy-mid mb-1 flex items-center gap-1">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-            Completed builds
+            Completed Builds
         </p>
         <p class="text-3xl font-heading font-medium text-nexora-success">{{ $finished }}</p>
         <p class="text-xs text-nexora-navy-mid mt-1">out of {{ $total }} total orders</p>
@@ -100,7 +100,7 @@
     <div class="bg-nexora-slate-200 rounded-xl px-4 py-3 border border-nexora-corporate/50">
         <p class="text-xs text-nexora-navy-mid mb-1 flex items-center gap-1">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            Cancelled / overdue
+            Cancelled / Overdue
         </p>
         <p class="text-3xl font-heading font-medium {{ $overdue > 0 ? 'text-nexora-danger' : 'text-nexora-deep-navy' }}">{{ $overdue }}</p>
         <p class="text-xs {{ $overdue > 0 ? 'text-nexora-danger' : 'text-nexora-navy-mid' }} mt-1">
@@ -112,7 +112,7 @@
     <div class="bg-nexora-slate-200 rounded-xl px-4 py-3 border border-nexora-corporate/50">
         <p class="text-xs text-nexora-navy-mid mb-1 flex items-center gap-1">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            QC pass rate
+            QC Pass rate
         </p>
         <p class="text-3xl font-heading font-medium {{ $qcRate >= 80 ? 'text-nexora-success' : 'text-nexora-warning' }}">{{ $qcRate }}%</p>
         <p class="text-xs text-nexora-navy-mid mt-1">{{ $finished }} passed · {{ $cancelled }} failed / cancelled</p>
@@ -129,7 +129,7 @@
                     $pill = $statusStyles[$wo['status']]['pill'] ?? 'bg-nexora-gray/80 text-nexora-off-white';
                     $isOverdue = str_starts_with($wo['due'], 'Due') && $wo['status'] === 'Cancelled';
                 @endphp
-                <div class="flex items-center gap-3 py-2.5">
+                <div class="flex items-center gap-3 p-2.5 hover:bg-nexora-steel-blue transition duration-300">
                     {{-- Icon --}}
                     <div class="w-8 h-8 rounded-lg bg-nexora-slate-500/20 flex items-center justify-center flex-shrink-0">
                         <svg class="w-4 h-4 text-nexora-corporate" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>

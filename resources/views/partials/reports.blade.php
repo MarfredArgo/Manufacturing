@@ -67,9 +67,9 @@
     </div>
 </div>
 
-<div class="grid grid-cols-2 gap-3 mb-4">
+<div class="flex gap-3 mb-4">
 
-    <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4">
+    <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 flex-1">
         <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-1">Work orders by status</p>
         <p class="text-xs text-nexora-navy-mid mb-3">All orders · current snapshot</p>
         {{-- Custom legend --}}
@@ -87,7 +87,7 @@
     </div>
 
     {{-- Weekly Output --}}
-    <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4">
+    <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 flex-1">
         <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-1">Weekly builds vs defects</p>
         <p class="text-xs text-nexora-navy-mid mb-3">Completed builds and cancelled/defect orders per day</p>
         <div class="flex flex-wrap gap-3 mb-3">
@@ -98,12 +98,9 @@
             <canvas id="weeklyChart" aria-label="Line chart of weekly builds and defects"></canvas>
         </div>
     </div>
-</div>
-
-<div class="grid grid-cols-[200px_1fr] gap-3 mb-4">
 
     {{-- Parts Donut --}}
-    <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 flex flex-col items-center justify-center">
+    <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 pt-1 w-[250px] flex flex-col items-center justify-center">
         <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-3 self-start">Parts status</p>
         <div class="relative" style="height:130px;width:130px">
             <canvas id="partsDonut" aria-label="Donut chart showing parts by status: Ready, Sourcing, Missing"></canvas>
@@ -124,8 +121,12 @@
         </div>
     </div>
 
+</div>
+
+<div class="flex gap-3 mb-4">
+
     {{-- Work Order Summary Table --}}
-    <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4">
+    <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 flex-1">
         <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-3">Recent work orders</p>
         <div class="overflow-x-auto">
             <table class="w-full text-xs table-fixed">
@@ -164,30 +165,32 @@
             </table>
         </div>
     </div>
-</div>
 
-<div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4">
-    <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-3">Orders per technician</p>
-    <div class="flex flex-wrap gap-6">
-        @foreach($assignees as $a)
-            @php $pct = $total > 0 ? round(($a['count'] / $total) * 100) : 0; @endphp
-            <div class="flex items-center gap-3 min-w-[180px]">
-                <div class="w-8 h-8 rounded-full bg-nexora-corporate flex items-center justify-center text-xs font-medium text-nexora-deep-navy flex-shrink-0">
-                    {{ strtoupper(substr($a['name'], 0, 2)) }}
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex justify-between mb-1">
-                        <span class="text-xs text-nexora-deep-navy">{{ $a['name'] }}</span>
-                        <span class="text-xs text-nexora-navy-mid">{{ $a['count'] }}</span>
+    {{-- Technician Order Tally --}}
+    <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 w-[250px]">
+        <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-3">Orders per technician</p>
+        <div class="flex flex-wrap gap-6">
+            @foreach($assignees as $a)
+                @php $pct = $total > 0 ? round(($a['count'] / $total) * 100) : 0; @endphp
+                <div class="flex items-center gap-3 min-w-[180px]">
+                    <div class="w-8 h-8 rounded-full bg-nexora-corporate flex items-center justify-center text-xs font-medium text-nexora-deep-navy flex-shrink-0">
+                        {{ strtoupper(substr($a['name'], 0, 2)) }}
                     </div>
-                    <div class="h-1.5 bg-nexora-slate-500/20 rounded-full overflow-hidden">
-                        <div class="h-full bg-nexora-corporate rounded-full" style="width:{{ $pct }}%"></div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-xs text-nexora-deep-navy">{{ $a['name'] }}</span>
+                            <span class="text-xs text-nexora-navy-mid">{{ $a['count'] }}</span>
+                        </div>
+                        <div class="h-1.5 bg-nexora-slate-500/20 rounded-full overflow-hidden w-[180px]">
+                            <div class="h-full bg-nexora-corporate rounded-full" style="width:{{ $pct }}%"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
+        </div>
     </div>
 </div>
+
 </div>
 <script>
     window.reportsData = {
