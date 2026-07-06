@@ -62,6 +62,8 @@
         $workOrders   = $tempData['workOrders'];
         $statusStyles = $tempData['statusStyles'];
         $partStyles   = $tempData['partStyles'];
+        $qcTemplates  = $tempData['qcTemplates'] ?? [];
+        $qcSessions   = $tempData['qcSessions'] ?? [];
     @endphp
 </head>
 <body class="font-body text-white flex flex-col h-full">
@@ -110,6 +112,27 @@
         {{-- Sidebar --}}
         <aside class="w-44 bg-nexora-off-white border-[1px] border-nexora-corporate flex flex-col flex-shrink-0 rounded-lg max-w-full min-h-full mx-auto ml-1">
             <nav class="flex-1 px-3 pt-4 space-y-0.5 text-sm">
+                {{-- Quality Check Sub Tabs --}}
+                @if($curPage === 'qc')
+                    @php
+                        $qcSubs = [
+                            ['label' => 'Benchmark',  'sub' => 'benchmark'],
+                            ['label' => 'Rejections', 'sub' => 'rejections'],
+                            ['label' => 'Rework',     'sub' => 'rework'],
+                            ['label' => 'Analytics',  'sub' => 'analytics'],
+                        ];
+                    @endphp
+                    @foreach($qcSubs as $tab)
+                        <a href="?page=qc&sub={{ $tab['sub'] }}"
+                           class="block px-3 py-2 rounded-md font-medium transition-colors duration-150
+                                  {{ ($curSub === $tab['sub'] || ($curSub === '' && $tab['sub'] === 'benchmark'))
+                                      ? 'bg-nexora-sky text-white'
+                                      : 'text-nexora-slate-500 hover:bg-nexora-light-blue hover:text-white' }}">
+                            {{ $tab['label'] }}
+                        </a>
+                    @endforeach
+                @endif
+
                 {{-- Work Orders Sub Tabs --}}
                 @if($curPage === 'orders')
                     @php
@@ -190,9 +213,13 @@
 
                 {{-- Quality Check --}}
                 @elseif($curPage === 'qc')
-                    <div class="bg-nexora-navy rounded-xl p-6 text-white">
-                        <p>Quality Check.</p>
-                    </div>
+                    @if($curSub === 'benchmark' || $curSub === '')
+                        @include('partials.Quality Check.benchmark')
+                    @else
+                        <div class="flex items-center justify-center h-40 text-nexora-navy-mid text-sm">
+                            {{ ucfirst($curSub) }}.
+                        </div>
+                    @endif
 
                 @endif
             </div>
