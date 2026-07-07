@@ -75,10 +75,10 @@
     <div class="flex flex-1 gap-3 min-w-0">
 
         {{-- Checklist table --}}
-        <div class="flex-1 flex flex-col min-w-0 gap-3">
+        <div class="flex flex-col gap-2 flex-wrap">
 
             {{-- Order header --}}
-            <div class="flex items-start justify-between gap-3 flex-wrap">
+            <div class="flex items-start justify-between gap-3">
                 <div>
                     <p class="text-[10px] text-nexora-navy font-['Courier_New']">
                         {{ $selectedOrder['id'] }} &bull; {{ $selectedOrder['source'] }}
@@ -88,27 +88,36 @@
                         {{ $selectedOrder['specs'] }} &bull; Tech: {{ $selectedOrder['assigned'] }}
                     </p>
                 </div>
-                {{-- Progress + verdict pills --}}
-                <div class="flex items-center gap-3 flex-shrink-0">
-                    <div class="flex gap-1.5">
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-nexora-success/80 text-nexora-off-white">
-                            {{ $passCount }} Pass
-                        </span>
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-nexora-warning/80 text-nexora-off-white">
-                            {{ $warnCount }} Warn
-                        </span>
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-nexora-danger/80 text-nexora-off-white">
-                            {{ $failCount }} Fail
-                        </span>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[10px] text-nexora-navy-mid">{{ $doneCount }}/{{ $totalChecks }} checked</p>
-                        <div class="w-28 h-1.5 bg-nexora-slate-500/20 rounded-full overflow-hidden mt-1">
-                            <div class="h-full bg-nexora-corporate rounded-full transition-all duration-300"
-                                 style="width:{{ $pct }}%"></div>
-                        </div>
-                    </div>
+
+                {{-- Button alone on the right --}}
+                <button onclick="openBenchmarkModal()"
+                        class="flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold
+                            border border-nexora-corporate bg-nexora-corporate text-white
+                            hover:bg-nexora-navy-mid transition-colors duration-150 whitespace-nowrap">
+                    Enter Results
+                </button>
+            </div>
+
+            {{-- Pills + progress bar on their own row --}}
+            <div class="flex items-center gap-3">
+                <div class="flex gap-1.5 flex-shrink-0">
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-nexora-success/80 text-nexora-off-white whitespace-nowrap">
+                        {{ $passCount }} Pass
+                    </span>
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-nexora-warning/80 text-nexora-off-white whitespace-nowrap">
+                        {{ $warnCount }} Warn
+                    </span>
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-nexora-danger/80 text-nexora-off-white whitespace-nowrap">
+                        {{ $failCount }} Fail
+                    </span>
                 </div>
+                <div class="flex-1 h-1.5 bg-nexora-slate-500/20 rounded-full overflow-hidden">
+                    <div class="h-full bg-nexora-corporate rounded-full transition-all duration-300"
+                        style="width:{{ $pct }}%"></div>
+                </div>
+                <p class="text-[10px] text-nexora-navy-mid flex-shrink-0 whitespace-nowrap">
+                    {{ $doneCount }}/{{ $totalChecks }} checked
+                </p>
             </div>
 
             {{-- Table --}}
@@ -312,4 +321,83 @@
             No orders currently in QC Check.
         </div>
     @endif
+    {{-- ── BACKDROP ── --}}
+    <div id="benchmark-backdrop"
+        class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center hidden"
+        onclick="handleBackdropClick(event, 'benchmark-backdrop')">
+    
+        {{-- Blur overlay --}}
+        <div class="absolute inset-0 bg-nexora-deep-navy/40 backdrop-blur-sm pointer-events-none"></div>
+    
+        {{-- Modal --}}
+        <div onclick="event.stopPropagation()"
+            class="relative z-10 bg-nexora-off-white border border-nexora-corporate/50 rounded-2xl
+                    shadow-2xl w-full max-w-2xl mx-4 max-h-[85vh] flex flex-col">
+    
+            {{-- Header --}}
+            <div class="flex items-center justify-between px-5 pt-5 pb-3
+                        border-b border-nexora-corporate/20 flex-shrink-0">
+                <div>
+                    <p class="text-[10px] text-nexora-navy-mid mb-0.5 font-['Courier_New']">
+                        {{ $selectedOrder['id'] }} &bull; Enter / update benchmark results
+                    </p>
+                    <h2 class="text-lg font-bold text-nexora-deep-navy">{{ $selectedOrder['name'] }}</h2>
+                </div>
+                <div class="flex items-center gap-3">
+                    {{-- Live counts --}}
+                    <div class="flex gap-1.5" id="bm-live-counts">
+                        <span id="bm-count-pass"
+                            class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-nexora-success/80 text-white">
+                            0 Pass
+                        </span>
+                        <span id="bm-count-warn"
+                            class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-nexora-warning/80 text-white">
+                            0 Warn
+                        </span>
+                        <span id="bm-count-fail"
+                            class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-nexora-danger/80 text-white">
+                            0 Fail
+                        </span>
+                    </div>
+                    <button onclick="closeModal('benchmark-backdrop')"
+                            class="w-7 h-7 rounded-full flex items-center justify-center text-nexora-navy-mid
+                                hover:bg-nexora-slate-500/20 hover:text-nexora-deep-navy transition-colors text-lg leading-none">
+                        ✕
+                    </button>
+                </div>
+            </div>
+    
+            {{-- Body: one row per check --}}
+            <div class="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden px-5 py-3">
+                <div class="flex flex-col gap-2" id="bm-check-list">
+                </div>
+            </div>
+    
+            {{-- Footer --}}
+            <div class="flex items-center justify-between px-5 py-3
+                        border-t border-nexora-corporate/20 flex-shrink-0">
+                <p id="bm-save-msg" class="text-xs text-nexora-success hidden">✓ Results saved</p>
+                <div class="flex gap-2 ml-auto">
+                    <button onclick="closeModal('benchmark-backdrop')"
+                            class="px-4 py-1.5 rounded-full text-xs font-medium border border-nexora-corporate/50
+                                text-nexora-navy-mid hover:bg-nexora-slate-200 transition-colors">
+                        Cancel
+                    </button>
+                    <button onclick="saveBenchmarkResults()"
+                            class="px-4 py-1.5 rounded-full text-xs font-semibold bg-nexora-corporate text-white
+                                hover:bg-nexora-navy-mid transition-colors">
+                        Save Results
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const benchmarkData = {
+            woId:      "{{ $selectedOrder['id'] }}",
+            checks:    @json($checks),
+            results:   @json($results->values()),
+            orderName: "{{ $selectedOrder['name'] }}",
+        };
+    </script>
 </div>

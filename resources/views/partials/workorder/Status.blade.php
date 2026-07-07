@@ -106,7 +106,7 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
         <div id="detail-{{ $i }}" class="p-5 {{ $i === 0 ? '' : 'hidden' }}">
             <div class="flex justify-between">
                 <span class="text-xs text-nexora-navy mb-1">{{ $order['id'] }} &bull; {{ $order['source'] }}</span>
-                <button class="px-3 rounded-full font-medium text-base text-nexora-deep-navy bg-nexora-steel-blue border border-nexora-deep-navy 
+                <button onclick="openEditModal({{ $i }})" class="px-3 rounded-full font-medium text-base text-nexora-deep-navy bg-nexora-steel-blue border border-nexora-deep-navy 
                         hover:border-nexora-corporate hover:text-nexora-off-white transition-colors whitespace-nowrap">Edit</button>
             </div>
             <h2 class="text-2xl font-bold mb-2">{{ $order['name'] }}</h2>
@@ -163,4 +163,83 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
 
         </div>
     @endforeach
+    {{-- ── BACKDROP ── --}}
+    <div id="edit-backdrop"
+        class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center hidden"
+        onclick="handleBackdropClick(event,'edit-backdrop')">
+    
+        {{-- Blur overlay --}}
+        <div class="absolute inset-0 bg-nexora-deep-navy/40 backdrop-blur-sm pointer-events-none"></div>
+    
+        {{-- Modal --}}
+        <div id="edit-modal"
+            onclick="event.stopPropagation()"
+            class="relative z-10 bg-nexora-off-white border border-nexora-corporate/50 rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[80vh] flex flex-col">
+    
+            {{-- Header --}}
+            <div class="flex items-center justify-between px-5 pt-5 pb-3 border-b border-nexora-corporate/20 flex-shrink-0">
+                <div>
+                    <p id="modal-order-id" class="text-[10px] text-nexora-navy-mid mb-0.5"></p>
+                    <h2 id="modal-order-name" class="text-lg font-bold text-nexora-deep-navy"></h2>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="modal-order-status" class="px-2.5 py-1 rounded-full text-xs font-bold"></span>
+                    <button onclick="closeModal('edit-backdrop')"
+                            class="w-7 h-7 rounded-full flex items-center justify-center text-nexora-navy-mid
+                                hover:bg-nexora-slate-500/20 hover:text-nexora-deep-navy transition-colors text-lg leading-none">
+                        ✕
+                    </button>
+                </div>
+            </div>
+    
+            {{-- Body --}}
+            <div class="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden px-5 py-4 flex flex-col gap-4">
+    
+                {{-- Order Status Section — only shown for Finished orders --}}
+                <div id="section-order-status" class="hidden">
+                    <p class="text-xs font-semibold tracking-widest text-nexora-slate-500 uppercase mb-2">Order Status</p>
+                    <div class="bg-nexora-slate-200 border border-nexora-corporate/30 rounded-xl p-4 flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-nexora-deep-navy">Send to QC Check</p>
+                            <p class="text-xs text-nexora-navy-mid mt-0.5">Mark this finished build as ready for quality control.</p>
+                        </div>
+                        <button onclick="sendToQC()"
+                                class="flex-shrink-0 ml-4 px-4 py-1.5 rounded-full text-xs font-semibold bg-nexora-corporate text-white
+                                    hover:bg-nexora-navy-mid transition-colors">
+                            Send to QC
+                        </button>
+                    </div>
+                </div>
+    
+                {{-- Parts Section --}}
+                <div>
+                    <p class="text-xs font-semibold tracking-widest text-nexora-slate-500 uppercase mb-2">Parts</p>
+                    <div id="modal-parts-list" class="flex flex-col gap-1.5">
+                        {{-- Populated by JS --}}
+                    </div>
+                </div>
+    
+            </div>
+    
+            {{-- Footer --}}
+            <div class="flex items-center justify-between px-5 py-3 border-t border-nexora-corporate/20 flex-shrink-0">
+                <p id="modal-save-msg" class="text-xs text-nexora-success hidden">✓ Changes saved</p>
+                <div class="flex gap-2 ml-auto">
+                    <button onclick="closeModal('edit-backdrop')"
+                            class="px-4 py-1.5 rounded-full text-xs font-medium border border-nexora-corporate/50
+                                text-nexora-navy-mid hover:bg-nexora-slate-200 transition-colors">
+                        Cancel
+                    </button>
+                    <button onclick="saveChanges()"
+                            class="px-4 py-1.5 rounded-full text-xs font-semibold bg-nexora-corporate text-white
+                                hover:bg-nexora-navy-mid transition-colors">
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    const workOrdersData = @json($workOrders);
+    </script>
 </div>
