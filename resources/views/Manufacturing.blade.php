@@ -112,13 +112,12 @@
     @if($curPage != 'dashboard' && $curPage != 'reports')
         {{-- Sidebar --}}
         <aside class="w-44 bg-nexora-off-white border-[1px] border-nexora-corporate flex flex-col flex-shrink-0 rounded-lg max-w-full min-h-full mx-auto ml-1">
-            <nav class="flex-1 px-3 pt-4 space-y-0.5 text-sm">
+            <nav class="flex-1 px-3 pt-4 space-y-0.5 text-sm justify-between">
                 {{-- Quality Check Sub Tabs --}}
                 @if($curPage === 'qc')
                     @php
                         $qcSubs = [
                             ['label' => 'Benchmark',  'sub' => 'benchmark'],
-                            ['label' => 'Rejections', 'sub' => 'rejections'],
                             ['label' => 'Rework',     'sub' => 'rework'],
                             ['label' => 'Analytics',  'sub' => 'analytics'],
                         ];
@@ -170,8 +169,8 @@
         </aside>
     @endif
         {{-- Main Content --}}
-        <main class="flex flex-col w-full max-h-[100%] mx-auto w-full">
-            <div class="flex-1 p-4 overflow-y-auto [&::-webkit-scrollbar]:hidden bg-nexora-off-white border-[1px] border-nexora-corporate rounded-lg">
+        <main class="flex flex-col h-full h-full mx-auto w-full">
+            <div class="flex-1 h-full p-4 bg-nexora-off-white border-[1px] border-nexora-corporate rounded-lg">
                 {{-- Dashboard --}}
                 @if($curPage === 'dashboard')
                     @include('partials.dashboard')

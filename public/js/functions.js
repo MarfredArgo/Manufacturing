@@ -295,6 +295,15 @@ async function saveChanges() {
         return;
     }
 
+    const order = workOrdersData[editingOrderIndex];
+
+    const allReady = order.parts.every((part, idx) => {
+        const finalStatus = pendingChanges[idx] ?? part.status;
+        return finalStatus === 'Ready';
+    });
+
+    const autoFinish = allReady && order.status === 'Building';
+
     const payload = {
         orderIndex:  editingOrderIndex,
         partChanges: pendingChanges,

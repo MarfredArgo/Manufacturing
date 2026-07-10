@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 
 class ManufacturingController extends Controller
 {
+    //Status Update
     public function updateOrder(Request $request): JsonResponse
     {
         $orderIndex  = (int)  $request->input('orderIndex');
@@ -30,16 +31,21 @@ class ManufacturingController extends Controller
     
             $currentStatus = $order['parts'][$partIdx]['status'];
     
-            // Rule: only Sourcing → Ready is allowed
             if ($currentStatus === 'Sourcing' && $newStatus === 'Ready') {
                 $order['parts'][$partIdx]['status'] = 'Ready';
             }
         }
-    
+        
+        $autoFinish = (bool) $request->input('autoFinish', false);
+
+        if ($autoFinish && $order['status'] === 'Building') {
+            $order['status'] = 'Finished';
+        }
+
         if ($sendToQC && $order['status'] === 'Finished') {
             $order['status'] = 'QC Check';
         }
-    
+
         $written = file_put_contents(
             $path,
             json_encode($tempData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
@@ -51,6 +57,7 @@ class ManufacturingController extends Controller
     
         return response()->json(['success' => true]);
     }
+    //QC update
     public function updateQC(Request $request): JsonResponse
     {
         $woId    = $request->input('woId');

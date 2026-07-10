@@ -91,7 +91,7 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
     </div>
 
     {{-- RIGHT PANEL --}}
-    <div class="flex-1 bg-nexora-slate-200 border border-nexora-corporate/50 rounded-xl overflow-y-auto [&::-webkit-scrollbar]:hidden text-nexora-deep-navy">
+    <div class="flex-1 h-full bg-nexora-slate-200 border border-nexora-corporate/50 rounded-xl overflow-y-auto [&::-webkit-scrollbar]:hidden text-nexora-deep-navy">
 
     @foreach($workOrders as $i => $order)
         @php

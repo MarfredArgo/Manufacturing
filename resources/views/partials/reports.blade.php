@@ -43,7 +43,7 @@
     $weekDefects = [1, 0, 2, 1, 0, 1, $cancelled];
 @endphp
 <h1 class="font-heading font-medium text-2xl text-nexora-deep-navy mb-4">Reports & Analytics</h1>
-<div class="overflow-y-auto [&::-webkit-scrollbar]:hidden">
+<div class="">
 <div class="grid grid-cols-4 gap-3 mb-4">
     <div class="bg-nexora-slate-200 rounded-xl px-4 py-3 border border-nexora-corporate/50">
         <p class="text-xs text-nexora-navy-mid mb-1">Total work orders</p>
@@ -206,4 +206,3 @@
     };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="{{ asset('js/reports-charts.js') }}"></script>
