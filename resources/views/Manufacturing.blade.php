@@ -61,6 +61,7 @@
         $tempData = json_decode($jsonString, true);    
 
         $workOrders   = $tempData['workOrders'];
+        $workers      = $tempData['workers'];
         $statusStyles = $tempData['statusStyles'];
         $partStyles   = $tempData['partStyles'];
         $qcTemplates  = $tempData['qcTemplates'] ?? [];
@@ -197,28 +198,23 @@
                         @include('partials.workorder.status')
                     {{-- Schedule --}}
                     @elseif($curSub === 'schedule')
-                        <div class="bg-nexora-navy rounded-xl p-6 text-white">
-                            <p>Schedule.</p>
-                        </div>
-
+                        @include('partials.workorder.schedule')
                     {{-- BOMs --}}
                     @elseif($curSub === 'boms')
                             @include('partials.workorder.bom')
                     {{-- Assignment --}}
                     @elseif($curSub === 'assignment')
-                        <div class="bg-nexora-navy rounded-xl p-6 text-white">
-                            <p>Assignment.</p>
-                        </div>
+                        @include('partials.workorder.assignment')
                     @endif
 
                 {{-- Quality Check --}}
                 @elseif($curPage === 'qc')
                     @if($curSub === 'benchmark' || $curSub === '')
                         @include('partials.Quality Check.benchmark')
-                    @else
-                        <div class="flex items-center justify-center h-40 text-nexora-navy-mid text-sm">
-                            {{ ucfirst($curSub) }}.
-                        </div>
+                    @elseif($curSub === 'rework')
+                        @include('partials.Quality Check.rework')
+                    @elseif($curSub === 'analytics')
+                        @include('partials.Quality Check.analytics')
                     @endif
 
                 @endif

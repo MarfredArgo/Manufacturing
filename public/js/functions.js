@@ -160,6 +160,18 @@ document.addEventListener('DOMContentLoaded', function () {
             options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { display: false } } }
         });
     }
+    
+    if (document.getElementById('qcVerdictDonut') && window.qcAnalyticsData) {
+        const { verdictLabels, verdictCounts, verdictColors } = window.qcAnalyticsData;
+        new Chart(document.getElementById('qcVerdictDonut'), {
+            type: 'doughnut',
+            data: {
+                labels: verdictLabels,
+                datasets: [{ data: verdictCounts, backgroundColor: verdictColors, borderColor: '#E2E8F0', borderWidth: 3, hoverOffset: 4 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { display: false } } }
+        });
+    }
 });
 
 // ── Generic Modal Helpers ──────────────────────────────────────────────────
