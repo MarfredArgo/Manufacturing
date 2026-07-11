@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
             options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { display: false } } }
         });
     }
-    
+
     if (document.getElementById('qcVerdictDonut') && window.qcAnalyticsData) {
         const { verdictLabels, verdictCounts, verdictColors } = window.qcAnalyticsData;
         new Chart(document.getElementById('qcVerdictDonut'), {
@@ -538,3 +538,5 @@ async function saveBenchmarkResults() {
         console.error(err);
     }
 }
+
+//assignment
