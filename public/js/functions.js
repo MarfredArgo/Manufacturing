@@ -539,4 +539,230 @@ async function saveBenchmarkResults() {
     }
 }
 
-//assignment
+// ── Assignment: Order Selection ────────────────────────────────────────────
+let selectedOrderIndex = (typeof CURRENT_SELECTED !== 'undefined') ? CURRENT_SELECTED : -1;
+
+function selectOrderForAssignment(index) {
+    selectedOrderIndex = index;
+    history.replaceState({}, '', `?page=orders&sub=assignment&order=${index}`);
+
+    document.querySelectorAll('[id^="card-"]').forEach((card, i) => {
+        card.classList.toggle('bg-nexora-steel-blue/80', i === index);
+    });
+
+    updateAssignmentBanner();
+}
+
+function cancelOrderSelection() {
+    selectedOrderIndex = -1;
+    history.replaceState({}, '', `?page=orders&sub=assignment`);
+    document.querySelectorAll('[id^="card-"]').forEach(card => card.classList.remove('bg-nexora-steel-blue/80'));
+    updateAssignmentBanner();
+}
+
+function updateAssignmentBanner() {
+    const banner  = document.getElementById('assignment-banner');
+    const header  = document.getElementById('worker-mgmt-header');
+    const instr   = document.getElementById('assign-instructions');
+
+    if (selectedOrderIndex >= 0 && workOrdersData[selectedOrderIndex]) {
+        const order = workOrdersData[selectedOrderIndex];
+        document.getElementById('assignment-order-id').textContent = order.id;
+        document.getElementById('assignment-order-name').textContent = order.name;
+        banner.classList.remove('hidden');
+        header.classList.add('hidden');
+        instr.classList.remove('hidden');
+    } else {
+        banner.classList.add('hidden');
+        header.classList.remove('hidden');
+        instr.classList.add('hidden');
+    }
+}
+
+// ── Assignment: Search ─────────────────────────────────────────────────────
+// (Separate from filterOrders() on the Status page — this page has no
+// status filter buttons, just the search box, so it needs its own handler.)
+function filterAssignmentSearch() {
+    const search = document.getElementById('searchWO').value.toLowerCase();
+    document.querySelectorAll('[id^="card-"]').forEach(card => {
+        const matches = card.dataset.name.toLowerCase().includes(search);
+        card.classList.toggle('hidden', !matches);
+    });
+}
+
+// ── Assignment: Worker Cards (click = edit, or assign if an order is selected) ──
+function handleWorkerCardClick(workerIndex) {
+    if (selectedOrderIndex >= 0) {
+        assignWorkerToOrder(selectedOrderIndex, workerIndex);
+    } else {
+        openEditWorkerModal(workerIndex);
+    }
+}
+
+// ── Assignment: Drag & Drop ────────────────────────────────────────────────
+let draggedWorkerIndex = null;
+
+function allowDrop(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+}
+
+function dragWorker(e, workerIndex) {
+    draggedWorkerIndex = workerIndex;
+    e.dataTransfer.setData('text/plain', String(workerIndex));
+}
+
+function dropAssign(e, orderIndex) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('ring-2', 'ring-nexora-corporate');
+
+    const workerIndex = draggedWorkerIndex !== null
+        ? draggedWorkerIndex
+        : parseInt(e.dataTransfer.getData('text/plain'), 10);
+
+    draggedWorkerIndex = null;
+    if (isNaN(workerIndex)) return;
+
+    assignWorkerToOrder(orderIndex, workerIndex);
+}
+
+// ── Assignment: Save (CRUD → tempData.json via backend) ────────────────────
+function assignWorkerToOrder(orderIndex, workerIndex) {
+    const order  = workOrdersData[orderIndex];
+    const worker = workersData[workerIndex];
+    if (!order || !worker) return;
+
+    fetch('/workorder/assign-worker', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ orderId: order.id, workerName: worker.name })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            showSuccess(`${worker.name} assigned to ${order.name}`);
+            setTimeout(() => location.reload(), 800);
+        } else {
+            alert('Assignment failed: ' + (data.message ?? 'Unknown error'));
+        }
+    })
+    .catch(err => {
+        alert('Network error — could not assign worker.');
+        console.error(err);
+    });
+}
+
+// ── Assignment: Worker Management (edit/delete/add) ────────────────────────
+function openEditWorkerModal(index) {
+    const worker = workersData[index];
+    document.getElementById('edit-w-id').value = worker.id;
+    document.getElementById('edit-w-name').value = worker.name;
+    document.getElementById('edit-w-role').value = worker.role;
+    document.getElementById('edit-w-notes').value = worker.notes || '';
+    document.getElementById('edit-worker-modal').classList.remove('hidden');
+}
+
+function closeEditWorkerModal() {
+    document.getElementById('edit-worker-modal').classList.add('hidden');
+}
+
+function submitEditWorker(e) {
+    e.preventDefault();
+    const updated = {
+        id: document.getElementById('edit-w-id').value,
+        name: document.getElementById('edit-w-name').value.trim(),
+        role: document.getElementById('edit-w-role').value.trim(),
+        notes: document.getElementById('edit-w-notes').value.trim()
+    };
+    fetch(`/manufacturing/update-worker`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+        body: JSON.stringify(updated)
+    })
+    .then(res => res.json())
+    .then(() => {
+        closeEditWorkerModal();
+        showSuccess('Worker updated successfully');
+        setTimeout(() => location.reload(), 800);
+    });
+}
+
+function confirmDeleteWorker() {
+    const id = document.getElementById('edit-w-id').value;
+    const name = document.getElementById('edit-w-name').value;
+    if (!confirm(`Delete "${name}"?`)) return;
+    fetch(`/manufacturing/delete-worker`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+        body: JSON.stringify({ id })
+    })
+    .then(res => res.json())
+    .then(() => {
+        closeEditWorkerModal();
+        showSuccess('Worker deleted successfully');
+        setTimeout(() => location.reload(), 800);
+    });
+}
+
+function openAddWorkerModal() {
+    document.getElementById('add-worker-form').reset();
+    document.getElementById('add-worker-modal').classList.remove('hidden');
+}
+
+function closeAddWorkerModal() {
+    document.getElementById('add-worker-modal').classList.add('hidden');
+}
+
+function submitAddWorker(e) {
+    e.preventDefault();
+    const newWorker = {
+        id: Date.now(),
+        name: document.getElementById('add-w-name').value.trim(),
+        role: document.getElementById('add-w-role').value.trim(),
+        notes: document.getElementById('add-w-notes').value.trim()
+    };
+    fetch(`/workorder/assignment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+        body: JSON.stringify(newWorker)
+    })
+    .then(res => res.json())
+    .then(() => {
+        closeAddWorkerModal();
+        showSuccess('Worker added successfully');
+        setTimeout(() => location.reload(), 800);
+    });
+}
+
+function showSuccess(msg) {
+    document.getElementById('success-text').textContent = msg;
+    document.getElementById('success-notif').classList.remove('hidden');
+}
+
+function closeSuccessNotif() {
+    document.getElementById('success-notif').classList.add('hidden');
+}
+
+// ── Schedule: Priority Filter ──────────────────────────────────────────────
+function filterSchedule(filter, evt) {
+    document.querySelectorAll('.filter-sched').forEach(btn => {
+        btn.classList.remove('bg-nexora-corporate', 'text-white');
+        btn.classList.add('bg-gray-200', 'text-gray-700');
+    });
+    if (evt && evt.target) {
+        evt.target.classList.remove('bg-gray-200', 'text-gray-700');
+        evt.target.classList.add('bg-nexora-corporate', 'text-white');
+    }
+
+    document.querySelectorAll('.schedule-row').forEach(row => {
+        const priority = row.dataset.priority;
+        if (filter === 'all' || priority === filter) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}

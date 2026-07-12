@@ -3,9 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ManufacturingController;
 
-Route::get('/manufacturing', [ManufacturingController::class, 'index']);
 Route::post('/manufacturing/update-order', [ManufacturingController::class, 'updateOrder']);
 Route::post('/manufacturing/update-qc', [ManufacturingController::class, 'updateQC']);
+Route::post('/manufacturing/update-worker', [ManufacturingController::class, 'updateWorker']);
+Route::post('/manufacturing/delete-worker', [ManufacturingController::class, 'deleteWorker']);
+Route::post('/workorder/assignment', [ManufacturingController::class, 'addWorker']);
+Route::post('/workorder/assign-worker', [ManufacturingController::class, 'assignWorker']);
 
 Route::get('/welcome', function () {
     return view('welcome');

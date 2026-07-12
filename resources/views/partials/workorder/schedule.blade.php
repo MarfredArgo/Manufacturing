@@ -6,7 +6,11 @@ $projectsWithPriority = collect($workOrders)->map(function ($order) use ($today)
     $dueDate = \Carbon\Carbon::parse($rawDue);
     $daysDiff = $today->diffInDays($dueDate, false); // negative = overdue
 
-    if ($daysDiff < 0) {
+    if ($order['status'] === 'Finished') {
+        $priority = 'completed';
+        $priorityLabel = 'Completed';
+        $priorityClass = 'bg-nexora-corporate text-white';
+    } elseif ($daysDiff < 0) {
         $priority = 'overdue';
         $priorityLabel = 'Overdue';
         $priorityClass = 'bg-red-600 text-white';
@@ -34,10 +38,11 @@ $projectsWithPriority = collect($workOrders)->map(function ($order) use ($today)
 })->sortByDesc(function ($p) {
 
     return match($p['priority']) {
-        'overdue' => 4,
-        'high' => 3,
-        'medium' => 2,
-        'low' => 1
+        'overdue' => 5,
+        'high' => 4,
+        'medium' => 3,
+        'low' => 2,
+        'completed' => 1
     };
 });
 @endphp
@@ -62,11 +67,11 @@ $projectsWithPriority = collect($workOrders)->map(function ($order) use ($today)
 
     <!-- Filter Controls -->
     <div class="flex flex-wrap gap-3">
-        <button onclick="filterSchedule('all')" class="filter-sched px-3 py-1.5 rounded bg-nexora-corporate text-white text-sm">All Projects</button>
-        <button onclick="filterSchedule('overdue')" class="filter-sched px-3 py-1.5 rounded bg-gray-200 text-gray-700 text-sm hover:bg-gray-300">Overdue</button>
-        <button onclick="filterSchedule('high')" class="filter-sched px-3 py-1.5 rounded bg-gray-200 text-gray-700 text-sm hover:bg-gray-300">High Priority</button>
-        <button onclick="filterSchedule('medium')" class="filter-sched px-3 py-1.5 rounded bg-gray-200 text-gray-700 text-sm hover:bg-gray-300">Medium Priority</button>
-        <button onclick="filterSchedule('low')" class="filter-sched px-3 py-1.5 rounded bg-gray-200 text-gray-700 text-sm hover:bg-gray-300">Low Priority</button>
+        <button onclick="filterSchedule('all', event)" class="filter-sched px-3 py-1.5 rounded bg-nexora-corporate text-white text-sm">All Projects</button>
+        <button onclick="filterSchedule('overdue', event)" class="filter-sched px-3 py-1.5 rounded bg-gray-200 text-gray-700 text-sm hover:bg-gray-300">Overdue</button>
+        <button onclick="filterSchedule('high', event)" class="filter-sched px-3 py-1.5 rounded bg-gray-200 text-gray-700 text-sm hover:bg-gray-300">High Priority</button>
+        <button onclick="filterSchedule('medium', event)" class="filter-sched px-3 py-1.5 rounded bg-gray-200 text-gray-700 text-sm hover:bg-gray-300">Medium Priority</button>
+        <button onclick="filterSchedule('low', event)" class="filter-sched px-3 py-1.5 rounded bg-gray-200 text-gray-700 text-sm hover:bg-gray-300">Low Priority</button>
     </div>
 
     <!-- Timeline View -->
@@ -94,7 +99,8 @@ $projectsWithPriority = collect($workOrders)->map(function ($order) use ($today)
                             'overdue' => '#dc2626',
                             'high' => '#ef4444',
                             'medium' => '#f97316',
-                            'low' => '#22c55e'
+                            'low' => '#22c55e',
+                            'completed' => '#1B6FC8'
                         };
                     @endphp
                     <tr class="schedule-row border-b border-nexora-corporate/20 hover:bg-nexora-slate-50 transition"
@@ -108,7 +114,9 @@ $projectsWithPriority = collect($workOrders)->map(function ($order) use ($today)
                         </td>
                         <td class="p-3 text-center text-nexora-deep-navy">{{ $project['due'] }}</td>
                         <td class="p-3 text-center font-medium">
-                            @if($days < 0)
+                            @if($project['priority'] === 'completed')
+                                <span class="text-nexora-corporate font-semibold">Completed</span>
+                            @elseif($days < 0)
                                 <span class="text-red-600 font-semibold">{{ abs($days) }} days overdue</span>
                             @elseif($days === 0)
                                 <span class="text-orange-600 font-semibold">Due today</span>
@@ -158,26 +166,11 @@ $projectsWithPriority = collect($workOrders)->map(function ($order) use ($today)
         </div>
     </div>
 
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-nexora-slate-100 border border-nexora-corporate/30 rounded-lg p-4">
+            <h4 class="font-semibold text-nexora-deep-navy mb-2">Completed</h4>
+            <p class="text-2xl font-bold text-nexora-corporate">{{ $projectsWithPriority->where('priority', 'completed')->count() }}</p>
+        </div>
+    </div>
+
 </div>
-
-<script>
-function filterSchedule(filter) {
-    // Update button styles
-    document.querySelectorAll('.filter-sched').forEach(btn => {
-        btn.classList.remove('bg-nexora-corporate', 'text-white');
-        btn.classList.add('bg-gray-200', 'text-gray-700');
-    });
-    event.target.classList.remove('bg-gray-200', 'text-gray-700');
-    event.target.classList.add('bg-nexora-corporate', 'text-white');
-
-    // Show/hide rows
-    document.querySelectorAll('.schedule-row').forEach(row => {
-        const priority = row.dataset.priority;
-        if (filter === 'all' || priority === filter) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    });
-}
-</script>
