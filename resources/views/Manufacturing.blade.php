@@ -8,7 +8,8 @@
     <link rel="icon" type="image/png" href="images/Nexora_Logo_Transparent.png">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{{ asset('js/functions.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="{{ asset('js/shared.js') }}"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -66,6 +67,7 @@
         $partStyles   = $tempData['partStyles'];
         $qcTemplates  = $tempData['qcTemplates'] ?? [];
         $qcSessions   = $tempData['qcSessions'] ?? [];
+        $reworkOrders = $tempData['reworkOrders'] ?? [];
     @endphp
 </head>
 <body class="font-body text-white flex flex-col h-full">
@@ -113,9 +115,10 @@
     @if($curPage != 'dashboard' && $curPage != 'reports')
         {{-- Sidebar --}}
         <aside class="w-44 bg-nexora-off-white border-[1px] border-nexora-corporate flex flex-col flex-shrink-0 rounded-lg max-w-full min-h-full mx-auto ml-1">
-            <nav class="flex-1 px-3 pt-4 space-y-0.5 text-sm justify-between">
+            <nav class="flex-1 flex flex-col pt-[40%] px-3 space-y-0.5 text-sm">
                 {{-- Quality Check Sub Tabs --}}
                 @if($curPage === 'qc')
+                    <script src="{{ asset('js/benchmark.js') }}"></script>
                     @php
                         $qcSubs = [
                             ['label' => 'Benchmark',  'sub' => 'benchmark'],
@@ -136,6 +139,9 @@
 
                 {{-- Work Orders Sub Tabs --}}
                 @if($curPage === 'orders')
+                    <script src="{{ asset('js/status.js') }}"></script>
+                    <script src="{{ asset('js/assignment.js') }}"></script>
+                    <script src="{{ asset('js/schedule.js') }}"></script>
                     @php
                         $orderSubs = [
                             ['label' => 'All Orders', 'sub' => 'all'],
@@ -158,15 +164,6 @@
                 @endif
 
             </nav>
-
-            {{-- Sign out --}}
-            <div class="px-3 pb-6">
-                <a href="/signin"
-                   class="block px-3 py-2 rounded-md text-sm font-medium text-nexora-slate-500
-                          hover:bg-nexora-corporate/80 hover:text-white transition-colors duration-300">
-                    Signout
-                </a>
-            </div>
         </aside>
     @endif
         {{-- Main Content --}}
@@ -174,9 +171,11 @@
             <div class="flex-1 h-full p-4 bg-nexora-off-white border-[1px] border-nexora-corporate rounded-lg">
                 {{-- Dashboard --}}
                 @if($curPage === 'dashboard')
+                    <script src="{{ asset('js/dashboard-charts.js') }}"></script>
                     @include('partials.dashboard')
                     {{-- Reports --}}
                 @elseif($curPage === 'reports')
+                    <script src="{{ asset('js/reports-charts.js') }}"></script>
                     @include('partials.reports')            
                 {{-- Work Orders --}}
                 @elseif($curPage === 'orders')
@@ -190,7 +189,7 @@
                         }
                     }
                 @endphp
-                        {{-- All Orders --}}
+                    {{-- All Orders --}}
                     @if($curSub === 'all' || $curSub === '')
                         @include('partials.workorder.allorder')
                     {{-- Status --}}

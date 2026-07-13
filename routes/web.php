@@ -3,25 +3,28 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ManufacturingController;
 
-Route::post('/manufacturing/update-order', [ManufacturingController::class, 'updateOrder']);
-Route::post('/manufacturing/update-qc', [ManufacturingController::class, 'updateQC']);
-Route::post('/manufacturing/update-worker', [ManufacturingController::class, 'updateWorker']);
-Route::post('/manufacturing/delete-worker', [ManufacturingController::class, 'deleteWorker']);
-Route::post('/workorder/assignment', [ManufacturingController::class, 'addWorker']);
-Route::post('/workorder/assign-worker', [ManufacturingController::class, 'assignWorker']);
+// Work orders
+Route::post('/manufacturing/update-order',      [ManufacturingController::class, 'updateOrder']);
 
-Route::get('/welcome', function () {
-    return view('welcome');
-});
+// QC benchmark
+Route::post('/manufacturing/update-qc',         [ManufacturingController::class, 'updateQC']);
 
-Route::get('/manufacturing', function () {
-    return view('Manufacturing');
-});
+// Rework
+Route::post('/manufacturing/update-rework',     [ManufacturingController::class, 'updateRework']);
+Route::post('/manufacturing/add-rework-part',   [ManufacturingController::class, 'addReworkPart']);
+Route::post('/manufacturing/update-rework-part',[ManufacturingController::class, 'updateReworkPart']);
 
-Route::get('/contactus', function () {
-    return view('Contactus');
-});
+// Analytics
+Route::post('/manufacturing/add-qc-note',       [ManufacturingController::class, 'addQcNote']);
 
-Route::get('/signin', function () {
-    return view('Signin');
-});
+// Workers
+Route::post('/manufacturing/update-worker',     [ManufacturingController::class, 'updateWorker']);
+Route::post('/manufacturing/delete-worker',     [ManufacturingController::class, 'deleteWorker']);
+Route::post('/workorder/assignment',            [ManufacturingController::class, 'addWorker']);
+Route::post('/workorder/assign-worker',         [ManufacturingController::class, 'assignWorker']);
+
+// Pages
+Route::get('/manufacturing', fn() => view('Manufacturing'));
+Route::get('/welcome',       fn() => view('welcome'));
+Route::get('/contactus',     fn() => view('Contactus'));
+Route::get('/signin',        fn() => view('Signin'));

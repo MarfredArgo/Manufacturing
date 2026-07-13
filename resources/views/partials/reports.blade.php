@@ -34,17 +34,18 @@
     $partsTotal     = $allParts->count();
 
     $recentOrders = collect($workOrders)
-        ->whereIn('status', ['Finished', 'Cancelled', 'QC Check', 'Building'])
-        ->take(8)
+        ->whereIn('status', ['Finished'])
+        ->take(5)
         ->values();
 
     $weekLabels  = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     $weekBuilds  = [4, 6, 5, 8, 7, 3, $finished];
     $weekDefects = [1, 0, 2, 1, 0, 1, $cancelled];
 @endphp
-<h1 class="font-heading font-medium text-2xl text-nexora-deep-navy mb-4">Reports & Analytics</h1>
-<div class="">
-<div class="grid grid-cols-4 gap-3 mb-4">
+<div class="flex flex-col h-full">
+<h1 class="flex-shrink-0 font-heading font-medium text-2xl text-nexora-deep-navy mb-4">Reports & Analytics</h1>
+<div class="flex-1 min-h-0 flex flex-col">
+<div class="grid grid-cols-4 gap-3 mb-4 flex-shrink-0">
     <div class="bg-nexora-slate-200 rounded-xl px-4 py-3 border border-nexora-corporate/50">
         <p class="text-xs text-nexora-navy-mid mb-1">Total work orders</p>
         <p class="text-3xl font-heading font-medium text-nexora-deep-navy">{{ $total }}</p>
@@ -67,7 +68,7 @@
     </div>
 </div>
 
-<div class="flex gap-3 mb-4">
+<div class="flex gap-3 mb-4 flex-shrink-0">
 
     <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 flex-1">
         <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-1">Work orders by status</p>
@@ -123,14 +124,14 @@
 
 </div>
 
-<div class="flex gap-3 mb-4">
+<div class="flex gap-3 mb-4 flex-1 min-h-0">
 
     {{-- Work Order Summary Table --}}
-    <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 flex-1">
-        <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-3">Recent work orders</p>
-        <div class="overflow-x-auto">
+    <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 flex-1 flex flex-col min-h-0">
+        <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-3 flex-shrink-0">Recent Finished Work Orders</p>
+        <div class="overflow-auto flex-1 min-h-0 [&::-webkit-scrollbar]:hidden">
             <table class="w-full text-xs table-fixed">
-                <thead>
+                <thead class="sticky top-0 bg-nexora-slate-200">
                     <tr class="border-b border-nexora-corporate/30">
                         <th class="text-left text-nexora-navy-mid font-medium pb-2 w-28">Order ID</th>
                         <th class="text-left text-nexora-navy-mid font-medium pb-2">Build</th>
@@ -167,9 +168,9 @@
     </div>
 
     {{-- Technician Order Tally --}}
-    <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 w-[250px]">
-        <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-3">Orders per technician</p>
-        <div class="flex flex-wrap gap-6">
+    <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 w-[250px] flex flex-col min-h-0">
+        <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-3 flex-shrink-0">Orders per technician</p>
+        <div class="overflow-auto flex-1 min-h-0 [&::-webkit-scrollbar]:hidden flex flex-wrap gap-6 content-start">
             @foreach($assignees as $a)
                 @php $pct = $total > 0 ? round(($a['count'] / $total) * 100) : 0; @endphp
                 <div class="flex items-center gap-3 min-w-[180px]">
@@ -190,7 +191,7 @@
         </div>
     </div>
 </div>
-
+</div>
 </div>
 <script>
     window.reportsData = {

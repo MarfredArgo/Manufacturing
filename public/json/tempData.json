@@ -27,27 +27,27 @@
                 {
                     "name": "NVIDIA GeForce RTX 4070",
                     "category": "GPU",
-                    "status": "Sourcing"
+                    "status": "Ready"
                 },
                 {
                     "name": "Samsung 990 Pro 1TB NVMe",
                     "category": "Storage",
-                    "status": "Sourcing"
+                    "status": "Ready"
                 },
                 {
                     "name": "NZXT H7 Flow ATX Case",
                     "category": "Case",
-                    "status": "Ready"
+                    "status": "Sourcing"
                 },
                 {
                     "name": "Corsair RM850x PSU",
                     "category": "PSU",
-                    "status": "Ready"
+                    "status": "Sourcing"
                 },
                 {
                     "name": "Noctua NH-D15 CPU Cooler",
                     "category": "Cooler",
-                    "status": "Ready"
+                    "status": "Sourcing"
                 },
                 {
                     "name": "Noctua NF-A14 Case Fan x3",

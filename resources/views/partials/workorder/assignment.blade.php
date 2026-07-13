@@ -31,11 +31,7 @@ $workerRole = request()->get('role','');
                          data-index="{{ $i }}" 
                          data-status="{{ $order['status'] }}" 
                          data-name="{{ $order['name'] }}"
-                         onclick="selectOrderForAssignment({{ $i }})"
-                         ondragover="allowDrop(event)"
-                         ondrop="dropAssign(event, {{ $i }})"
-                         ondragenter="this.classList.add('ring-2','ring-nexora-corporate')"
-                         ondragleave="this.classList.remove('ring-2','ring-nexora-corporate')"
+                         onclick="showOrder({{ $i }})"
                          class="block px-3 py-2.5 mb-1.5 cursor-pointer transition-all duration-150 row-animate
                              {{ $isActive
                                   ? 'bg-nexora-steel-blue/80'
@@ -70,7 +66,13 @@ $workerRole = request()->get('role','');
                         <span id="assignment-order-name"></span>
                     </p>
                 </div>
-                <button onclick="cancelOrderSelection()" class="flex-shrink-0 px-3 py-1.5 rounded bg-gray-200 text-gray-700 text-xs hover:bg-gray-300 transition-colors">Cancel</button>
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <button id="confirm-assign-btn" onclick="confirmAssignment()" disabled
+                            class="hidden px-3 py-1.5 rounded bg-green-600 text-white text-xs font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        Confirm Assignment
+                    </button>
+                    <button onclick="cancelOrderSelection()" class="px-3 py-1.5 rounded bg-gray-200 text-gray-700 text-xs hover:bg-gray-300 transition-colors">Cancel</button>
+                </div>
             </div>
 
             {{-- Default header, hidden while assigning --}}
@@ -79,13 +81,12 @@ $workerRole = request()->get('role','');
                 <p class="text-sm text-nexora-slate-500 mb-4">Click any worker to view, edit or delete</p>
             </div>
 
-            <p id="assign-instructions" class="hidden text-sm text-nexora-slate-500 mb-4">Click a worker to assign, or drag them onto any order in the list</p>
+            <p id="assign-instructions" class="hidden text-sm text-nexora-slate-500 mb-4">Click a worker to select them, then hit Confirm Assignment</p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 @foreach($workers as $i => $worker)
-                    <div class="worker-item p-3 rounded-lg bg-white border border-nexora-corporate/30 hover:shadow-md hover:border-nexora-corporate/60 cursor-grab active:cursor-grabbing transition-all"
-                         draggable="true"
-                         ondragstart="dragWorker(event, {{ $i }})"
+                    <div id="worker-card-{{ $i }}"
+                         class="worker-item p-3 rounded-lg bg-white border border-nexora-corporate/30 hover:shadow-md hover:border-nexora-corporate/60 cursor-pointer transition-all"
                          onclick="handleWorkerCardClick({{ $i }})">
                         <p class="text-sm font-semibold">{{ $worker['name'] }}</p>
                         <p class="text-xs text-nexora-slate-500">{{ $worker['role'] }}</p>
@@ -139,6 +140,7 @@ $workerRole = request()->get('role','');
 </div>
 
 <script>
+// Page data handed off to functions.js — same pattern as workOrdersData in Status.blade.php
 const workOrdersData = @json($workOrders);
 const workersData = @json($workers);
 const CURRENT_SELECTED = {{ $selectedIndex ?? -1 }};

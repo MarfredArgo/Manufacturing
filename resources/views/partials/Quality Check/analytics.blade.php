@@ -55,7 +55,14 @@
 
 <div class="flex flex-col gap-3 h-full overflow-y-auto [&::-webkit-scrollbar]:hidden">
 
-    <h1 class="font-heading font-medium text-xl text-nexora-navy-mid flex-shrink-0">QC ANALYTICS</h1>
+    <div class="flex items-center justify-between flex-shrink-0">
+    <h1 class="font-heading font-medium text-xl text-nexora-navy-mid">QC ANALYTICS</h1>
+    <button onclick="openAnalyticsNoteModal()"
+            class="text-xs font-semibold px-3 py-1.5 rounded-full border border-nexora-corporate
+                   text-nexora-corporate hover:bg-nexora-corporate hover:text-white transition-colors">
+        + Add Note
+    </button>
+</div>
 
     {{-- KPI row --}}
     <div class="grid grid-cols-4 gap-3 flex-shrink-0">
@@ -236,4 +243,71 @@
         verdictCounts: @json($verdictCounts),
         verdictColors: @json($verdictColors),
     };
+
+    (function () {
+        const ctx = document.getElementById('qcVerdictDonut');
+        if (ctx && window.Chart) {
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: window.qcAnalyticsData.verdictLabels,
+                    datasets: [{ 
+                        data: window.qcAnalyticsData.verdictCounts, 
+                        backgroundColor: window.qcAnalyticsData.verdictColors, 
+                        borderColor: '#132B52', borderWidth: 3, hoverOffset: 4 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { display: false } } }
+            });
+        }
+    })();
+</script>
+
+{{-- ── ADD QC NOTE MODAL ───────────────────────────────────────────────────── --}}
+<div id="qc-note-backdrop" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center hidden" onclick="handleBackdropClick(event,'qc-note-backdrop')">
+    <div class="absolute inset-0 bg-nexora-deep-navy/40 backdrop-blur-sm pointer-events-none"></div>
+    <div onclick="event.stopPropagation()" class="relative z-10 bg-nexora-off-white border border-nexora-corporate/50 rounded-2xl shadow-2xl w-full max-w-sm mx-4 flex flex-col">
+        <div class="flex items-center justify-between px-5 pt-5 pb-3 border-b border-nexora-corporate/20">
+            <h2 class="text-base font-bold text-nexora-deep-navy">Add QC Note</h2>
+            <button onclick="closeModal('qc-note-backdrop')" class="w-7 h-7 rounded-full flex items-center justify-center text-nexora-navy-mid hover:bg-nexora-slate-500/20 transition-colors text-lg leading-none">✕</button>
+        </div>
+        <div class="px-5 py-4 flex flex-col gap-3">
+            <div>
+                <label class="text-[10px] font-semibold text-nexora-slate-500 uppercase tracking-wider">Work Order</label>
+                <select id="qc-note-wo" class="mt-1.5 w-full border border-nexora-corporate/40 rounded-lg px-3 py-2 text-xs text-nexora-deep-navy bg-nexora-slate-200 focus:outline-none focus:border-nexora-corporate">
+                    @foreach($qcSessions as $sess)
+                        <option value="{{ $sess['woId'] }}">{{ $sess['woId'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="text-[10px] font-semibold text-nexora-slate-500 uppercase tracking-wider">Note</label>
+                <textarea id="qc-note-text" rows="4" placeholder="Enter your QC observation or note..." class="mt-1.5 w-full border border-nexora-corporate/40 rounded-lg px-3 py-2 text-xs text-nexora-deep-navy bg-nexora-slate-200 focus:outline-none focus:border-nexora-corporate resize-none"></textarea>
+            </div>
+        </div>
+        <div class="flex gap-2 justify-end px-5 pb-5">
+            <button onclick="closeModal('qc-note-backdrop')" class="px-4 py-1.5 rounded-full text-xs font-medium border border-nexora-corporate/50 text-nexora-navy-mid hover:bg-nexora-slate-200 transition-colors">Cancel</button>
+            <button onclick="saveQcNote()" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-nexora-corporate text-white hover:bg-nexora-navy-mid transition-colors">Save Note</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function openAnalyticsNoteModal() {
+    document.getElementById('qc-note-text').value = '';
+    openModal('qc-note-backdrop');
+}
+
+async function saveQcNote() {
+    const payload = {
+        woId:   document.getElementById('qc-note-wo').value,
+        note:   document.getElementById('qc-note-text').value,
+        _token: document.querySelector('meta[name="csrf-token"]').content,
+    };
+    try {
+        const res  = await fetch('/manufacturing/add-qc-note', { method:'POST', headers:{'Content-Type':'application/json','X-CSRF-TOKEN':payload._token}, body:JSON.stringify(payload) });
+        const data = await res.json();
+        if (data.success) { closeModal('qc-note-backdrop'); location.reload(); }
+        else alert('Failed: ' + (data.message ?? 'Unknown'));
+    } catch(e) { alert('Network error'); console.error(e); }
+}
 </script>

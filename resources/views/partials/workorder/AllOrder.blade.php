@@ -1,4 +1,3 @@
-
 <div class="flex flex-col h-full">
     <div class="flex items-center gap-4">
         <h1 class="font-heading font-medium text-xl text-nexora-navy-mid whitespace-nowrap">
