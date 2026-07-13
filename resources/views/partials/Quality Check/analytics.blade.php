@@ -231,7 +231,7 @@
                             <p class="text-[10px] text-nexora-warning mt-0.5">{{ $t['flagged'] }} session(s) with flags</p>
                         @endif
                     </div>
-                </div>
+                </div> {{-- adssa --}}
             @endforeach
         </div>
     </div>

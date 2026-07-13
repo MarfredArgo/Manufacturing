@@ -37,12 +37,12 @@
                 {
                     "name": "NZXT H7 Flow ATX Case",
                     "category": "Case",
-                    "status": "Sourcing"
+                    "status": "Ready"
                 },
                 {
                     "name": "Corsair RM850x PSU",
                     "category": "PSU",
-                    "status": "Sourcing"
+                    "status": "Ready"
                 },
                 {
                     "name": "Noctua NH-D15 CPU Cooler",
@@ -119,7 +119,7 @@
             "status": "Pending",
             "due": "Due Jul 2",
             "source": "from e-commerce #ORD-88189",
-            "assigned": "Unassigned",
+            "assigned": "Marco R.",
             "parts": [
                 {
                     "name": "Intel Core I5-13400",
