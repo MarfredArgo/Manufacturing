@@ -7,12 +7,34 @@ use App\Models\Worker;
 use App\Models\QcTemplate;
 use App\Models\QcSession;
 use App\Models\ReworkOrder;
+use App\Services\ManufacturingDataService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class ManufacturingController extends Controller
 {
+    // ── Main page ─────────────────────────────────────────────────────────────
+    public function index()
+    {
+        $data = (new ManufacturingDataService())->loadAll();
+
+        return view('Manufacturing', [
+            'workOrders'   => $data['workOrders'],
+            'workers'      => $data['workers'],
+            'qcTemplates'  => $data['qcTemplates'],
+            'qcSessions'   => $data['qcSessions'],
+            'reworkOrders' => $data['reworkOrders'],
+            'statusStyles' => config('nexora.statusStyles'),
+            'partStyles'   => config('nexora.partStyles'),
+            // Keep $tempData for any blade partials that still reference it
+            'tempData'     => array_merge($data, [
+                'statusStyles' => config('nexora.statusStyles'),
+                'partStyles'   => config('nexora.partStyles'),
+            ]),
+        ]);
+    }
+
     // ── Work Order: update parts + auto-finish + send to QC ─────────────────
     // NOTE: the frontend sends orderIndex (a position into workOrdersData,
     // i.e. @json($workOrders) from the blade) and partChanges keyed the same
