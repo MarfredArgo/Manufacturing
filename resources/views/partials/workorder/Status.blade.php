@@ -196,8 +196,8 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
             <div class="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden px-5 py-4 flex flex-col gap-4">
     
                 {{-- Order Status Section — only shown for Finished orders --}}
+                <p class="text-xs font-semibold tracking-widest text-nexora-slate-500 uppercase mb-2">Order Status</p>
                 <div id="section-order-status" class="hidden">
-                    <p class="text-xs font-semibold tracking-widest text-nexora-slate-500 uppercase mb-2">Order Status</p>
                     <div class="bg-nexora-slate-200 border border-nexora-corporate/30 rounded-xl p-4 flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-nexora-deep-navy">Send to QC Check</p>
@@ -209,6 +209,17 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
                             Send to QC
                         </button>
                     </div>
+                </div>
+                <div class="bg-nexora-slate-200 border border-nexora-corporate/30 rounded-xl p-4 flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-nexora-deep-navy">Cancel Build</p>
+                        <p class="text-xs text-nexora-navy-mid mt-0.5">Mark this as cancelled build</p>
+                    </div>
+                    <button onclick="closeModal('edit-backdrop')"
+                            class="px-4 py-1.5 rounded-full text-xs font-medium border border-nexora-stat-red/50
+                                text-nexora-navy-mid hover:bg-nexora-danger hover:text-white transition-colors">
+                        Cancel Order
+                    </button>
                 </div>
     
                 {{-- Parts Section --}}
@@ -224,7 +235,7 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
             {{-- Footer --}}
             <div class="flex items-center justify-between px-5 py-3 border-t border-nexora-corporate/20 flex-shrink-0">
                 <p id="modal-save-msg" class="text-xs text-nexora-success hidden">✓ Changes saved</p>
-                <div class="flex gap-2 ml-auto">
+                <div class="flex gap-4 ml-auto">
                     <button onclick="closeModal('edit-backdrop')"
                             class="px-4 py-1.5 rounded-full text-xs font-medium border border-nexora-corporate/50
                                 text-nexora-navy-mid hover:bg-nexora-slate-200 transition-colors">

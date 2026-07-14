@@ -58,16 +58,15 @@
         html, body { height: 100%; }
     </style>
     @php
-        $jsonString = file_get_contents(public_path('json/tempData.json'));
-        $tempData = json_decode($jsonString, true);    
+        $tempData = app(\App\Services\ManufacturingDataService::class)->loadAll();
 
         $workOrders   = $tempData['workOrders'];
         $workers      = $tempData['workers'];
-        $statusStyles = $tempData['statusStyles'];
-        $partStyles   = $tempData['partStyles'];
-        $qcTemplates  = $tempData['qcTemplates'] ?? [];
-        $qcSessions   = $tempData['qcSessions'] ?? [];
-        $reworkOrders = $tempData['reworkOrders'] ?? [];
+        $statusStyles = config('nexora.statusStyles');
+        $partStyles   = config('nexora.partStyles');
+        $qcTemplates  = $tempData['qcTemplates'];
+        $qcSessions   = $tempData['qcSessions'];
+        $reworkOrders = $tempData['reworkOrders'];
     @endphp
 </head>
 <body class="font-body text-white flex flex-col h-full">
