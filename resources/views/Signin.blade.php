@@ -338,9 +338,6 @@
         }, 400); 
     }
 
-    // Attach the new smooth exit to your links
-    // (Note: This checks if the buttons exist first, so it works safely on both pages)
-    
     const signInBtn = document.getElementById("signInBtn");
     const headerLogoBtn = document.getElementById("headerLogoBtn");
 
