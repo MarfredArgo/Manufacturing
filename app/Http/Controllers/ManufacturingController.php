@@ -27,7 +27,6 @@ class ManufacturingController extends Controller
             'reworkOrders' => $data['reworkOrders'],
             'statusStyles' => config('nexora.statusStyles'),
             'partStyles'   => config('nexora.partStyles'),
-            // Keep $tempData for any blade partials that still reference it
             'tempData'     => array_merge($data, [
                 'statusStyles' => config('nexora.statusStyles'),
                 'partStyles'   => config('nexora.partStyles'),
@@ -36,17 +35,10 @@ class ManufacturingController extends Controller
     }
 
     // ── Work Order: update parts + auto-finish + send to QC ─────────────────
-    // NOTE: the frontend sends orderIndex (a position into workOrdersData,
-    // i.e. @json($workOrders) from the blade) and partChanges keyed the same
-    // way — positionally, not by any DB id, since the old tempData.json had
-    // no id field on parts at all. To keep position N meaning the same work
-    // order here as it does in the blade, this query uses the exact same
-    // ordering as ManufacturingDataService::workOrders() (id DESC), and the
-    // parts() relation is ordered by id ASC so part position stays stable.
     public function updateOrder(Request $request): JsonResponse
     {
         $orderIndex  = (int)  $request->input('orderIndex');
-        $partChanges = (array) $request->input('partChanges', []); // [position => newStatus]
+        $partChanges = (array) $request->input('partChanges', []);
         $sendToQC    = (bool)  $request->input('sendToQC', false);
 
         $order = WorkOrder::with('parts')->orderBy('id', 'desc')->get()->values()->get($orderIndex);
@@ -67,7 +59,6 @@ class ManufacturingController extends Controller
 
             $order->refresh()->load('parts');
 
-            // Auto-finish: if all parts now Ready and status is Building
             $allReady = $order->parts->every(fn ($p) => $p->status === 'Ready');
             if ($allReady && $order->status === 'Building') {
                 $order->status = 'Finished';
@@ -103,8 +94,6 @@ class ManufacturingController extends Controller
                 $session = QcSession::create(['wo_id' => $woId, 'build_type' => 'gaming', 'tech' => '']);
             }
 
-            // Replace this session's results wholesale, same as the old
-            // "$s['results'] = $cleanResults" overwrite behavior.
             $session->results()->delete();
             foreach ($cleanResults as $r) {
                 $session->results()->create([
@@ -157,9 +146,6 @@ class ManufacturingController extends Controller
     }
 
     // ── Rework: update status / priority / notes / escalate ──────────────────
-    // NOTE: frontend sends reworkIndex (a position into reworkData, i.e.
-    // @json($reworkOrders) from the blade), not the RW-2024-xxx id — resolve
-    // via the same ordering ManufacturingDataService::reworkOrders() uses.
     public function updateRework(Request $request): JsonResponse
     {
         $reworkIndex = (int) $request->input('reworkIndex');
@@ -225,10 +211,6 @@ class ManufacturingController extends Controller
     }
 
     // ── Analytics: add note to a QC session ──────────────────────────────────
-    // NOTE: the live schema has no dedicated notes table for QC sessions.
-    // Stored as a note-only qc_results row (check_id/value left null) so
-    // nothing is silently dropped — flagging this as worth a proper
-    // qc_session_notes table if you want cleaner separation later.
     public function addQcNote(Request $request): JsonResponse
     {
         $woId = $request->input('woId');

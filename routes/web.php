@@ -24,7 +24,7 @@ Route::post('/workorder/assignment',             [ManufacturingController::class
 Route::post('/workorder/assign-worker',          [ManufacturingController::class, 'assignWorker']);
 
 // Pages
-Route::get('/',              [ManufacturingController::class, 'index']);
+Route::get('/',              fn() => view('Signin'));
 Route::get('/manufacturing', [ManufacturingController::class, 'index']);
 Route::get('/welcome',       fn() => view('welcome'));
 Route::get('/contactus',     fn() => view('Contactus'));
