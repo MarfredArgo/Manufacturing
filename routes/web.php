@@ -28,4 +28,4 @@ Route::get('/manufacturing', fn() => view('Manufacturing'));
 Route::get('/welcome',       fn() => view('welcome'));
 Route::get('/contactus',     fn() => view('Contactus'));
 Route::get('/signin',        fn() => view('Signin'));
-Route::get('/',              fn() => view('/manufacturing'));
+Route::get('/',              fn() => view('Manufacturing'));
