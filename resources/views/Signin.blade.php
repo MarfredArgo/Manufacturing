@@ -180,6 +180,19 @@
             margin-bottom: 32px;
         }
 
+<<<<<<< HEAD
+=======
+        .login-error {
+            background: #FEE2E2;
+            color: #B91C1C;
+            border: 1px solid #FCA5A5;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+>>>>>>> 0bbec8f2458e19f74de04b6c5913c55f6e74300d
         .input-group {
             margin-bottom: 20px;
         }
@@ -271,7 +284,11 @@
     <div class="main-wrapper">
         
         <header class="header">
+<<<<<<< HEAD
             <a href="signIn.html" class="nexora-logo">
+=======
+            <a href="/" class="nexora-logo">
+>>>>>>> 0bbec8f2458e19f74de04b6c5913c55f6e74300d
                 <img src="logo/Banner Transparent.png" alt="Nexora Logo">
             </a>
         </header>
@@ -280,16 +297,33 @@
             <div class="form-col">
                 <div class="login-card">
                     <h1>Sign In</h1>
+<<<<<<< HEAD
                     
                     <form>
                         <div class="input-group">
                             <label for="username">Username</label>
                             <input id="username" type="text" placeholder="Enter Username">
+=======
+
+                    @if ($errors->any())
+                        <p class="login-error">{{ $errors->first() }}</p>
+                    @endif
+
+                    <form method="POST" action="{{ route('login') }}">
+                        @csrf
+                        <div class="input-group">
+                            <label for="username">Username</label>
+                            <input id="username" name="username" type="text" placeholder="Enter Username" value="{{ old('username') }}">
+>>>>>>> 0bbec8f2458e19f74de04b6c5913c55f6e74300d
                         </div>
                         
                         <div class="input-group">
                             <label for="password">Password</label>
+<<<<<<< HEAD
                             <input id="password" type="password" placeholder="Enter Password">
+=======
+                            <input id="password" name="password" type="password" placeholder="Enter Password">
+>>>>>>> 0bbec8f2458e19f74de04b6c5913c55f6e74300d
                         </div>
                         
                         <button type="submit" id="signInBtn">Log In</button>
@@ -339,11 +373,20 @@
     }
 
     const signInBtn = document.getElementById("signInBtn");
+<<<<<<< HEAD
     const headerLogoBtn = document.getElementById("headerLogoBtn");
 
     if (signInBtn) signInBtn.addEventListener("click", (e) => smoothExit(e, "/manufacturing"));
     if (contactBtn) contactBtn.addEventListener("click", (e) => smoothExit(e, "contactus.html"));
     if (headerLogoBtn) headerLogoBtn.addEventListener("click", (e) => smoothExit(e, "signIn.html"));
+=======
+    // signInBtn is a native type="submit" button inside a real <form
+    // method="POST" action="{{ route('login') }}">, so it just submits
+    // normally now — no JS interception needed (or wanted: the old
+    // handler here called preventDefault() and hard-navigated straight
+    // to /manufacturing regardless of whether the credentials were
+    // valid, which meant the login page never actually checked anything).
+>>>>>>> 0bbec8f2458e19f74de04b6c5913c55f6e74300d
 </script>
 
 </body>

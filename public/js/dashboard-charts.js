@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 // dashboard-charts.js
 // Requires Chart.js to be loaded before this file.
 // window.dashboardData must be set by dashboard.blade.php before DOMContentLoaded fires.
 
 document.addEventListener('DOMContentLoaded', function () {
+=======
+(function () {
+>>>>>>> 0bbec8f2458e19f74de04b6c5913c55f6e74300d
     if (!document.getElementById('dashWeekChart') || !window.dashboardData) return;
 
     const { days, weekCounts } = window.dashboardData;
@@ -26,9 +30,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 tooltip: { callbacks: { label: c => c.parsed.y + ' builds' } }
             },
             scales: {
+<<<<<<< HEAD
                 x: { grid: { display: false }, ticks: { color: '#869FB1', font: { size: 11 } }, border: { color: '#1B3A6B' } },
                 y: { grid: { color: '#1B3A6B' }, ticks: { color: '#869FB1', font: { size: 11 }, stepSize: 2 }, border: { display: false }, min: 0 }
             }
         }
     });
 });
+=======
+                x: { grid: { display: false }, ticks: { color: '#5B7A9D', font: { size: 11 } }, border: { color: '#1B3A6B' } },
+                y: { grid: { color: '#E2E8F0' }, ticks: { color: '#5B7A9D', font: { size: 11 }, stepSize: 2 }, border: { display: false }, min: 0 }
+            }
+        }
+    });
+})();
+>>>>>>> 0bbec8f2458e19f74de04b6c5913c55f6e74300d

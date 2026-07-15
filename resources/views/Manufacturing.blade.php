@@ -170,11 +170,17 @@
             <div class="flex-1 h-full p-4 bg-nexora-off-white border-[1px] border-nexora-corporate rounded-lg">
                 {{-- Dashboard --}}
                 @if($curPage === 'dashboard')
+<<<<<<< HEAD
                     <script src="{{ asset('js/dashboard-charts.js') }}"></script>
                     @include('partials.dashboard')
                     {{-- Reports --}}
                 @elseif($curPage === 'reports')
                     <script src="{{ asset('js/reports-charts.js') }}"></script>
+=======
+                    @include('partials.dashboard')
+                    {{-- Reports --}}
+                @elseif($curPage === 'reports')
+>>>>>>> 0bbec8f2458e19f74de04b6c5913c55f6e74300d
                     @include('partials.reports')            
                 {{-- Work Orders --}}
                 @elseif($curPage === 'orders')

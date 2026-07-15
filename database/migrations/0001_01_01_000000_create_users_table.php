@@ -9,6 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+<<<<<<< HEAD
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
@@ -36,6 +37,21 @@ return new class extends Migration
             $table->integer('last_activity')->index();
         });
     }
+=======
+        public function up(): void
+        {
+            Schema::create('users', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('username')->unique();
+                $table->string('email')->unique();
+                $table->string('password');
+                $table->string('staff_id')->nullable();
+                $table->string('role')->default('user');
+                $table->timestamps();
+            });
+        }
+>>>>>>> 0bbec8f2458e19f74de04b6c5913c55f6e74300d
 
     /**
      * Reverse the migrations.
