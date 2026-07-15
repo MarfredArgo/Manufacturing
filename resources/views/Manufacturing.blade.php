@@ -169,7 +169,7 @@
     @endif
         {{-- Main Content --}}
         <main class="flex flex-col h-full h-full mx-auto w-full">
-            <div class="flex-1 h-full p-4 bg-nexora-off-white border-[1px] border-nexora-corporate rounded-lg">
+            <div class="flex-1 h-full p-4 bg-nexora-off-white border-[1px] border-nexora-corporate rounded-lg overflow-y-auto [&::-webkit-scrollbar]:hidden">
                 {{-- Dashboard --}}
                 @if($curPage === 'dashboard')
                     @include('partials.dashboard')

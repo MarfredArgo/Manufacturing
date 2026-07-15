@@ -23,7 +23,7 @@
             },
             scales: {
                 x: { grid: { display: false }, ticks: { color: '#5B7A9D', font: { size: 11 } }, border: { color: '#1B3A6B' } },
-                y: { grid: { color: '#E2E8F0' }, ticks: { color: '#5B7A9D', font: { size: 11 }, stepSize: 2 }, border: { display: false }, min: 0 }
+                y: { grid: { display: true, color: '#869FB1' }, ticks: { color: '#5B7A9D', font: { size: 11 }, stepSize: 2 }, border: { display: false }, min: 0 }
             }
         }
     });

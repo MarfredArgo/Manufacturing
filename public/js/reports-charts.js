@@ -18,7 +18,7 @@
             plugins: { legend: { display: false } },
             scales: {
                 x: { grid: { display: false }, ticks: { color: '#5B7A9D', font: { size: 11 } }, border: { color: '#1B3A6B' } },
-                y: { grid: { color: '#E2E8F0' }, ticks: { color: '#5B7A9D', font: { size: 11 }, stepSize: 1 }, border: { display: false }, min: 0 }
+                y: { grid: { display: true, color: '#869FB1' }, ticks: { color: '#5B7A9D', font: { size: 11 }, stepSize: 1 }, border: { display: false }, min: 0 }
             }
         }
     });
@@ -48,8 +48,8 @@
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                x: { grid: { display: false }, ticks: { color: '#5B7A9D', font: { size: 11 } }, border: { color: '#1B3A6B' } },
-                y: { grid: { color: '#E2E8F0' }, ticks: { color: '#5B7A9D', font: { size: 11 }, stepSize: 2 }, border: { display: false }, min: 0 }
+                x: { grid: { display: true, color: '#869FB1' }, ticks: { color: '#5B7A9D', font: { size: 11 } }, border: { color: '#1B3A6B' } },
+                y: { grid: { display: false }, ticks: { color: '#5B7A9D', font: { size: 11 }, stepSize: 2 }, border: { display: false }, min: 0 }
             }
         }
     });
@@ -61,7 +61,7 @@
             datasets: [{
                 data: [partsReady, partsSourcing, partsMissing],
                 backgroundColor: ['#16A34A', '#D97706', '#DC2626'],
-                borderColor: '#E2E8F0', borderWidth: 3, hoverOffset: 4
+                borderColor: '#132B52', borderWidth: 3, hoverOffset: 4
             }]
         },
         options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { display: false } } }
