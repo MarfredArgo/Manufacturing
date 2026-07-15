@@ -32,13 +32,9 @@ RUN chmod -R 775 storage bootstrap/cache \
 
 EXPOSE 8080
 
-<<<<<<< HEAD
-CMD php artisan config:cache \
-=======
 CMD php artisan config:clear \
     && php artisan cache:clear \
     && php artisan config:cache \
->>>>>>> 0bbec8f2458e19f74de04b6c5913c55f6e74300d
     && php artisan route:cache \
     && php artisan view:cache \
     && php artisan serve --host=0.0.0.0 --port=8080
