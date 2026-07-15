@@ -1,0 +1,100 @@
+// shared.js
+// ── Generic Modal Helpers ──────────────────────────────────────────────────
+function openModal(id) {
+    document.getElementById(id).classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+function handleBackdropClick(event, id) {
+    if (event.target === event.currentTarget) closeModal(id);
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('.modal-backdrop:not(.hidden)').forEach(el => {
+        closeModal(el.id);
+    });
+});
+
+// ── Success Notification ───────────────────────────────────────────────────
+function showSuccess(msg) {
+    document.getElementById('success-text').textContent = msg;
+    document.getElementById('success-notif').classList.remove('hidden');
+}
+
+function closeSuccessNotif() {
+    document.getElementById('success-notif').classList.add('hidden');
+}
+
+// ── Shared: showOrder (Status, BOM, Assignment) ────────────────────────────
+function showOrder(index) {
+    document.querySelectorAll('[id^="detail-"]').forEach(el => el.classList.add('hidden'));
+    const detailPanel = document.getElementById('detail-' + index);
+    if (detailPanel) detailPanel.classList.remove('hidden');
+
+    document.querySelectorAll('[id^="card-"]').forEach(el => {
+        el.classList.remove('bg-nexora-steel-blue/80');
+        el.classList.add('hover:bg-nexora-steel-blue/50', 'hover:-translate-y-[2px]', 'hover:shadow-md');
+    });
+
+    const activeCard = document.getElementById('card-' + index);
+    if (activeCard) {
+        activeCard.classList.add('bg-nexora-steel-blue/80');
+        activeCard.classList.remove('hover:bg-nexora-steel-blue/50', 'hover:-translate-y-[2px]', 'hover:shadow-md');
+    }
+
+    if (document.getElementById('assignment-banner')) {
+        selectedOrderIndex  = index;
+        selectedWorkerIndex = null;
+        history.replaceState({}, '', `?page=orders&sub=assignment&order=${index}`);
+        updateAssignmentBanner();
+        updateWorkerSelectionHighlight();
+    }
+}
+
+// ── Shared: Filter (AllOrder + Status) ────────────────────────────────────
+let currentFilter = 'all';
+
+function filterOrders(status) {
+    currentFilter = status;
+    const search = document.getElementById('search-input').value.toLowerCase();
+
+    document.querySelectorAll('[id^="card-"]').forEach(card => {
+        const matchesStatus = status === 'all' || card.dataset.status === status;
+        const matchesSearch = card.dataset.name.toLowerCase().includes(search);
+        card.classList.toggle('hidden', !(matchesStatus && matchesSearch));
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('bg-nexora-corporate', 'text-white');
+        btn.classList.add('text-nexora-deep-navy');
+    });
+
+    document.querySelector(`[data-filter="${status}"]`).classList.add('bg-nexora-corporate', 'text-white');
+    document.querySelector(`[data-filter="${status}"]`).classList.remove('text-nexora-deep-navy');
+
+    reanimateRows();
+}
+
+// ── Shared: Table Row Animation ────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.row-animate').forEach(row => {
+        row.addEventListener('animationend', () => row.classList.add('done'));
+    });
+    reanimateRows();
+});
+
+function reanimateRows() {
+    const visibleRows = document.querySelectorAll('.row-animate:not(.hidden)');
+    visibleRows.forEach(row => row.classList.remove('animate', 'done'));
+    setTimeout(() => {
+        visibleRows.forEach((row, i) => {
+            setTimeout(() => row.classList.add('animate'), i * 20);
+        });
+    }, 20);
+}

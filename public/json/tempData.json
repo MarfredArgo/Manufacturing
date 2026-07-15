@@ -1,0 +1,1723 @@
+{
+    "workOrders": [
+        {
+            "id": "WO-2024-0041",
+            "name": "Apex Gaming Pro",
+            "specs": "RTX 4070 · I7-14700K · 32GB DDR5",
+            "status": "Building",
+            "due": "Due Jun 30",
+            "source": "from e-commerce #ORD-88234",
+            "assigned": "Marco R.",
+            "parts": [
+                {
+                    "name": "Intel Core I7-14700K",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "MSI MAG Z790 Tomahawk",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair Vengeance 32GB DDR5",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA GeForce RTX 4070",
+                    "category": "GPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Samsung 990 Pro 1TB NVMe",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NZXT H7 Flow ATX Case",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair RM850x PSU",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Noctua NH-D15 CPU Cooler",
+                    "category": "Cooler",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "Noctua NF-A14 Case Fan x3",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0040",
+            "name": "Creator Workstation X",
+            "specs": "RTX 4090 · Ryzen 9 7950X · 64GB DDR5",
+            "status": "QC Check",
+            "due": "Due Jun 29",
+            "source": "from e-commerce #ORD-88201",
+            "assigned": "Sarah L.",
+            "parts": [
+                {
+                    "name": "AMD Ryzen 9 7950X",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "ASUS ROG Crosshair X670E",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "G.Skill Trident 64GB DDR5",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA GeForce RTX 4090",
+                    "category": "GPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "WD Black SN850X 2TB",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Lian Li PC-O11 Dynamic",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Seasonic Prime TX-1000",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Noctua NH-D15 CPU Cooler",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Lian Li UNI FAN SL120 x3",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0039",
+            "name": "Budget Office Build",
+            "specs": "Intel Arc · I5-13400 · 16GB DDR4",
+            "status": "Pending",
+            "due": "Due Jul 2",
+            "source": "from e-commerce #ORD-88189",
+            "assigned": "Marco R.",
+            "parts": [
+                {
+                    "name": "Intel Core I5-13400",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "MSI PRO B660M-A",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Kingston Fury 16GB DDR4",
+                    "category": "RAM",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "Intel Arc A380",
+                    "category": "GPU",
+                    "status": "Missing"
+                },
+                {
+                    "name": "Ramsta 2.5\" 512GB SSD",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Cooler Master MasterBox Q300L",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Cooler Master MWE 550W",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Intel Stock Cooler",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Generic 120mm Case Fan x2",
+                    "category": "Case Fans",
+                    "status": "Missing"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0038",
+            "name": "Budget AMD Gaming Build",
+            "specs": "Radeon RX6600 · Ryzen 5 5600X · 16GB DDR4",
+            "status": "Cancelled",
+            "due": "Due Jul 5",
+            "source": "from e-commerce #ORD-88150",
+            "assigned": "Jake M.",
+            "parts": [
+                {
+                    "name": "AMD Ryzen 5 5600X",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Gigabyte B550M DS3H",
+                    "category": "Motherboard",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "Kingston Fury 16GB DDR4",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "AMD Radeon RX6600",
+                    "category": "GPU",
+                    "status": "Missing"
+                },
+                {
+                    "name": "Kingston KC600 512GB SSD",
+                    "category": "Storage",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "Darkflash DLM21 Mesh Case",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair CX650 PSU",
+                    "category": "PSU",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "Cooler Master Hyper 212",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Darkflash 120mm Fan x2",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0037",
+            "name": "Apex Gaming Starter",
+            "specs": "RTX 4060 · I5-14600K · 16GB DDR5",
+            "status": "Finished",
+            "due": "Completed Jun 27",
+            "source": "from e-commerce #ORD-88102",
+            "assigned": "Marco R.",
+            "parts": [
+                {
+                    "name": "Intel Core I5-14600K",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "MSI MAG B760 Tomahawk",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair Vengeance 16GB DDR5",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA GeForce RTX 4060",
+                    "category": "GPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Kingston NV2 500GB NVMe",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NZXT H5 Flow ATX Case",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair CV650 PSU",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "DeepCool AK400 Cooler",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NZXT Aer F120 Fan x2",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0036",
+            "name": "Midrange Gaming Plus",
+            "specs": "RTX 4070 Super · Ryzen 7 7700 · 32GB DDR5",
+            "status": "Building",
+            "due": "Due Jul 3",
+            "source": "from e-commerce #ORD-88095",
+            "assigned": "Sarah L.",
+            "parts": [
+                {
+                    "name": "AMD Ryzen 7 7700",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "ASUS TUF B650-PLUS",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair Vengeance 32GB DDR5",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA RTX 4070 Super",
+                    "category": "GPU",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "Samsung 980 Pro 1TB",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NZXT H6 Flow",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Cooler Master MWE 750W",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "DeepCool AK620 Cooler",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NZXT Aer F140 Fan x3",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0035",
+            "name": "Streaming Setup Pro",
+            "specs": "RTX 4080 · I9-14900K · 32GB DDR5",
+            "status": "QC Check",
+            "due": "Due Jul 1",
+            "source": "from e-commerce #ORD-88080",
+            "assigned": "Marco R.",
+            "parts": [
+                {
+                    "name": "Intel Core I9-14900K",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Gigabyte Z790 AORUS Elite",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "G.Skill Trident 32GB DDR5",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA RTX 4080",
+                    "category": "GPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "WD Black SN850X 2TB",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Lian Li Lancool III",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair RM1000x",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair H150i Elite AIO",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Lian Li UNI FAN SL140 x3",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0034",
+            "name": "Compact ITX Build",
+            "specs": "RTX 4060 · Ryzen 5 7600 · 16GB DDR5",
+            "status": "Pending",
+            "due": "Due Jul 6",
+            "source": "from e-commerce #ORD-88070",
+            "assigned": "Unassigned",
+            "parts": [
+                {
+                    "name": "AMD Ryzen 5 7600",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "ASRock B650I ITX",
+                    "category": "Motherboard",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "Kingston Fury 16GB DDR5",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA RTX 4060",
+                    "category": "GPU",
+                    "status": "Missing"
+                },
+                {
+                    "name": "Crucial P3 1TB NVMe",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Cooler Master NR200",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair SF750 SFX PSU",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Noctua NH-L9a Low Profile",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Cooler Master 120mm Fan x2",
+                    "category": "Case Fans",
+                    "status": "Sourcing"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0033",
+            "name": "Office Basic Build",
+            "specs": "Integrated Graphics · I3-13100 · 8GB DDR4",
+            "status": "Finished",
+            "due": "Completed Jun 28",
+            "source": "from e-commerce #ORD-88055",
+            "assigned": "Jake M.",
+            "parts": [
+                {
+                    "name": "Intel Core I3-13100",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Gigabyte H610M",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Kingston 8GB DDR4",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Integrated UHD Graphics",
+                    "category": "GPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Kingston A400 240GB SSD",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Generic mATX Case",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "500W Generic PSU",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Intel Stock Cooler",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Generic 120mm Fan x1",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0032",
+            "name": "Entry-Level Gaming",
+            "specs": "GTX 1660 Super · Ryzen 5 3600 · 16GB DDR4",
+            "status": "Building",
+            "due": "Due Jul 4",
+            "source": "from e-commerce #ORD-88030",
+            "assigned": "Sarah L.",
+            "parts": [
+                {
+                    "name": "AMD Ryzen 5 3600",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "MSI B450M Mortar",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Kingston Fury 16GB DDR4",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA GTX 1660 Super",
+                    "category": "GPU",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "Crucial BX500 480GB SSD",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Tecware Forge M Case",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair CV550 PSU",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Cooler Master Hyper 212",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Generic 120mm Fan x2",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0031",
+            "name": "High FPS Esports Build",
+            "specs": "RTX 4060 Ti · I5-14400F · 16GB DDR5",
+            "status": "Building",
+            "due": "Due Jul 5",
+            "source": "from e-commerce #ORD-88010",
+            "assigned": "Marco R.",
+            "parts": [
+                {
+                    "name": "Intel Core I5-14400F",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "ASUS PRIME B760M-A",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair Vengeance 16GB DDR5",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA RTX 4060 Ti",
+                    "category": "GPU",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "Kingston NV2 1TB NVMe",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Tecware Nexus Air M2",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Cooler Master MWE 650W",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "DeepCool AK400 Cooler",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Tecware 120mm Fan x3",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0030",
+            "name": "Ultra Workstation Build",
+            "specs": "RTX 4090 · Threadripper 7960X · 128GB DDR5",
+            "status": "Pending",
+            "due": "Due Jul 8",
+            "source": "from e-commerce #ORD-87995",
+            "assigned": "Unassigned",
+            "parts": [
+                {
+                    "name": "AMD Threadripper 7960X",
+                    "category": "CPU",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "ASUS Pro WS TRX50-SAGE",
+                    "category": "Motherboard",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "Corsair Dominator 128GB DDR5",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA RTX 4090",
+                    "category": "GPU",
+                    "status": "Missing"
+                },
+                {
+                    "name": "Samsung 990 Pro 4TB",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Phanteks Enthoo Pro 2",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Seasonic Prime TX-1600",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair H150i Elite 360 AIO",
+                    "category": "Cooler",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "Phanteks D30 140mm Fan x6",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0029",
+            "name": "Student Budget Build",
+            "specs": "RX 580 · Ryzen 5 2600 · 16GB DDR4",
+            "status": "Cancelled",
+            "due": "Due Jul 7",
+            "source": "from e-commerce #ORD-87970",
+            "assigned": "Jake M.",
+            "parts": [
+                {
+                    "name": "AMD Ryzen 5 2600",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Gigabyte A320M",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Kingston 16GB DDR4",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "AMD Radeon RX 580",
+                    "category": "GPU",
+                    "status": "Missing"
+                },
+                {
+                    "name": "WD Green 480GB SSD",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Darkflash DLM22 Case",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Generic 600W PSU",
+                    "category": "PSU",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "AMD Wraith Stealth Cooler",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Generic 120mm Fan x2",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0028",
+            "name": "Mini Office Build",
+            "specs": "Integrated · Ryzen 3 4300G · 8GB DDR4",
+            "status": "Finished",
+            "due": "Completed Jun 29",
+            "source": "from e-commerce #ORD-87940",
+            "assigned": "Sarah L.",
+            "parts": [
+                {
+                    "name": "AMD Ryzen 3 4300G",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "ASRock A520M-ITX",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Kingston 8GB DDR4",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Integrated Vega Graphics",
+                    "category": "GPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Crucial BX500 240GB SSD",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "InWin Chopin Mini Case",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Built-in PSU",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "AMD Wraith Stealth Cooler",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Generic 80mm Fan x1",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0027",
+            "name": "Content Creator Lite",
+            "specs": "RTX 3060 · Ryzen 7 5800X · 32GB DDR4",
+            "status": "QC Check",
+            "due": "Due Jul 2",
+            "source": "from e-commerce #ORD-87910",
+            "assigned": "Marco R.",
+            "parts": [
+                {
+                    "name": "AMD Ryzen 7 5800X",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "MSI B550 Tomahawk",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair Vengeance 32GB DDR4",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA RTX 3060",
+                    "category": "GPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Samsung 970 Evo 1TB",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NZXT H510 Case",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair RM750 PSU",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Noctua NH-U12S Cooler",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NZXT Aer F120 Fan x2",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0026",
+            "name": "1440p Gaming Beast",
+            "specs": "RTX 4070 Ti · Ryzen 7 7800X3D · 32GB DDR5",
+            "status": "Building",
+            "due": "Due Jul 6",
+            "source": "from e-commerce #ORD-87890",
+            "assigned": "Jake M.",
+            "parts": [
+                {
+                    "name": "AMD Ryzen 7 7800X3D",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "ASUS TUF B650-PLUS",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "G.Skill Trident 32GB DDR5",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA RTX 4070 Ti",
+                    "category": "GPU",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "WD Black SN770 1TB",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Lian Li Lancool 216",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair RM850e",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "DeepCool LT720 360 AIO",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Lian Li UNI FAN SL120 x3",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0025",
+            "name": "Office Productivity Plus",
+            "specs": "Integrated · I5-12400 · 16GB DDR4",
+            "status": "Finished",
+            "due": "Completed Jun 30",
+            "source": "from e-commerce #ORD-87860",
+            "assigned": "Sarah L.",
+            "parts": [
+                {
+                    "name": "Intel Core I5-12400",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Gigabyte B660M DS3H",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Kingston 16GB DDR4",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Integrated UHD Graphics",
+                    "category": "GPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Crucial P3 500GB NVMe",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Cooler Master N200 Case",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair CV550 PSU",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Intel Stock Cooler",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Generic 120mm Fan x1",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0024",
+            "name": "Streaming Budget Setup",
+            "specs": "RTX 3050 · Ryzen 5 5500 · 16GB DDR4",
+            "status": "Pending",
+            "due": "Due Jul 9",
+            "source": "from e-commerce #ORD-87820",
+            "assigned": "Unassigned",
+            "parts": [
+                {
+                    "name": "AMD Ryzen 5 5500",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "MSI A520M PRO",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Kingston Fury 16GB DDR4",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA RTX 3050",
+                    "category": "GPU",
+                    "status": "Missing"
+                },
+                {
+                    "name": "Kingston NV1 500GB",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Tecware Flatline Case",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Cooler Master MWE 600W",
+                    "category": "PSU",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "AMD Wraith Stealth Cooler",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Generic 120mm Fan x2",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0023",
+            "name": "Retro Gaming Build",
+            "specs": "GTX 1050 Ti · I7-8700 · 16GB DDR4",
+            "status": "Cancelled",
+            "due": "Due Jul 10",
+            "source": "from e-commerce #ORD-87790",
+            "assigned": "Marco R.",
+            "parts": [
+                {
+                    "name": "Intel Core I7-8700",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "ASUS H310M",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Kingston 16GB DDR4",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA GTX 1050 Ti",
+                    "category": "GPU",
+                    "status": "Missing"
+                },
+                {
+                    "name": "WD Blue 1TB HDD",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Generic ATX Case",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "500W Generic PSU",
+                    "category": "PSU",
+                    "status": "Sourcing"
+                },
+                {
+                    "name": "Intel Stock Cooler",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Generic 120mm Fan x1",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        },
+        {
+            "id": "WO-2024-0022",
+            "name": "Creator Editing Rig",
+            "specs": "RTX 4080 · I7-14700K · 64GB DDR5",
+            "status": "QC Check",
+            "due": "Due Jul 4",
+            "source": "from e-commerce #ORD-87750",
+            "assigned": "Sarah L.",
+            "parts": [
+                {
+                    "name": "Intel Core I7-14700K",
+                    "category": "CPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "MSI Z790 Carbon WiFi",
+                    "category": "Motherboard",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair Dominator 64GB DDR5",
+                    "category": "RAM",
+                    "status": "Ready"
+                },
+                {
+                    "name": "NVIDIA RTX 4080",
+                    "category": "GPU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Samsung 990 Pro 2TB",
+                    "category": "Storage",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Fractal Design Meshify 2",
+                    "category": "Case",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Seasonic Focus GX-1000",
+                    "category": "PSU",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Corsair H115i Elite AIO",
+                    "category": "Cooler",
+                    "status": "Ready"
+                },
+                {
+                    "name": "Fractal Design Dynamic X2 x3",
+                    "category": "Case Fans",
+                    "status": "Ready"
+                }
+            ]
+        }
+    ],
+    "workers": [
+        {
+            "id": 1,
+            "name": "Marco R.",
+            "role": "Lead PC Builder",
+            "notes": "Specializes in high-end gaming builds and custom cable management."
+        },
+        {
+            "id": 2,
+            "name": "Sarah L.",
+            "role": "Senior Technician",
+            "notes": "Handles workstation and creator builds, QC certified."
+        },
+        {
+            "id": 3,
+            "name": "Jake M.",
+            "role": "Assembly Technician",
+            "notes": "Focuses on budget and office builds, fast turnaround."
+        }
+    ],
+    "statusStyles": {
+        "Building": {
+            "pill": "bg-nexora-warning\/80 text-nexora-off-white",
+            "dot": "bg-nexora-warning"
+        },
+        "QC Check": {
+            "pill": "bg-nexora-info\/80 text-nexora-off-white",
+            "dot": "bg-nexora-info"
+        },
+        "Cancelled": {
+            "pill": "bg-nexora-gray\/80 text-nexora-off-white",
+            "dot": "bg-nexora-gray"
+        },
+        "Pending": {
+            "pill": "bg-nexora-danger\/80 text-nexora-off-white",
+            "dot": "bg-nexora-danger"
+        },
+        "Finished": {
+            "pill": "bg-nexora-success\/80 text-nexora-off-white",
+            "dot": "bg-nexora-success"
+        }
+    },
+    "partStyles": {
+        "Ready": {
+            "dot": "bg-nexora-success",
+            "text": "text-nexora-success"
+        },
+        "Sourcing": {
+            "dot": "bg-nexora-warning",
+            "text": "text-nexora-warning"
+        },
+        "Missing": {
+            "dot": "bg-nexora-danger",
+            "text": "text-nexora-danger"
+        }
+    },
+    "qcTemplates": {
+        "gaming": [
+            {
+                "id": "g01",
+                "category": "CPU",
+                "name": "Cinebench R23 Multicore",
+                "tool": "Cinebench R23",
+                "target": 20000,
+                "operator": ">=",
+                "unit": "pts"
+            },
+            {
+                "id": "g02",
+                "category": "CPU",
+                "name": "CPU Temp Under Load",
+                "tool": "HWiNFO64",
+                "target": 85,
+                "operator": "<=",
+                "unit": "°C"
+            },
+            {
+                "id": "g03",
+                "category": "GPU",
+                "name": "3DMark TimeSpy",
+                "tool": "3DMark",
+                "target": 10000,
+                "operator": ">=",
+                "unit": "pts"
+            },
+            {
+                "id": "g04",
+                "category": "GPU",
+                "name": "GPU Temp Under Load",
+                "tool": "HWiNFO64",
+                "target": 85,
+                "operator": "<=",
+                "unit": "°C"
+            },
+            {
+                "id": "g05",
+                "category": "RAM",
+                "name": "RAM Speed (XMP\/EXPO)",
+                "tool": "CPU-Z",
+                "target": 5200,
+                "operator": ">=",
+                "unit": "MT\/s"
+            },
+            {
+                "id": "g06",
+                "category": "Storage",
+                "name": "NVMe Sequential Read",
+                "tool": "CrystalDiskMark",
+                "target": 5000,
+                "operator": ">=",
+                "unit": "MB\/s"
+            },
+            {
+                "id": "g07",
+                "category": "System",
+                "name": "POST & Boot Sequence",
+                "tool": "Visual",
+                "target": 1,
+                "operator": "=",
+                "unit": "pass"
+            },
+            {
+                "id": "g08",
+                "category": "System",
+                "name": "Cable Management Check",
+                "tool": "Visual",
+                "target": 1,
+                "operator": "=",
+                "unit": "pass"
+            }
+        ],
+        "workstation": [
+            {
+                "id": "w01",
+                "category": "CPU",
+                "name": "Cinebench R23 Multicore",
+                "tool": "Cinebench R23",
+                "target": 30000,
+                "operator": ">=",
+                "unit": "pts"
+            },
+            {
+                "id": "w02",
+                "category": "CPU",
+                "name": "CPU Temp Under Load",
+                "tool": "HWiNFO64",
+                "target": 85,
+                "operator": "<=",
+                "unit": "°C"
+            },
+            {
+                "id": "w03",
+                "category": "GPU",
+                "name": "3DMark TimeSpy Extreme",
+                "tool": "3DMark",
+                "target": 12000,
+                "operator": ">=",
+                "unit": "pts"
+            },
+            {
+                "id": "w04",
+                "category": "GPU",
+                "name": "GPU Temp Under Load",
+                "tool": "HWiNFO64",
+                "target": 83,
+                "operator": "<=",
+                "unit": "°C"
+            },
+            {
+                "id": "w05",
+                "category": "RAM",
+                "name": "RAM Speed (XMP\/EXPO)",
+                "tool": "CPU-Z",
+                "target": 5600,
+                "operator": ">=",
+                "unit": "MT\/s"
+            },
+            {
+                "id": "w06",
+                "category": "Storage",
+                "name": "NVMe Sequential Read",
+                "tool": "CrystalDiskMark",
+                "target": 6500,
+                "operator": ">=",
+                "unit": "MB\/s"
+            },
+            {
+                "id": "w07",
+                "category": "Storage",
+                "name": "NVMe Sequential Write",
+                "tool": "CrystalDiskMark",
+                "target": 5000,
+                "operator": ">=",
+                "unit": "MB\/s"
+            },
+            {
+                "id": "w08",
+                "category": "System",
+                "name": "POST & Boot Sequence",
+                "tool": "Visual",
+                "target": 1,
+                "operator": "=",
+                "unit": "pass"
+            },
+            {
+                "id": "w09",
+                "category": "System",
+                "name": "Cable Management Check",
+                "tool": "Visual",
+                "target": 1,
+                "operator": "=",
+                "unit": "pass"
+            }
+        ],
+        "budget": [
+            {
+                "id": "b01",
+                "category": "CPU",
+                "name": "Cinebench R23 Multicore",
+                "tool": "Cinebench R23",
+                "target": 8000,
+                "operator": ">=",
+                "unit": "pts"
+            },
+            {
+                "id": "b02",
+                "category": "CPU",
+                "name": "CPU Temp Under Load",
+                "tool": "HWiNFO64",
+                "target": 90,
+                "operator": "<=",
+                "unit": "°C"
+            },
+            {
+                "id": "b03",
+                "category": "GPU",
+                "name": "3DMark Night Raid",
+                "tool": "3DMark",
+                "target": 15000,
+                "operator": ">=",
+                "unit": "pts"
+            },
+            {
+                "id": "b04",
+                "category": "RAM",
+                "name": "RAM Speed",
+                "tool": "CPU-Z",
+                "target": 3200,
+                "operator": ">=",
+                "unit": "MT\/s"
+            },
+            {
+                "id": "b05",
+                "category": "Storage",
+                "name": "Storage Read Speed",
+                "tool": "CrystalDiskMark",
+                "target": 400,
+                "operator": ">=",
+                "unit": "MB\/s"
+            },
+            {
+                "id": "b06",
+                "category": "System",
+                "name": "POST & Boot Sequence",
+                "tool": "Visual",
+                "target": 1,
+                "operator": "=",
+                "unit": "pass"
+            }
+        ],
+        "office": [
+            {
+                "id": "o01",
+                "category": "CPU",
+                "name": "Cinebench R23 Multicore",
+                "tool": "Cinebench R23",
+                "target": 5000,
+                "operator": ">=",
+                "unit": "pts"
+            },
+            {
+                "id": "o02",
+                "category": "CPU",
+                "name": "CPU Temp Under Load",
+                "tool": "HWiNFO64",
+                "target": 90,
+                "operator": "<=",
+                "unit": "°C"
+            },
+            {
+                "id": "o03",
+                "category": "Storage",
+                "name": "Storage Read Speed",
+                "tool": "CrystalDiskMark",
+                "target": 300,
+                "operator": ">=",
+                "unit": "MB\/s"
+            },
+            {
+                "id": "o04",
+                "category": "System",
+                "name": "POST & Boot Sequence",
+                "tool": "Visual",
+                "target": 1,
+                "operator": "=",
+                "unit": "pass"
+            }
+        ]
+    },
+    "qcSessions": [
+        {
+            "woId": "WO-2024-0040",
+            "template": "workstation",
+            "tech": "Sarah L.",
+            "results": [
+                {
+                    "checkId": "w01",
+                    "value": 38200,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "w02",
+                    "value": 71,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "w03",
+                    "value": 19800,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "w04",
+                    "value": 78,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "w05",
+                    "value": 5600,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "w06",
+                    "value": 7100,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "w07",
+                    "value": 6800,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "w08",
+                    "value": 1,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "w09",
+                    "value": 1,
+                    "verdict": "Pass",
+                    "note": ""
+                }
+            ]
+        },
+        {
+            "woId": "WO-2024-0035",
+            "template": "gaming",
+            "tech": "Marco R.",
+            "results": [
+                {
+                    "checkId": "g01",
+                    "value": 35500,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "g02",
+                    "value": 72,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "g03",
+                    "value": 21400,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "g04",
+                    "value": 88,
+                    "verdict": "Warn",
+                    "note": "Slightly above threshold, monitor under extended load"
+                },
+                {
+                    "checkId": "g05",
+                    "value": 6000,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "g06",
+                    "value": 7200,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "g07",
+                    "value": 1,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "g08",
+                    "value": 1,
+                    "verdict": "Pass",
+                    "note": ""
+                }
+            ]
+        },
+        {
+            "woId": "WO-2024-0027",
+            "template": "gaming",
+            "tech": "Marco R.",
+            "results": [
+                {
+                    "checkId": "g01",
+                    "value": 17800,
+                    "verdict": "Warn",
+                    "note": "Score slightly below target, may need retest"
+                },
+                {
+                    "checkId": "g02",
+                    "value": 80,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "g03",
+                    "value": 9200,
+                    "verdict": "Warn",
+                    "note": "3DMark score below expected for RTX 3060"
+                },
+                {
+                    "checkId": "g04",
+                    "value": 76,
+                    "verdict": "Pass",
+                    "note": ""
+                },
+                {
+                    "checkId": "g05",
+                    "value": null,
+                    "verdict": "",
+                    "note": ""
+                },
+                {
+                    "checkId": "g06",
+                    "value": null,
+                    "verdict": "",
+                    "note": ""
+                },
+                {
+                    "checkId": "g07",
+                    "value": null,
+                    "verdict": "",
+                    "note": ""
+                },
+                {
+                    "checkId": "g08",
+                    "value": null,
+                    "verdict": "",
+                    "note": ""
+                }
+            ]
+        },
+        {
+            "woId": "WO-2024-0022",
+            "template": "gaming",
+            "tech": "Sarah L.",
+            "results": [
+                {
+                    "checkId": "g01",
+                    "value": null,
+                    "verdict": "",
+                    "note": ""
+                },
+                {
+                    "checkId": "g02",
+                    "value": null,
+                    "verdict": "",
+                    "note": ""
+                },
+                {
+                    "checkId": "g03",
+                    "value": null,
+                    "verdict": "",
+                    "note": ""
+                },
+                {
+                    "checkId": "g04",
+                    "value": null,
+                    "verdict": "",
+                    "note": ""
+                },
+                {
+                    "checkId": "g05",
+                    "value": null,
+                    "verdict": "",
+                    "note": ""
+                },
+                {
+                    "checkId": "g06",
+                    "value": null,
+                    "verdict": "",
+                    "note": ""
+                },
+                {
+                    "checkId": "g07",
+                    "value": null,
+                    "verdict": "",
+                    "note": ""
+                },
+                {
+                    "checkId": "g08",
+                    "value": null,
+                    "verdict": "",
+                    "note": ""
+                }
+            ]
+        }
+    ],
+    "reworkOrders": [
+        {
+            "id": "RW-2024-001",
+            "woId": "WO-2024-0035",
+            "buildName": "Streaming Setup Pro",
+            "assignedTech": "Marco R.",
+            "raisedBy": "Marco R.",
+            "raisedDate": "Jun 28, 2024",
+            "status": "Waiting for Part",
+            "priority": "High",
+            "failedChecks": [
+                {
+                    "checkId": "g04",
+                    "checkName": "GPU Temp Under Load",
+                    "verdict": "Warn",
+                    "result": "88°C",
+                    "target": "<= 85°C",
+                    "reason": "Slightly above threshold, monitor under extended load"
+                }
+            ],
+            "requiredParts": [
+                {
+                    "name": "Replacement GPU Cooler (RTX 4070)",
+                    "status": "Sourcing",
+                    "eta": "Jul 3, 2024"
+                }
+            ],
+            "notes": "GPU running warm under sustained load. Likely needs reseating or cooler swap before QC recheck.",
+            "escalatedToProcurement": true
+        },
+        {
+            "id": "RW-2024-002",
+            "woId": "WO-2024-0027",
+            "buildName": "Content Creator Lite",
+            "assignedTech": "Marco R.",
+            "raisedBy": "Marco R.",
+            "raisedDate": "Jun 27, 2024",
+            "status": "In Rework",
+            "priority": "Medium",
+            "failedChecks": [
+                {
+                    "checkId": "g01",
+                    "checkName": "Cinebench R23 Multicore",
+                    "verdict": "Warn",
+                    "result": "17,800 pts",
+                    "target": ">= 20,000 pts",
+                    "reason": "Score slightly below target, may need retest or BIOS update"
+                },
+                {
+                    "checkId": "g03",
+                    "checkName": "3DMark TimeSpy",
+                    "verdict": "Warn",
+                    "result": "9,200 pts",
+                    "target": ">= 10,000 pts",
+                    "reason": "3DMark score below expected for RTX 3060"
+                }
+            ],
+            "requiredParts": [],
+            "notes": "Technician updating BIOS and GPU drivers. Will re-run benchmarks after update.",
+            "escalatedToProcurement": false
+        }
+    ]
+}
