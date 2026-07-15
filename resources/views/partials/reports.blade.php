@@ -206,8 +206,4 @@
         partsMissing: {{ $partsMissing }}
     };
 </script>
-<<<<<<< HEAD
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-=======
 <script src="{{ asset('js/reports-charts.js') }}"></script>
->>>>>>> 0bbec8f2458e19f74de04b6c5913c55f6e74300d
