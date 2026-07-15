@@ -33,11 +33,13 @@
                             'gray':       '#9D9D9D',
 
                             'success':    '#16A34A',
+                            'caution':    '#FBD035',
                             'warning':    '#D97706',
                             'danger':     '#DC2626',
                             'info':       '#0EA5E9',
 
                             'stat-green' :'#15803D',
+                            'stat-yellow':'#cda101',
                             'stat-orange':'#92400E',
                             'stat-red':   '#991B1B',
                             'stat-blue':  '#1E40AF',

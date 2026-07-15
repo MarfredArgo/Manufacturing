@@ -15,16 +15,16 @@ $scheduleData = collect($workOrders)
             $barColor   = 'bg-nexora-corporate';
         } elseif ($daysDiff < 0) {
             $priority = 'overdue'; $label = 'Overdue';
-            $badgeClass = 'bg-red-600 text-white'; $barColor = 'bg-nexora-gray';
+            $badgeClass = 'bg-nexora-stat-red text-white'; $barColor = 'bg-nexora-danger';
         } elseif ($daysDiff <= 3) {
             $priority = 'high'; $label = 'High';
-            $badgeClass = 'bg-red-500 text-white'; $barColor = 'bg-nexora-danger';
+            $badgeClass = 'bg-nexora-stat-orange text-white'; $barColor = 'bg-nexora-warning';
         } elseif ($daysDiff <= 7) {
             $priority = 'medium'; $label = 'Medium';
-            $badgeClass = 'bg-orange-400 text-gray-800'; $barColor = 'bg-nexora-warning';
+            $badgeClass = 'bg-nexora-stat-yellow text-gray-800'; $barColor = 'bg-nexora-caution';
         } else {
             $priority = 'low'; $label = 'Low';
-            $badgeClass = 'bg-green-500 text-white'; $barColor = 'bg-nexora-success';
+            $badgeClass = 'bg-nexora-stat-green text-white'; $barColor = 'bg-nexora-success';
         }
 
         return array_merge($order, [
