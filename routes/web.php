@@ -2,14 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ManufacturingController;
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\AuthController;
 
 // Auth
 Route::post('/login',  [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
->>>>>>> 0bbec8f2458e19f74de04b6c5913c55f6e74300d
 
 // Work orders
 Route::post('/manufacturing/update-order',       [ManufacturingController::class, 'updateOrder']);
