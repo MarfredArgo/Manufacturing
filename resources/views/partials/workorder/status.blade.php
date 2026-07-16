@@ -254,3 +254,5 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
     const workOrdersData = @json($workOrders);
     </script>
 </div>
+
+<script>initRowAnimations();</script>

@@ -1,9 +1,10 @@
-(function () {
-    if (!document.getElementById('dashWeekChart') || !window.dashboardData || !window.Chart) return;
+function initDashboardChart() {
+    const ctx = document.getElementById('dashWeekChart');
+    if (!ctx || !window.dashboardData || !window.Chart) return;
 
     const { days, weekCounts } = window.dashboardData;
 
-    new Chart(document.getElementById('dashWeekChart'), {
+    new Chart(ctx, {
         type: 'bar',
         data: {
             labels: days,
@@ -27,4 +28,10 @@
             }
         }
     });
-})();
+}
+
+if (window.Chart) {
+    initDashboardChart();
+} else {
+    window.addEventListener('load', initDashboardChart);
+}

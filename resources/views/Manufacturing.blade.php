@@ -8,7 +8,6 @@
     <link rel="icon" type="image/png" href="images/Nexora_Logo_Transparent.png">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="{{ asset('js/shared.js') }}"></script>
     <script>
         tailwind.config = {
@@ -219,5 +218,6 @@
             </div>
         </main>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </body>
 </html>

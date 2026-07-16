@@ -89,3 +89,5 @@
         </table>
     </div>
 </div>
+
+<script>initRowAnimations();</script>

@@ -97,8 +97,4 @@ function initRowAnimations() {
     reanimateRows();
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initRowAnimations);
-} else {
-    initRowAnimations();
-}
+
