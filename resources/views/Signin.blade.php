@@ -322,13 +322,30 @@
     <script>
     const SPLASH_DURATION = 4300;
     const splash = document.getElementById("splash");
-
+    const mainWrapper = document.querySelector(".main-wrapper");
+    const navEntries = performance.getEntriesByType("navigation");
+    const isReload = navEntries.length > 0 && navEntries[0].type === "reload";
+    const hasLoginErrors = {{ $errors->any() ? 'true' : 'false' }};
+    
     // 1. Hide splash screen after initial load
+    if (isReload || hasLoginErrors) {
+        // 1. Instantly delete the splash container
+        if (splash) {
+            splash.remove();
+        }
+        // 2. FORCE the main page wrapper to display instantly, bypassing the 4.1s CSS animation
+        if (mainWrapper) {
+            mainWrapper.style.opacity = "1";
+            mainWrapper.style.transform = "translateY(0)";
+            mainWrapper.style.animation = "none";
+        }
+    } else {
     setTimeout(() => {
         splash.style.opacity = "0";
         splash.style.pointerEvents = "none";
+        sessionStorage.setItem("hasSeenSplash", "true");
     }, SPLASH_DURATION);
-
+    }
     // 2. Smooth, fast fade-out for exiting the page
     function smoothExit(e, url) {
         e.preventDefault(); 

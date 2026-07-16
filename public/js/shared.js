@@ -1,5 +1,3 @@
-// shared.js
-// ── Generic Modal Helpers ──────────────────────────────────────────────────
 function openModal(id) {
     document.getElementById(id).classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -21,7 +19,6 @@ document.addEventListener('keydown', e => {
     });
 });
 
-// ── Success Notification ───────────────────────────────────────────────────
 function showSuccess(msg) {
     document.getElementById('success-text').textContent = msg;
     document.getElementById('success-notif').classList.remove('hidden');
@@ -31,7 +28,6 @@ function closeSuccessNotif() {
     document.getElementById('success-notif').classList.add('hidden');
 }
 
-// ── Shared: showOrder (Status, BOM, Assignment) ────────────────────────────
 function showOrder(index) {
     document.querySelectorAll('[id^="detail-"]').forEach(el => el.classList.add('hidden'));
     const detailPanel = document.getElementById('detail-' + index);
@@ -57,12 +53,12 @@ function showOrder(index) {
     }
 }
 
-// ── Shared: Filter (AllOrder + Status) ────────────────────────────────────
 let currentFilter = 'all';
 
 function filterOrders(status) {
     currentFilter = status;
-    const search = document.getElementById('search-input').value.toLowerCase();
+    const searchEl = document.getElementById('search-input');
+    const search   = searchEl ? searchEl.value.toLowerCase() : '';
 
     document.querySelectorAll('[id^="card-"]').forEach(card => {
         const matchesStatus = status === 'all' || card.dataset.status === status;
@@ -75,19 +71,14 @@ function filterOrders(status) {
         btn.classList.add('text-nexora-deep-navy');
     });
 
-    document.querySelector(`[data-filter="${status}"]`).classList.add('bg-nexora-corporate', 'text-white');
-    document.querySelector(`[data-filter="${status}"]`).classList.remove('text-nexora-deep-navy');
+    const activeBtn = document.querySelector(`[data-filter="${status}"]`);
+    if (activeBtn) {
+        activeBtn.classList.add('bg-nexora-corporate', 'text-white');
+        activeBtn.classList.remove('text-nexora-deep-navy');
+    }
 
     reanimateRows();
 }
-
-// ── Shared: Table Row Animation ────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.row-animate').forEach(row => {
-        row.addEventListener('animationend', () => row.classList.add('done'));
-    });
-    reanimateRows();
-});
 
 function reanimateRows() {
     const visibleRows = document.querySelectorAll('.row-animate:not(.hidden)');
@@ -97,4 +88,17 @@ function reanimateRows() {
             setTimeout(() => row.classList.add('animate'), i * 20);
         });
     }, 20);
+}
+
+function initRowAnimations() {
+    document.querySelectorAll('.row-animate').forEach(row => {
+        row.addEventListener('animationend', () => row.classList.add('done'));
+    });
+    reanimateRows();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRowAnimations);
+} else {
+    initRowAnimations();
 }

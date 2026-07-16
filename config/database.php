@@ -98,7 +98,7 @@ return [
             'sslmode'        => env('DB_SSLMODE', 'require'),
             'options'        => array_filter([
                 PDO::PGSQL_ATTR_DISABLE_PREPARES => true,
-                'endpoint'                        => env('DB_OPTIONS'),
+                'endpoint'                        => env('DB_ENDPOINT'),
             ]),
         ],
 

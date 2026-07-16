@@ -79,7 +79,7 @@
     {{-- Active Orders --}}
     <div class="bg-nexora-slate-200 rounded-xl px-4 py-3 border border-nexora-corporate/50">
         <p class="text-xs text-nexora-navy-mid mb-1 flex items-center gap-1">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 0 2-2h2a2 2 0 0 0 2 2"/></svg>
+            <x-heroicon-o-clipboard class="w-3.5 h-3.5" />
             Active Work Orders
         </p>
         <p class="text-3xl font-heading font-medium text-nexora-deep-navy">{{ $active }}</p>
@@ -89,7 +89,7 @@
     {{-- Completed --}}
     <div class="bg-nexora-slate-200 rounded-xl px-4 py-3 border border-nexora-corporate/50">
         <p class="text-xs text-nexora-navy-mid mb-1 flex items-center gap-1">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+           <x-heroicon-o-check-circle class="w-3.5 h-3.5" />
             Completed Builds
         </p>
         <p class="text-3xl font-heading font-medium text-nexora-success">{{ $finished }}</p>
@@ -99,7 +99,7 @@
     {{-- Overdue --}}
     <div class="bg-nexora-slate-200 rounded-xl px-4 py-3 border border-nexora-corporate/50">
         <p class="text-xs text-nexora-navy-mid mb-1 flex items-center gap-1">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <x-heroicon-o-exclamation-triangle class="w-3.5 h-3.5" />
             Cancelled / Overdue
         </p>
         <p class="text-3xl font-heading font-medium {{ $overdue > 0 ? 'text-nexora-danger' : 'text-nexora-deep-navy' }}">{{ $overdue }}</p>
@@ -111,7 +111,7 @@
     {{-- QC Pass Rate --}}
     <div class="bg-nexora-slate-200 rounded-xl px-4 py-3 border border-nexora-corporate/50">
         <p class="text-xs text-nexora-navy-mid mb-1 flex items-center gap-1">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <x-heroicon-o-shield-check class="w-3.5 h-3.5" />
             QC Pass rate
         </p>
         <p class="text-3xl font-heading font-medium {{ $qcRate >= 80 ? 'text-nexora-success' : 'text-nexora-warning' }}">{{ $qcRate }}%</p>
@@ -132,7 +132,7 @@
                 <div class="flex items-center gap-3 p-2.5 hover:bg-nexora-steel-blue transition duration-300">
                     {{-- Icon --}}
                     <div class="w-8 h-8 rounded-lg bg-nexora-slate-500/20 flex items-center justify-center flex-shrink-0">
-                        <svg class="w-4 h-4 text-nexora-corporate" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                        <x-heroicon-o-computer-desktop class="w-5 h-5 text-nexora-corporate" />
                     </div>
                     {{-- Meta --}}
                     <div class="flex-1 min-w-0">
@@ -180,13 +180,13 @@
                 <div class="rounded-lg border px-3 py-2 {{ $alertBg }}">
                     <div class="flex items-start gap-2">
                         @if($alert['icon'] === 'alert-circle')
-                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0 {{ $alertIcon }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            <x-heroicon-o-exclamation-circle class="w-5 h-5 {{ $alertIcon }}" />
                         @elseif($alert['icon'] === 'clock')
-                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0 {{ $alertIcon }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            <x-heroicon-o-clock class="w-5 h-5 {{ $alertIcon }}" />
                         @elseif($alert['icon'] === 'shield-x')
-                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0 {{ $alertIcon }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9.5 9.5 5 5M14.5 9.5l-5 5"/></svg>
+                            <x-heroicon-o-shield-exclamation class="w-5 h-5 {{ $alertIcon }}" />
                         @else
-                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0 {{ $alertIcon }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/></svg>
+                            <x-heroicon-o-home class="w-5 h-5 {{ $alertIcon }}" />
                         @endif
                         <div>
                             <p class="text-xs font-medium text-nexora-deep-navy">{{ $alert['title'] }}</p>

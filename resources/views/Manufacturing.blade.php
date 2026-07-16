@@ -107,7 +107,7 @@
 
         {{-- Profile circle --}}
         <div class="flex items-center justify-end w-[5vw]">
-            <div class="w-9 h-9 rounded-full bg-white flex-shrink-0"></div>
+            <a href="/signin" class="w-9 h-9 rounded-full bg-white flex-shrink-0"></a>
         </div>
     </header>
 
