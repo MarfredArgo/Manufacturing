@@ -243,24 +243,8 @@
         verdictCounts: @json($verdictCounts),
         verdictColors: @json($verdictColors),
     };
-
-    (function () {
-        const ctx = document.getElementById('qcVerdictDonut');
-        if (ctx && window.Chart) {
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: window.qcAnalyticsData.verdictLabels,
-                    datasets: [{ 
-                        data: window.qcAnalyticsData.verdictCounts, 
-                        backgroundColor: window.qcAnalyticsData.verdictColors, 
-                        borderColor: '#132B52', borderWidth: 3, hoverOffset: 4 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { display: false } } }
-            });
-        }
-    })();
 </script>
+<script src="{{ asset('js/analytics-charts.js') }}"></script>
 
 {{-- ── ADD QC NOTE MODAL ───────────────────────────────────────────────────── --}}
 <div id="qc-note-backdrop" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center hidden" onclick="handleBackdropClick(event,'qc-note-backdrop')">

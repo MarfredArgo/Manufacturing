@@ -130,3 +130,5 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
     @endforeach        
     </div>
 </div>
+
+<script>initRowAnimations();</script>

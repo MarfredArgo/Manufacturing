@@ -145,3 +145,5 @@ const workOrdersData = @json($workOrders);
 const workersData = @json($workers);
 const CURRENT_SELECTED = {{ $selectedIndex ?? -1 }};
 </script>
+
+<script>initRowAnimations();</script>
