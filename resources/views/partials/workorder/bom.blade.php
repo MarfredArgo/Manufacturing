@@ -13,10 +13,7 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
                 {{ $subName }}
             </h1>
             <div class="relative flex-1 max-w-[80%]">
-                <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-nexora-slate-500"
-                     fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                </svg>
+                <x-heroicon-o-magnifying-glass class="absolute left-2.5 top-1.5 w-4 h-4 text-nexora-navy/50"/>
                 <input type="text" placeholder="Search"
                         id="search-input"
                         oninput="filterOrders(currentFilter)"

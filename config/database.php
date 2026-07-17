@@ -84,7 +84,7 @@ return [
             ]) : [],
         ],
 
-        'pgsql' => [
+        'manufacturing' => [
             'driver'         => 'pgsql',
             'host'           => env('DB_HOST', '127.0.0.1'),
             'port'           => env('DB_PORT', '5432'),
@@ -99,6 +99,24 @@ return [
             'options'        => array_filter([
                 PDO::PGSQL_ATTR_DISABLE_PREPARES => true,
                 'endpoint'                        => env('DB_ENDPOINT'),
+            ]),
+        ],
+        
+        'HR' => [
+            'driver' => 'pgsql',
+            'host' => env('HR_HOST', '127.0.0.1'),
+            'port' => env('HR_PORT', '5432'),
+            'database' => env('HR_DATABASE', 'hr'),
+            'username' => env('HR_USERNAME', 'postgres'),
+            'password' => env('HR_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => env('HR_SSLMODE', 'require'),
+            'options' => array_filter([
+                PDO::PGSQL_ATTR_DISABLE_PREPARES => true,
+                'endpoint'                        => env('HR_ENDPOINT'),
             ]),
         ],
 

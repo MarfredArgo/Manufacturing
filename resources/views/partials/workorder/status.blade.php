@@ -14,10 +14,7 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
                 {{ strtoupper($subName) }}
             </h1>
             <div class="relative flex-1 max-w-[50%]">
-                <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-nexora-slate-500"
-                     fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                </svg>
+                <x-heroicon-o-magnifying-glass class="absolute left-2.5 top-1.5 w-4 h-4 text-nexora-navy/50"/>
                 <input type="text" placeholder="Search"
                         id="search-input"
                         oninput="filterOrders(currentFilter)"
@@ -203,7 +200,7 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
                             <p class="text-sm font-medium text-nexora-deep-navy">Send to QC Check</p>
                             <p class="text-xs text-nexora-navy-mid mt-0.5">Mark this finished build as ready for quality control.</p>
                         </div>
-                        <button onclick="sendToQC()"
+                        <button onclick="sendToQC(); closeModal('edit-backdrop');"
                                 class="flex-shrink-0 ml-4 px-4 py-1.5 rounded-full text-xs font-semibold bg-nexora-corporate text-white
                                     hover:bg-nexora-navy-mid transition-colors">
                             Send to QC
@@ -216,8 +213,8 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
                         <p class="text-xs text-nexora-navy-mid mt-0.5">Mark this as cancelled build</p>
                     </div>
                     <button onclick="closeModal('edit-backdrop')"
-                            class="px-4 py-1.5 rounded-full text-xs font-medium border border-nexora-stat-red/50
-                                text-nexora-navy-mid hover:bg-nexora-danger hover:text-white transition-colors">
+                            class="px-4 py-1.5 rounded-full text-xs font-medium bg-nexora-danger border border-nexora-stat-red/50
+                                text-nexora-off-white hover:bg-nexora-stat-red hover:text-white transition-colors">
                         Cancel Order
                     </button>
                 </div>

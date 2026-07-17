@@ -128,10 +128,17 @@
                     @endphp
                     @foreach($qcSubs as $tab)
                         <a href="?page=qc&sub={{ $tab['sub'] }}"
-                           class="block px-3 py-2 rounded-md font-medium transition-colors duration-150
+                           class="flex gap-4 pb-4 px-3 py-2 rounded-md font-medium transition-colors duration-150
                                   {{ ($curSub === $tab['sub'] || ($curSub === '' && $tab['sub'] === 'benchmark'))
                                       ? 'bg-nexora-sky text-white'
-                                      : 'text-nexora-slate-500 hover:bg-nexora-light-blue hover:text-white' }}">
+                                      : 'text-nexora-slate-500 hover:bg-nexora-light-blue hover:text-white hover:shadow-md hover:-translate-y-[1px]' }}">
+                            @if ($tab['label'] === 'Benchmark')
+                                <x-heroicon-o-cpu-chip class="w-8 h-8"/>    
+                            @elseif ($tab['label'] === 'Rework')
+                                <x-heroicon-o-cog-8-tooth class="w-8 h-8"/>
+                            @elseif ($tab['label'] === 'Analytics')
+                                <x-heroicon-o-chart-bar class="w-8 h-8"/>
+                            @endif
                             {{ $tab['label'] }}
                         </a>
                     @endforeach
@@ -154,10 +161,21 @@
 
                     @foreach($orderSubs as $tab)
                         <a href="?page=orders&sub={{ $tab['sub'] }}"
-                           class="block px-3 py-2 rounded-md font-medium transition-colors duration-150
+                           class="flex gap-4 px-3 py-2 pb-4 items-center rounded-md font-medium transition-colors duration-150
                                   {{ ($curSub === $tab['sub'] || ($curSub === '' && $tab['sub'] === 'all'))
                                       ? 'bg-nexora-sky text-white'
-                                      : 'text-nexora-slate-500 hover:bg-nexora-light-blue hover:text-white' }}">
+                                      : 'text-nexora-slate-500 hover:bg-nexora-light-blue hover:text-white hover:shadow-md hover:-translate-y-[1px]' }}">
+                            @if ($tab['label'] === 'All Orders')
+                                <x-heroicon-o-clipboard-document-list class="w-8 h-8"/>    
+                            @elseif ($tab['label'] === 'Status')
+                                <x-heroicon-o-information-circle class="w-8 h-8"/>
+                            @elseif ($tab['label'] === 'Schedule')
+                                <x-heroicon-o-calendar-date-range class="w-8 h-8"/>
+                            @elseif ($tab['label'] === 'BOMs')
+                                <x-heroicon-o-wrench-screwdriver class="w-8 h-8"/>
+                            @elseif ($tab['label'] === 'Assignment')
+                                <x-heroicon-o-user-plus class="w-8 h-8"/>
+                            @endif
                             {{ $tab['label'] }}
                         </a>
                     @endforeach

@@ -14,9 +14,7 @@ $workerRole = request()->get('role','');
         </div>
 
         <div class="relative">
-            <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-nexora-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
+            <x-heroicon-o-magnifying-glass class="absolute left-2.5 top-1.5 w-4 h-4 text-nexora-navy/50"/>
             <input type="text" id="searchWO" placeholder="Search orders..." oninput="filterAssignmentSearch()"
                    class="w-full pl-8 pr-3 py-1.5 rounded-md bg-nexora-steel-blue/50 text-nexora-deep-navy text-xs placeholder-nexora-navy/50 border border-nexora-corporate focus:outline-none focus:border-nexora-deep-navy">
         </div>
@@ -78,7 +76,6 @@ $workerRole = request()->get('role','');
             {{-- Default header, hidden while assigning --}}
             <div id="worker-mgmt-header">
                 <h3 class="text-xl font-bold mb-4">Worker Management</h3>
-                <p class="text-sm text-nexora-slate-500 mb-4">Click any worker to view, edit or delete</p>
             </div>
 
             <p id="assign-instructions" class="hidden text-sm text-nexora-slate-500 mb-4">Click a worker to select them, then hit Confirm Assignment</p>
@@ -104,34 +101,6 @@ $workerRole = request()->get('role','');
 </div>
 
 {{-- Modals & Scripts --}}
-<div id="edit-worker-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-[999] hidden" onclick="closeEditWorkerModal()">
-    <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl relative" onclick="event.stopPropagation()">
-        <h3 class="text-lg font-bold text-nexora-deep-navy mb-4">Edit Worker</h3>
-        <form id="edit-worker-form" onsubmit="submitEditWorker(event)">
-            <input type="hidden" id="edit-w-id">
-            <div class="mb-3">
-                <label class="text-xs text-nexora-slate-600 mb-1 block">Full Name</label>
-                <input type="text" id="edit-w-name" value="{{ $workerName }}" class="w-full border border-nexora-corporate/50 rounded p-2 text-sm text-gray-800 bg-white focus:outline-none focus:border-nexora-deep-navy" required>
-            </div>
-            <div class="mb-3">
-                <label class="text-xs text-nexora-slate-600 mb-1 block">Role / Specialty</label>
-                <input type="text" id="edit-w-role" value="{{ $workerRole }}" class="w-full border border-nexora-corporate/50 rounded p-2 text-sm text-gray-800 bg-white focus:outline-none focus:border-nexora-deep-navy" required>
-            </div>
-            <div class="mb-5">
-                <label class="text-xs text-nexora-slate-600 mb-1 block">Notes / Bio</label>
-                <textarea id="edit-w-notes" rows="3" class="w-full border border-nexora-corporate/50 rounded p-2 text-sm text-gray-800 bg-white focus:outline-none focus:border-nexora-deep-navy"></textarea>
-            </div>
-            <div class="flex justify-between items-center gap-3">
-                <button type="button" onclick="confirmDeleteWorker()" class="px-3 py-2 rounded bg-red-500 text-white text-sm hover:bg-red-600 transition-colors">Delete Worker</button>
-                <div class="flex gap-2">
-                    <button type="button" onclick="closeEditWorkerModal()" class="px-3 py-2 rounded bg-gray-200 text-gray-700 text-sm hover:bg-gray-300 transition-colors">Cancel</button>
-                    <button type="submit" class="px-3 py-2 rounded bg-green-600 text-white text-sm hover:bg-green-700 transition-colors">Save Changes</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
 <div id="success-notif" class="fixed inset-0 bg-black/50 flex items-center justify-center z-[999] hidden">
     <div class="bg-white rounded-lg p-6 w-full max-w-sm shadow-xl text-center">
         <p id="success-text" class="text-base text-gray-800"></p>
