@@ -16,7 +16,6 @@ return new class extends Migration
             }
         });
     }
-
     public function down(): void
     {
         Schema::connection('manufacturing')->table('work_order_parts', function (Blueprint $table) {
