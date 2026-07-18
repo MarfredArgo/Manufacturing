@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class QcResult extends Model
 {
+    protected $connection = 'manufacturing';
     protected $fillable = ['session_id', 'check_id', 'value', 'verdict', 'note'];
 
     public function session()

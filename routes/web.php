@@ -22,6 +22,9 @@ Route::post('/manufacturing/update-rework-part', [ManufacturingController::class
 // Analytics
 Route::post('/manufacturing/add-qc-note',        [ManufacturingController::class, 'addQcNote']);
 
+// Requisitions / procurement
+Route::post('/manufacturing/send-to-procurement', [ManufacturingController::class, 'sendToProcurement']);
+
 // Workers
 Route::post('/manufacturing/update-worker',      [ManufacturingController::class, 'updateWorker']);
 Route::post('/manufacturing/delete-worker',      [ManufacturingController::class, 'deleteWorker']);

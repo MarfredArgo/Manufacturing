@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class QcSession extends Model
 {
+    protected $connection = 'manufacturing';
     protected $fillable = ['wo_id', 'build_type', 'tech'];
 
     public function workOrder()

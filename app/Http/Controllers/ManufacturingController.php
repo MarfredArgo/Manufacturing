@@ -4,37 +4,39 @@ namespace App\Http\Controllers;
 
 use App\Models\WorkOrder;
 use App\Models\Worker;
-use App\Models\QcTemplate;
 use App\Models\QcSession;
 use App\Models\ReworkOrder;
+use App\Models\Requisition;
 use App\Services\ManufacturingDataService;
+use App\Services\BenchmarkTargetService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class ManufacturingController extends Controller
 {
-    // ── Main page ─────────────────────────────────────────────────────────────
     public function index()
     {
         $data = (new ManufacturingDataService())->loadAll();
 
         return view('Manufacturing', [
-            'workOrders'   => $data['workOrders'],
-            'workers'      => $data['workers'],
-            'qcTemplates'  => $data['qcTemplates'],
-            'qcSessions'   => $data['qcSessions'],
-            'reworkOrders' => $data['reworkOrders'],
-            'statusStyles' => config('nexora.statusStyles'),
-            'partStyles'   => config('nexora.partStyles'),
-            'tempData'     => array_merge($data, [
+            'workOrders'       => $data['workOrders'],
+            'workers'          => $data['workers'],
+            'benchmarkTargets' => $data['benchmarkTargets'],
+            'qcSessions'       => $data['qcSessions'],
+            'reworkOrders'     => $data['reworkOrders'],
+            'requisitions'     => $data['requisitions'],
+            'statusStyles'     => config('nexora.statusStyles'),
+            'partStyles'       => config('nexora.partStyles'),
+            'rangeStyles'      => config('nexora.rangeStyles'),
+            'tempData'         => array_merge($data, [
                 'statusStyles' => config('nexora.statusStyles'),
                 'partStyles'   => config('nexora.partStyles'),
+                'rangeStyles'  => config('nexora.rangeStyles'),
             ]),
         ]);
     }
 
-    // ── Work Order: update parts + auto-finish + send to QC ─────────────────
     public function updateOrder(Request $request): JsonResponse
     {
         $orderIndex  = (int)  $request->input('orderIndex');
@@ -46,7 +48,7 @@ class ManufacturingController extends Controller
             return response()->json(['success' => false, 'message' => 'Order not found.'], 404);
         }
 
-        DB::transaction(function () use ($order, $partChanges, $sendToQC) {
+        DB::connection('manufacturing')->transaction(function () use ($order, $partChanges, $sendToQC) {
             $partsByPosition = $order->parts->values();
 
             foreach ($partChanges as $position => $newStatus) {
@@ -74,24 +76,38 @@ class ManufacturingController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // ── QC Benchmark: save results + auto-create rework if flagged ───────────
     public function updateQC(Request $request): JsonResponse
     {
         $woId    = $request->input('woId');
         $results = $request->input('results', []);
 
-        $allowedVerdicts = ['Pass', 'Warn', 'Fail', ''];
-        $cleanResults = array_map(fn ($r) => [
-            'checkId' => (string) ($r['checkId'] ?? ''),
-            'value'   => isset($r['value']) && $r['value'] !== null ? (float) $r['value'] : null,
-            'verdict' => in_array($r['verdict'] ?? '', $allowedVerdicts) ? ($r['verdict'] ?? '') : '',
-            'note'    => (string) ($r['note'] ?? ''),
-        ], $results);
+        $order = WorkOrder::find($woId);
+        $range = $order->range ?? null;
 
-        DB::transaction(function () use ($woId, $cleanResults) {
+        $targetService   = new BenchmarkTargetService();
+        $allowedVerdicts = ['Pass', 'Warn', 'Fail', ''];
+
+        $cleanResults = array_map(function ($r) use ($targetService, $range, $allowedVerdicts) {
+            $checkId = (string) ($r['checkId'] ?? '');
+            $value   = isset($r['value']) && $r['value'] !== null ? (float) $r['value'] : null;
+            $verdict = $r['verdict'] ?? '';
+
+            if ($verdict === '' && $value !== null) {
+                $verdict = $targetService->verdictFor($checkId, $range, $value);
+            }
+
+            return [
+                'checkId' => $checkId,
+                'value'   => $value,
+                'verdict' => in_array($verdict, $allowedVerdicts) ? $verdict : '',
+                'note'    => (string) ($r['note'] ?? ''),
+            ];
+        }, $results);
+
+        DB::connection('manufacturing')->transaction(function () use ($woId, $cleanResults, $range, $targetService, $order) {
             $session = QcSession::where('wo_id', $woId)->first();
             if (!$session) {
-                $session = QcSession::create(['wo_id' => $woId, 'build_type' => 'gaming', 'tech' => '']);
+                $session = QcSession::create(['wo_id' => $woId, 'build_type' => $range ?? 'mid-range', 'tech' => '']);
             }
 
             $session->results()->delete();
@@ -104,11 +120,9 @@ class ManufacturingController extends Controller
                 ]);
             }
 
-            // Auto-create rework order for any flagged results
             $flagged = array_values(array_filter($cleanResults, fn ($r) => in_array($r['verdict'], ['Warn', 'Fail'])));
             if (count($flagged) > 0 && !ReworkOrder::where('wo_id', $woId)->exists()) {
-                $wo = WorkOrder::find($woId);
-                $checkDefs = QcTemplate::whereIn('id', array_column($flagged, 'checkId'))->get()->keyBy('id');
+                $targets = $targetService->targetsFor($range);
 
                 $rwCount  = ReworkOrder::count() + 1;
                 $reworkId = 'RW-2024-' . str_pad((string) $rwCount, 3, '0', STR_PAD_LEFT);
@@ -116,9 +130,9 @@ class ManufacturingController extends Controller
                 $rework = ReworkOrder::create([
                     'id'                       => $reworkId,
                     'wo_id'                    => $woId,
-                    'build_name'               => $wo->name ?? $woId,
-                    'assigned_tech'            => $wo->assigned ?? '',
-                    'raised_by'                => $wo->assigned ?? '',
+                    'build_name'               => $order->name ?? $woId,
+                    'assigned_tech'            => $order->assigned ?? '',
+                    'raised_by'                => $order->assigned ?? '',
                     'raised_date'              => now()->format('M d, Y'),
                     'status'                   => 'In Rework',
                     'priority'                 => 'Medium',
@@ -127,15 +141,15 @@ class ManufacturingController extends Controller
                 ]);
 
                 foreach ($flagged as $r) {
-                    $def = $checkDefs[$r['checkId']] ?? null;
+                    $def = $targets[$r['checkId']] ?? null;
                     $rework->failedChecks()->create([
                         'check_id'   => $r['checkId'],
-                        'check_name' => $def->name ?? $r['checkId'],
+                        'check_name' => $def['name'] ?? $r['checkId'],
                         'verdict'    => $r['verdict'],
                         'result'     => $r['value'] !== null
-                            ? number_format($r['value']) . ' ' . ($def->unit ?? '')
+                            ? number_format($r['value']) . ' ' . ($def['unit'] ?? '')
                             : '—',
-                        'target'     => ($def->operator ?? '') . ' ' . number_format($def->target ?? 0) . ' ' . ($def->unit ?? ''),
+                        'target'     => ($def['operator'] ?? '') . ' ' . number_format($def['target'] ?? 0) . ' ' . ($def['unit'] ?? ''),
                         'reason'     => $r['note'] ?: 'Flagged during QC benchmark',
                     ]);
                 }
@@ -145,7 +159,6 @@ class ManufacturingController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // ── Rework: update status / priority / notes / escalate ──────────────────
     public function updateRework(Request $request): JsonResponse
     {
         $reworkIndex = (int) $request->input('reworkIndex');
@@ -164,7 +177,6 @@ class ManufacturingController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // ── Rework: add replacement part ─────────────────────────────────────────
     public function addReworkPart(Request $request): JsonResponse
     {
         $reworkIndex = (int) $request->input('reworkIndex');
@@ -184,7 +196,6 @@ class ManufacturingController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // ── Rework: update existing replacement part ──────────────────────────────
     public function updateReworkPart(Request $request): JsonResponse
     {
         $reworkIndex = (int) $request->input('reworkIndex');
@@ -210,7 +221,6 @@ class ManufacturingController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // ── Analytics: add note to a QC session ──────────────────────────────────
     public function addQcNote(Request $request): JsonResponse
     {
         $woId = $request->input('woId');
@@ -231,7 +241,6 @@ class ManufacturingController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // ── Worker CRUD ───────────────────────────────────────────────────────────
     public function addWorker(Request $request): JsonResponse
     {
         Worker::create([
@@ -274,5 +283,41 @@ class ManufacturingController extends Controller
         }
         $order->update(['assigned' => $request->input('workerName')]);
         return response()->json(['success' => true]);
+    }
+
+    public function sendToProcurement(Request $request): JsonResponse
+    {
+        $woId    = $request->input('woId');
+        $order   = WorkOrder::find($woId);
+
+        $priority = 'Low';
+        if ($order && $order->due) {
+            $due = strtotime($order->due);
+            if ($due !== false) {
+                $daysLeft = ceil(($due - time()) / 86400);
+                if ($daysLeft <= 0)      $priority = 'Critical';
+                elseif ($daysLeft <= 3)  $priority = 'High';
+                elseif ($daysLeft <= 7)  $priority = 'Medium';
+                else                     $priority = 'Low';
+            }
+        }
+
+        $reqCount = Requisition::count() + 1;
+        $reqId    = 'REQ-' . str_pad((string) $reqCount, 4, '0', STR_PAD_LEFT);
+
+        Requisition::create([
+            'req_id'         => $reqId,
+            'part_name'      => $request->input('partName'),
+            'quantity'       => (int) $request->input('quantity', 1),
+            'department'     => 'Manufacturing',
+            'requested_by'   => $request->input('requestedBy'),
+            'priority'       => $priority,
+            'wo_id'          => $woId,
+            'notes'          => $request->input('notes'),
+            'date_requested' => now()->toDateString(),
+            'status'         => 'Pending',
+        ]);
+
+        return response()->json(['success' => true, 'reqId' => $reqId, 'priority' => $priority]);
     }
 }

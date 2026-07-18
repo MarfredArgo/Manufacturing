@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class WorkOrderPart extends Model
 {
-    protected $fillable = ['wo_id', 'name', 'category', 'status'];
+    protected $connection = 'manufacturing';
+    protected $fillable   = ['wo_id','product_id','name','category','status'];
 
     public function workOrder()
     {

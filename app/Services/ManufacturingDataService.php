@@ -4,32 +4,27 @@ namespace App\Services;
 
 use App\Models\WorkOrder;
 use App\Models\Worker;
-use App\Models\QcTemplate;
 use App\Models\QcSession;
 use App\Models\ReworkOrder;
+use App\Models\Requisition;
 
 class ManufacturingDataService
 {
-    /**
-     * Loads everything the Manufacturing views need, shaped exactly like the
-     * old tempData.json (minus statusStyles/partStyles — those are UI config
-     * now, see config/nexora.php). Keeping the shape identical means every
-     * blade partial keeps working without changes.
-     */
     public function loadAll(): array
     {
         return [
-            'workOrders'   => $this->workOrders(),
-            'workers'      => $this->workers(),
-            'qcTemplates'  => $this->qcTemplates(),
-            'qcSessions'   => $this->qcSessions(),
-            'reworkOrders' => $this->reworkOrders(),
+            'workOrders'       => $this->workOrders(),
+            'workers'          => $this->workers(),
+            'benchmarkTargets' => config('nexora.benchmarkTargets'),
+            'qcSessions'       => $this->qcSessions(),
+            'reworkOrders'     => $this->reworkOrders(),
+            'requisitions'     => $this->requisitions(),
         ];
     }
 
     public function workOrders(): array
     {
-        return WorkOrder::with('parts')->orderBy('id', 'desc')->get()->map(fn ($wo) => [
+        return WorkOrder::with('parts')->orderBy('due', 'asc')->get()->map(fn ($wo) => [
             'id'       => $wo->id,
             'name'     => $wo->name,
             'specs'    => $wo->specs,
@@ -37,10 +32,12 @@ class ManufacturingDataService
             'due'      => $wo->due,
             'source'   => $wo->source,
             'assigned' => $wo->assigned,
+            'range'    => $wo->range,
             'parts'    => $wo->parts->map(fn ($p) => [
-                'name'     => $p->name,
-                'category' => $p->category,
-                'status'   => $p->status,
+                'productId' => $p->product_id,
+                'name'      => $p->name,
+                'category'  => $p->category,
+                'status'    => $p->status,
             ])->values()->all(),
         ])->values()->all();
     }
@@ -53,22 +50,6 @@ class ManufacturingDataService
             'role'  => $w->role,
             'notes' => $w->notes,
         ])->values()->all();
-    }
-
-    public function qcTemplates(): array
-    {
-        return QcTemplate::all()
-            ->groupBy('build_type')
-            ->map(fn ($checks) => $checks->map(fn ($c) => [
-                'id'       => $c->id,
-                'category' => $c->category,
-                'name'     => $c->name,
-                'tool'     => $c->tool,
-                'target'   => is_numeric($c->target) ? $c->target + 0 : $c->target, // "20000.00" -> 20000
-                'operator' => $c->operator,
-                'unit'     => $c->unit,
-            ])->values()->all())
-            ->all();
     }
 
     public function qcSessions(): array
@@ -112,6 +93,22 @@ class ManufacturingDataService
                 'status' => $rp->status,
                 'eta'    => $rp->eta,
             ])->values()->all(),
+        ])->values()->all();
+    }
+
+    public function requisitions(): array
+    {
+        return Requisition::orderBy('created_at', 'desc')->get()->map(fn ($r) => [
+            'reqId'         => $r->req_id,
+            'partName'      => $r->part_name,
+            'quantity'      => $r->quantity,
+            'department'    => $r->department,
+            'requestedBy'   => $r->requested_by,
+            'priority'      => $r->priority,
+            'woId'          => $r->wo_id,
+            'notes'         => $r->notes,
+            'dateRequested' => $r->date_requested?->format('M d, Y'),
+            'status'        => $r->status,
         ])->values()->all();
     }
 }
