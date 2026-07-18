@@ -12,6 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('rework_orders')) {
         Schema::create('rework_orders', function (Blueprint $table) {
             $table->string('id', 20)->primary();
             $table->string('wo_id', 20);
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->timestamp('created_at')->nullable()->default(DB::raw("now()"));
             $table->timestamp('updated_at')->nullable()->default(DB::raw("now()"));
         });
+        }
     }
 
     /**

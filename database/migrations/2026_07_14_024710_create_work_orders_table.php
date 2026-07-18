@@ -12,6 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('work_orders')) {
         Schema::create('work_orders', function (Blueprint $table) {
             $table->string('id', 20)->primary();
             $table->string('name', 150);
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->timestamp('created_at')->nullable()->default(DB::raw("now()"));
             $table->timestamp('updated_at')->nullable()->default(DB::raw("now()"));
         });
+        }
     }
 
     /**

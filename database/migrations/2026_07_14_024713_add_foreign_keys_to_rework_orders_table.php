@@ -10,10 +10,12 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+    {   
+        if (!Schema::hasTable('rework_orders')) {
         Schema::table('rework_orders', function (Blueprint $table) {
             $table->foreign(['wo_id'], 'rework_orders_wo_id_fkey')->references(['id'])->on('work_orders')->onUpdate('no action')->onDelete('cascade');
         });
+        }
     }
 
     /**
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (!Schema::hasTable('rework_orders')) {
         Schema::table('rework_orders', function (Blueprint $table) {
             $table->dropForeign('rework_orders_wo_id_fkey');
         });
+        }
     }
 };

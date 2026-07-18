@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('rework_required_parts')) {
         Schema::table('rework_required_parts', function (Blueprint $table) {
             $table->foreign(['rework_id'], 'rework_required_parts_rework_id_fkey')->references(['id'])->on('rework_orders')->onUpdate('no action')->onDelete('cascade');
         });
+        }
     }
 
     /**
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (!Schema::hasTable('rework_required_parts')) {
         Schema::table('rework_required_parts', function (Blueprint $table) {
             $table->dropForeign('rework_required_parts_rework_id_fkey');
         });
+        }
     }
 };

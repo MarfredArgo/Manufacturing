@@ -12,6 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('qc_sessions')) {
         Schema::create('qc_sessions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('wo_id', 20);
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->timestamp('created_at')->nullable()->default(DB::raw("now()"));
             $table->timestamp('updated_at')->nullable()->default(DB::raw("now()"));
         });
+        }
     }
 
     /**

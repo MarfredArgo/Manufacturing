@@ -10,17 +10,21 @@ return new class extends Migration
 
     public function up(): void
     {
+        if (!Schema::hasTable('work_orders')) {
         Schema::connection('manufacturing')->table('work_orders', function (Blueprint $table) {
             if (!Schema::connection('manufacturing')->hasColumn('work_orders', 'range')) {
                 $table->string('range', 20)->nullable()->after('assigned');
             }
         });
+        }
     }
 
     public function down(): void
     {
+        if (!Schema::hasTable('work_orders')) {
         Schema::connection('manufacturing')->table('work_orders', function (Blueprint $table) {
             $table->dropColumn('range');
         });
+        }
     }
 };

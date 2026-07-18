@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('qc_results', function (Blueprint $table) {
-            $table->foreign(['check_id'], 'qc_results_check_id_fkey')->references(['id'])->on('qc_templates')->onUpdate('no action')->onDelete('no action');
-            $table->foreign(['session_id'], 'qc_results_session_id_fkey')->references(['id'])->on('qc_sessions')->onUpdate('no action')->onDelete('cascade');
-        });
+        if (!Schema::hasTable('qc_results')) {
+            Schema::table('qc_results', function (Blueprint $table) {
+                $table->foreign(['check_id'], 'qc_results_check_id_fkey')->references(['id'])->on('qc_templates')->onUpdate('no action')->onDelete('no action');
+                $table->foreign(['session_id'], 'qc_results_session_id_fkey')->references(['id'])->on('qc_sessions')->onUpdate('no action')->onDelete('cascade');
+            });
+        }
     }
 
     /**
@@ -22,9 +24,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (!Schema::hasTable('qc_results')) {
         Schema::table('qc_results', function (Blueprint $table) {
             $table->dropForeign('qc_results_check_id_fkey');
             $table->dropForeign('qc_results_session_id_fkey');
         });
+        }
     }
 };

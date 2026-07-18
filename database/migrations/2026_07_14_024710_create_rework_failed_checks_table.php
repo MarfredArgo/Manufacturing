@@ -12,17 +12,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rework_failed_checks', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('rework_id', 20);
-            $table->string('check_id', 10)->nullable();
-            $table->string('check_name', 150)->nullable();
-            $table->string('verdict', 10)->nullable();
-            $table->string('result', 50)->nullable();
-            $table->string('target', 50)->nullable();
-            $table->text('reason')->nullable();
-            $table->timestamp('created_at')->nullable()->default(DB::raw("now()"));
-        });
+        if (!Schema::hasTable('rework_failed_checks')) {
+            Schema::create('rework_failed_checks', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('rework_id', 20);
+                $table->string('check_id', 10)->nullable();
+                $table->string('check_name', 150)->nullable();
+                $table->string('verdict', 10)->nullable();
+                $table->string('result', 50)->nullable();
+                $table->string('target', 50)->nullable();
+                $table->text('reason')->nullable();
+                $table->timestamp('created_at')->nullable()->default(DB::raw("now()"));
+            });
+        }
     }
 
     /**

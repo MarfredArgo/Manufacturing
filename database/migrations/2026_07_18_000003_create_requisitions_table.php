@@ -11,6 +11,7 @@ return new class extends Migration
 
     public function up(): void
     {
+        if (!Schema::hasTable('requisitions')) {
         Schema::connection('manufacturing')->create('requisitions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('req_id', 20)->unique();
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->timestamp('created_at')->nullable()->default(DB::raw('now()'));
             $table->timestamp('updated_at')->nullable()->default(DB::raw('now()'));
         });
+        }
     }
 
     public function down(): void
