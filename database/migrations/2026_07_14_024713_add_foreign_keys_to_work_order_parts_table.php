@@ -40,6 +40,5 @@ return new class extends Migration
                 $table->dropForeign('work_order_parts_wo_id_fkey');
             }
         });
-        }
     }
 };
