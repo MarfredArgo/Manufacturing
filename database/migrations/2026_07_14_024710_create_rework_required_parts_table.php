@@ -7,12 +7,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    protected $connection = 'manufacturing';
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('rework_required_parts', function (Blueprint $table) {
+        if (Schema::connection('manufacturing')->hasTable('rework_required_parts')) {
+            return;
+        }
+
+        Schema::connection('manufacturing')->create('rework_required_parts', function (Blueprint $table) {
             $table->increments('id');
             $table->string('rework_id', 20);
             $table->string('name', 150);
@@ -28,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rework_required_parts');
+        Schema::connection('manufacturing')->dropIfExists('rework_required_parts');
     }
 };

@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class WorkOrder extends Model
 {
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    protected $connection   = 'manufacturing';
+    protected $primaryKey   = 'id';
+    public    $incrementing = false;
+    protected $keyType      = 'string';
 
-    protected $fillable = ['id', 'name', 'specs', 'status', 'due', 'source', 'assigned'];
+    protected $fillable = ['id','name','specs','status','due','source','assigned','range'];
 
     public function parts()
     {

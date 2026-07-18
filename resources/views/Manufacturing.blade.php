@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{{ asset('js/shared.js') }}"></script>
+    <script src="{{ asset('js/table-sort.js') }}"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -61,13 +62,19 @@
     @php
         $tempData = app(\App\Services\ManufacturingDataService::class)->loadAll();
 
-        $workOrders   = $tempData['workOrders'];
-        $workers      = $tempData['workers'];
-        $statusStyles = config('nexora.statusStyles');
-        $partStyles   = config('nexora.partStyles');
-        $qcTemplates  = $tempData['qcTemplates'];
-        $qcSessions   = $tempData['qcSessions'];
-        $reworkOrders = $tempData['reworkOrders'];
+        $workOrders       = $tempData['workOrders'];
+        $workers          = $tempData['workers'];
+        $statusStyles     = config('nexora.statusStyles');
+        $partStyles       = config('nexora.partStyles');
+        $rangeStyles      = config('nexora.rangeStyles');
+        $benchmarkTargets = $tempData['benchmarkTargets'];
+        $qcSessions       = $tempData['qcSessions'];
+        $reworkOrders     = $tempData['reworkOrders'];
+        $requisitions     = $tempData['requisitions'];
+
+        $tempData['statusStyles'] = $statusStyles;
+        $tempData['partStyles']   = $partStyles;
+        $tempData['rangeStyles']  = $rangeStyles;
     @endphp
 </head>
 <body class="font-body text-white flex flex-col h-full">

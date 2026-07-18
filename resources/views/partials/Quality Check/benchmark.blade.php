@@ -1,36 +1,43 @@
 @php
-    $qcTemplates = $tempData['qcTemplates'];
-    $qcSessions  = collect($tempData['qcSessions'] ?? []);
+    $benchmarkTargets = $tempData['benchmarkTargets'] ?? [];
+    $qcSessions       = collect($tempData['qcSessions'] ?? []);
+    $rangeStyles      = $tempData['rangeStyles'] ?? [];
 
-    // Only QC Check orders appear in the picker
+    $rangeToKey = [
+        'high-end'  => 'HE',
+        'mid-range' => 'MR',
+        'budget'    => 'BU',
+        'office'    => 'OF',
+    ];
+
     $qcOrders    = collect($workOrders)->where('status', 'QC Check')->values();
     $selectedIdx = (int) request()->get('qcorder', 0);
     $selectedOrder = $qcOrders[$selectedIdx] ?? $qcOrders[0] ?? null;
 
-    // Detect template from build name
-    $templateKey = 'gaming';
-    if ($selectedOrder) {
-        $n = strtolower($selectedOrder['name']);
-        if (str_contains($n, 'workstation') || str_contains($n, 'ultra'))   $templateKey = 'workstation';
-        elseif (str_contains($n, 'office') || str_contains($n, 'mini'))     $templateKey = 'office';
-        elseif (str_contains($n, 'budget') || str_contains($n, 'student'))  $templateKey = 'budget';
-    }
+    $range     = $selectedOrder['range'] ?? 'mid-range';
+    $rangeKey  = $rangeToKey[$range] ?? 'MR';
+    $checksMap = $benchmarkTargets[$rangeKey] ?? [];
 
-    $checks  = $qcTemplates[$templateKey] ?? [];
+    // Turn the assoc map into an indexed list with checkId attached, grouped implicitly by category prefix
+    $checks = collect($checksMap)->map(function ($def, $checkId) {
+        [$category] = explode('_', $checkId, 2);
+        return array_merge($def, ['id' => $checkId, 'category' => $category]);
+    })->values();
+
     $session = $qcSessions->firstWhere('woId', $selectedOrder['id'] ?? '');
     $results = collect($session['results'] ?? []);
 
-    // Summary counts
-    $totalChecks = count($checks);
+    $totalChecks = $checks->count();
     $passCount   = $results->where('verdict', 'Pass')->count();
     $warnCount   = $results->where('verdict', 'Warn')->count();
     $failCount   = $results->where('verdict', 'Fail')->count();
     $doneCount   = $results->filter(fn($r) => $r['verdict'] !== '')->count();
     $pct         = $totalChecks > 0 ? round(($doneCount / $totalChecks) * 100) : 0;
 
-    // Flagged issues (Warn or Fail with a note)
-    $checkMap = collect($checks)->keyBy('id');
+    $checkMap = $checks->keyBy('id');
     $flagged  = $results->filter(fn($r) => in_array($r['verdict'], ['Warn','Fail']) && $r['note'] !== '');
+
+    $rangePill = $rangeStyles[$range] ?? 'bg-nexora-slate-500/80 text-white';
 @endphp
 
 <div class="flex gap-3 h-full">
@@ -89,16 +96,20 @@
                     </p>
                 </div>
 
-                {{-- Button alone on the right --}}
-                <button onclick="openBenchmarkModal()"
-                        class="flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold
-                            border border-nexora-corporate bg-nexora-corporate text-white
-                            hover:bg-nexora-navy-mid transition-colors duration-150 whitespace-nowrap">
-                    Enter Results
-                </button>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold {{ $rangePill }} whitespace-nowrap capitalize">
+                        {{ str_replace('-', ' ', $range) }}
+                    </span>
+                    <button onclick="openBenchmarkModal()"
+                            class="px-4 py-1.5 rounded-full text-xs font-semibold
+                                border border-nexora-corporate bg-nexora-corporate text-white
+                                hover:bg-nexora-navy-mid transition-colors duration-150 whitespace-nowrap">
+                        Enter Results
+                    </button>
+                </div>
             </div>
 
-            {{-- Pills + progress bar on their own row --}}
+            {{-- Pills + progress bar --}}
             <div class="flex items-center gap-3">
                 <div class="flex gap-1.5 flex-shrink-0">
                     <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-nexora-success/80 text-nexora-off-white whitespace-nowrap">
@@ -123,15 +134,15 @@
             {{-- Table --}}
             <div class="flex-1 rounded-xl bg-nexora-slate-200 border border-nexora-corporate/50
                         overflow-y-auto [&::-webkit-scrollbar]:hidden">
-                <table class="w-full text-xs table-fixed">
+                <table class="w-full text-xs table-fixed sortable-table" data-table-id="benchmark">
                     <thead class="sticky top-0 bg-nexora-slate-200 z-10">
                         <tr class="border-b border-nexora-corporate/30">
                             <th class="text-left text-nexora-deep-navy font-medium px-4 py-2.5 w-7">#</th>
-                            <th class="text-left text-nexora-deep-navy font-medium px-4 py-2.5">Benchmark / Check</th>
-                            <th class="text-left text-nexora-deep-navy font-medium px-4 py-2.5 w-28">Tool</th>
-                            <th class="text-left text-nexora-deep-navy font-medium px-4 py-2.5 w-32">Target</th>
-                            <th class="text-left text-nexora-deep-navy font-medium px-4 py-2.5 w-32">Result</th>
-                            <th class="text-left text-nexora-deep-navy font-medium px-4 py-2.5 w-20">Verdict</th>
+                            <th class="text-left text-nexora-deep-navy font-medium px-4 py-2.5 sortable" data-sort-type="text">Benchmark / Check</th>
+                            <th class="text-left text-nexora-deep-navy font-medium px-4 py-2.5 w-28 sortable" data-sort-type="text">Tool</th>
+                            <th class="text-left text-nexora-deep-navy font-medium px-4 py-2.5 w-32 sortable" data-sort-type="number">Target</th>
+                            <th class="text-left text-nexora-deep-navy font-medium px-4 py-2.5 w-32 sortable" data-sort-type="number">Result</th>
+                            <th class="text-left text-nexora-deep-navy font-medium px-4 py-2.5 w-20 sortable" data-sort-type="text">Verdict</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -143,7 +154,6 @@
                                 $verdict = $res['verdict'] ?? '';
                                 $note    = $res['note'] ?? '';
 
-                                // Auto-compute verdict if value exists but verdict empty
                                 if ($val !== null && $verdict === '') {
                                     if ($check['operator'] === '>=')
                                         $verdict = $val >= $check['target'] ? 'Pass' : ($val >= $check['target'] * 0.9 ? 'Warn' : 'Fail');
@@ -169,9 +179,8 @@
                                 $lastCat = $check['category'];
                             @endphp
 
-                            {{-- Category divider row --}}
                             @if($showCat)
-                                <tr class="bg-nexora-slate-500/10">
+                                <tr class="bg-nexora-slate-500/10 no-sort">
                                     <td colspan="6" class="px-4 py-1.5 text-[10px] font-semibold
                                                            text-nexora-corporate uppercase tracking-wider">
                                         {{ $check['category'] }}
@@ -184,19 +193,19 @@
                                 <td class="px-4 py-2.5 text-nexora-navy-mid font-['Courier_New']">
                                     {{ str_pad($rowNum++, 2, '0', STR_PAD_LEFT) }}
                                 </td>
-                                <td class="px-4 py-2.5">
+                                <td class="px-4 py-2.5" data-sort-value="{{ $check['name'] }}">
                                     <p class="font-medium text-nexora-deep-navy">{{ $check['name'] }}</p>
                                     @if($note)
                                         <p class="text-[10px] text-nexora-warning mt-0.5 italic">{{ $note }}</p>
                                     @endif
                                 </td>
-                                <td class="px-4 py-2.5 text-nexora-navy-mid">{{ $check['tool'] }}</td>
-                                <td class="px-4 py-2.5 text-nexora-navy-mid">
+                                <td class="px-4 py-2.5 text-nexora-navy-mid" data-sort-value="{{ $check['tool'] }}">{{ $check['tool'] }}</td>
+                                <td class="px-4 py-2.5 text-nexora-navy-mid" data-sort-value="{{ $check['target'] }}">
                                     {{ $check['operator'] }}
                                     {{ in_array($check['unit'], ['pts','MB/s','MT/s']) ? number_format($check['target']) : $check['target'] }}
                                     {{ $check['unit'] !== 'pass' ? $check['unit'] : '' }}
                                 </td>
-                                <td class="px-4 py-2.5 font-medium font-['Courier_New'] {{ $valColor }}">
+                                <td class="px-4 py-2.5 font-medium font-['Courier_New'] {{ $valColor }}" data-sort-value="{{ $val ?? -1 }}">
                                     @if($val !== null)
                                         {{ in_array($check['unit'], ['pts','MB/s','MT/s']) ? number_format($val) : $val }}
                                         {{ !in_array($check['unit'], ['pass']) ? $check['unit'] : '' }}
@@ -204,7 +213,7 @@
                                         <span class="text-nexora-navy-mid opacity-40">—</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-2.5">
+                                <td class="px-4 py-2.5" data-sort-value="{{ $verdict ?: 'zzz' }}">
                                     @if($verdict)
                                         <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold {{ $vPill }}">
                                             {{ $verdict }}
@@ -223,14 +232,13 @@
         {{-- ── Side panel ──────────────────────────────────────────────────--}}
         <div class="w-52 flex-shrink-0 flex flex-col gap-3">
 
-            {{-- Build info --}}
             <div class="bg-nexora-slate-200 border border-nexora-corporate/50 rounded-xl p-4">
                 <p class="text-[10px] font-semibold text-nexora-deep-navy uppercase tracking-wider mb-3">Build Info</p>
                 @foreach([
-                    ['Due',      $selectedOrder['due']],
-                    ['Template', ucfirst($templateKey)],
-                    ['Checks',   $totalChecks . ' total'],
-                    ['Done',     $doneCount . ' / ' . $totalChecks . ' (' . $pct . '%)'],
+                    ['Due',    $selectedOrder['due']],
+                    ['Range',  ucfirst(str_replace('-', ' ', $range))],
+                    ['Checks', $totalChecks . ' total'],
+                    ['Done',   $doneCount . ' / ' . $totalChecks . ' (' . $pct . '%)'],
                 ] as [$k, $v])
                     <div class="flex justify-between items-center py-1.5 border-b border-nexora-corporate/20 last:border-0">
                         <span class="text-[10px] text-nexora-navy-mid">{{ $k }}</span>
@@ -239,7 +247,6 @@
                 @endforeach
             </div>
 
-            {{-- Flagged issues --}}
             @if($flagged->count())
             <div class="bg-nexora-slate-200 border border-nexora-corporate/50 rounded-xl p-4">
                 <p class="text-[10px] font-semibold text-nexora-deep-navy uppercase tracking-wider mb-3">
@@ -262,15 +269,15 @@
                         </div>
                     @endforeach
                 </div>
-                <button class="mt-3 w-full py-1.5 rounded-lg text-[10px] font-semibold
+                <button onclick="openSendToInventoryModal()"
+                        class="mt-3 w-full py-1.5 rounded-lg text-[10px] font-semibold
                                border border-nexora-danger/50 bg-nexora-danger/10 text-nexora-danger
                                hover:bg-nexora-danger/20 transition-colors duration-150">
-                    Send to Procurement
+                    Send to Inventory
                 </button>
             </div>
             @endif
 
-            {{-- Defect escalation flow --}}
             <div class="bg-nexora-slate-200 border border-nexora-corporate/50 rounded-xl p-4">
                 <p class="text-[10px] font-semibold text-nexora-deep-navy uppercase tracking-wider mb-3">
                     Defect Flow
@@ -278,8 +285,8 @@
                 @php
                     $steps = [
                         ['QC flagged',         'Technician marks issue',         $flagged->count() > 0],
-                        ['Sent to procurement','Defect report + part info',       false],
-                        ['Procurement reviews','Return, replace, or reorder',     false],
+                        ['Sent to inventory',  'Defect report + part info',       false],
+                        ['Inventory reviews',  'Return, replace, or reorder',     false],
                         ['Part replaced',      'WO resumes or rework issued',     false],
                         ['QC re-check',        'Full checklist re-run',           false],
                     ];
@@ -307,7 +314,6 @@
                 </div>
             </div>
 
-            {{-- Submit --}}
             <button class="w-full py-2 rounded-xl text-xs font-semibold
                            border border-nexora-corporate bg-nexora-corporate text-white
                            hover:bg-nexora-navy-mid transition-colors duration-150">
@@ -321,20 +327,18 @@
             No orders currently in QC Check.
         </div>
     @endif
-    {{-- ── BACKDROP ── --}}
+
+    {{-- ── ENTER RESULTS BACKDROP ── --}}
     <div id="benchmark-backdrop"
         class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center hidden"
         onclick="handleBackdropClick(event, 'benchmark-backdrop')">
-    
-        {{-- Blur overlay --}}
+
         <div class="absolute inset-0 bg-nexora-deep-navy/40 backdrop-blur-sm pointer-events-none"></div>
-    
-        {{-- Modal --}}
+
         <div onclick="event.stopPropagation()"
             class="relative z-10 bg-nexora-off-white border border-nexora-corporate/50 rounded-2xl
                     shadow-2xl w-full max-w-2xl mx-4 max-h-[85vh] flex flex-col">
-    
-            {{-- Header --}}
+
             <div class="flex items-center justify-between px-5 pt-5 pb-3
                         border-b border-nexora-corporate/20 flex-shrink-0">
                 <div>
@@ -344,7 +348,6 @@
                     <h2 class="text-lg font-bold text-nexora-deep-navy">{{ $selectedOrder['name'] }}</h2>
                 </div>
                 <div class="flex items-center gap-3">
-                    {{-- Live counts --}}
                     <div class="flex gap-1.5" id="bm-live-counts">
                         <span id="bm-count-pass"
                             class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-nexora-success/80 text-white">
@@ -366,14 +369,11 @@
                     </button>
                 </div>
             </div>
-    
-            {{-- Body: one row per check --}}
+
             <div class="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden px-5 py-3">
-                <div class="flex flex-col gap-2" id="bm-check-list">
-                </div>
+                <div class="flex flex-col gap-2" id="bm-check-list"></div>
             </div>
-    
-            {{-- Footer --}}
+
             <div class="flex items-center justify-between px-5 py-3
                         border-t border-nexora-corporate/20 flex-shrink-0">
                 <p id="bm-save-msg" class="text-xs text-nexora-success hidden">✓ Results saved</p>
@@ -392,12 +392,52 @@
             </div>
         </div>
     </div>
+
+    {{-- ── SEND TO PROCUREMENT MODAL ── --}}
+    <div id="inventory-backdrop"
+        class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center hidden"
+        onclick="handleBackdropClick(event, 'inventory-backdrop')">
+        <div class="absolute inset-0 bg-nexora-deep-navy/40 backdrop-blur-sm pointer-events-none"></div>
+        <div onclick="event.stopPropagation()"
+             class="relative z-10 bg-nexora-off-white border border-nexora-corporate/50 rounded-2xl shadow-2xl w-full max-w-sm mx-4 flex flex-col">
+            <div class="flex items-center justify-between px-5 pt-5 pb-3 border-b border-nexora-corporate/20">
+                <h2 class="text-base font-bold text-nexora-deep-navy">Send to Inventory</h2>
+                <button onclick="closeModal('inventory-backdrop')" class="w-7 h-7 rounded-full flex items-center justify-center text-nexora-navy-mid hover:bg-nexora-slate-500/20 transition-colors text-lg leading-none">✕</button>
+            </div>
+            <div class="px-5 py-4 flex flex-col gap-3">
+                <div>
+                    <label class="text-[10px] font-semibold text-nexora-slate-500 uppercase tracking-wider">Part Name</label>
+                    <input id="req-part-name" type="text" placeholder="e.g. Replacement GPU"
+                           class="mt-1.5 w-full border border-nexora-corporate/40 rounded-lg px-3 py-2 text-xs text-nexora-deep-navy bg-nexora-slate-200 focus:outline-none focus:border-nexora-corporate">
+                </div>
+                <div>
+                    <label class="text-[10px] font-semibold text-nexora-slate-500 uppercase tracking-wider">Quantity</label>
+                    <input id="req-quantity" type="number" min="1" value="1"
+                           class="mt-1.5 w-full border border-nexora-corporate/40 rounded-lg px-3 py-2 text-xs text-nexora-deep-navy bg-nexora-slate-200 focus:outline-none focus:border-nexora-corporate">
+                </div>
+                <div>
+                    <label class="text-[10px] font-semibold text-nexora-slate-500 uppercase tracking-wider">Notes (optional)</label>
+                    <textarea id="req-notes" rows="3" placeholder="Additional context for inventory..."
+                              class="mt-1.5 w-full border border-nexora-corporate/40 rounded-lg px-3 py-2 text-xs text-nexora-deep-navy bg-nexora-slate-200 focus:outline-none focus:border-nexora-corporate resize-none"></textarea>
+                </div>
+            </div>
+            <div class="flex gap-2 justify-end px-5 pb-5">
+                <button onclick="closeModal('inventory-backdrop')" class="px-4 py-1.5 rounded-full text-xs font-medium border border-nexora-corporate/50 text-nexora-navy-mid hover:bg-nexora-slate-200 transition-colors">Cancel</button>
+                <button onclick="submitInventoryRequest()" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-nexora-danger text-white hover:opacity-90 transition-colors">Send Request</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const benchmarkData = {
             woId:      "{{ $selectedOrder['id'] }}",
-            checks:    @json($checks),
+            range:     "{{ $range }}",
+            checks:    @json($checks->values()),
             results:   @json($results->values()),
             orderName: "{{ $selectedOrder['name'] }}",
+            assigned:  "{{ $selectedOrder['assigned'] }}",
         };
     </script>
 </div>
+
+<script>initSortableTables();</script>

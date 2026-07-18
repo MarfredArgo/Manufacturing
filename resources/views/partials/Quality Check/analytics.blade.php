@@ -1,6 +1,6 @@
 @php
     $qcSessions  = collect($tempData['qcSessions'] ?? []);
-    $qcTemplates = $tempData['qcTemplates'] ?? [];
+    $benchmarkTargets = $tempData['benchmarkTargets'] ?? [];
     $reworkOrders = collect($tempData['reworkOrders'] ?? []);
 
     // Flatten all results
@@ -32,7 +32,11 @@
         ->take(5);
 
     // Resolve check name from templates
-    $allCheckDefs = collect($qcTemplates)->flatMap(fn($checks) => $checks)->keyBy('id');
+    $allCheckDefs = collect($benchmarkTargets)->flatMap(function ($checks) {
+        return collect($checks)->map(function ($def, $checkId) {
+            return array_merge($def, ['id' => $checkId]);
+        });
+    })->keyBy('id');
 
     // Per-tech summary
     $techSummary = $qcSessions->groupBy('tech')->map(fn($sessions, $tech) => [

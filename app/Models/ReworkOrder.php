@@ -6,17 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReworkOrder extends Model
 {
+    protected $connection = 'manufacturing';
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
         'id', 'wo_id', 'build_name', 'assigned_tech', 'raised_by',
-        'raised_date', 'status', 'priority', 'notes', 'escalated_to_procurement',
+        'raised_date', 'status', 'priority', 'notes', 'escalated_to_inventory',
     ];
 
     protected $casts = [
-        'escalated_to_procurement' => 'boolean',
+        'escalated_to_inventory' => 'boolean',
     ];
 
     public function workOrder()

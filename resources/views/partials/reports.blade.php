@@ -130,15 +130,15 @@
     <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 flex-1 flex flex-col min-h-0">
         <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-3 flex-shrink-0">Recent Finished Work Orders</p>
         <div class="overflow-auto flex-1 min-h-0 [&::-webkit-scrollbar]:hidden">
-            <table class="w-full text-xs table-fixed">
+            <table class="w-full text-xs table-fixed sortable-table" data-table-id="reports-recent">
                 <thead class="sticky top-0 bg-nexora-slate-200">
                     <tr class="border-b border-nexora-corporate/30">
-                        <th class="text-left text-nexora-navy-mid font-medium pb-2 w-28">Order ID</th>
-                        <th class="text-left text-nexora-navy-mid font-medium pb-2">Build</th>
-                        <th class="text-left text-nexora-navy-mid font-medium pb-2 w-24">Assigned</th>
-                        <th class="text-left text-nexora-navy-mid font-medium pb-2 w-20">Parts OK</th>
-                        <th class="text-left text-nexora-navy-mid font-medium pb-2 w-24">Status</th>
-                        <th class="text-left text-nexora-navy-mid font-medium pb-2 w-28">Due / Done</th>
+                        <th class="text-left text-nexora-navy-mid font-medium pb-2 w-28 sortable" data-sort-type="text">Order ID</th>
+                        <th class="text-left text-nexora-navy-mid font-medium pb-2 sortable" data-sort-type="text">Build</th>
+                        <th class="text-left text-nexora-navy-mid font-medium pb-2 w-24 sortable" data-sort-type="text">Assigned</th>
+                        <th class="text-left text-nexora-navy-mid font-medium pb-2 w-20 sortable" data-sort-type="number">Parts OK</th>
+                        <th class="text-left text-nexora-navy-mid font-medium pb-2 w-24 sortable" data-sort-type="text">Status</th>
+                        <th class="text-left text-nexora-navy-mid font-medium pb-2 w-28 sortable" data-sort-type="text">Due / Done</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-nexora-corporate/30">
@@ -150,16 +150,16 @@
                             $pill      = $statusStyles[$wo['status']]['pill'] ?? 'bg-nexora-gray/80 text-nexora-off-white';
                         @endphp
                         <tr>
-                            <td class="py-2 font-mono text-nexora-navy-mid">{{ $wo['id'] }}</td>
-                            <td class="py-2 text-nexora-deep-navy truncate pr-2">{{ $wo['name'] }}</td>
-                            <td class="py-2 text-nexora-navy-mid">{{ $wo['assigned'] }}</td>
-                            <td class="py-2 {{ $allReady ? 'text-nexora-success' : 'text-nexora-warning' }}">
+                            <td class="py-2 font-mono text-nexora-navy-mid" data-sort-value="{{ $wo['id'] }}">{{ $wo['id'] }}</td>
+                            <td class="py-2 text-nexora-deep-navy truncate pr-2" data-sort-value="{{ $wo['name'] }}">{{ $wo['name'] }}</td>
+                            <td class="py-2 text-nexora-navy-mid" data-sort-value="{{ $wo['assigned'] }}">{{ $wo['assigned'] }}</td>
+                            <td class="py-2 {{ $allReady ? 'text-nexora-success' : 'text-nexora-warning' }}" data-sort-value="{{ $woReady }}">
                                 {{ $woReady }}/{{ $woTotal }}
                             </td>
-                            <td class="py-2">
+                            <td class="py-2" data-sort-value="{{ $wo['status'] }}">
                                 <span class="px-2 py-0.5 rounded-full text-xs {{ $pill }}">{{ $wo['status'] }}</span>
                             </td>
-                            <td class="py-2 text-nexora-navy-mid">{{ $wo['due'] }}</td>
+                            <td class="py-2 text-nexora-navy-mid" data-sort-value="{{ $wo['due'] }}">{{ $wo['due'] }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -207,3 +207,5 @@
     };
 </script>
 <script src="{{ asset('js/reports-charts.js') }}"></script>
+
+<script>initSortableTables();</script>

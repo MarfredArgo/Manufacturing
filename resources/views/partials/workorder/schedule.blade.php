@@ -97,15 +97,15 @@ $counts = [
     {{-- Timeline View: the only section that scrolls --}}
     <div class="bg-white rounded-lg border border-nexora-corporate/30 shadow-sm flex-1 min-h-0 flex flex-col overflow-hidden mb-6">
         <div class="overflow-auto flex-1 min-h-0 [&::-webkit-scrollbar]:hidden">
-            <table class="w-full text-sm">
+            <table class="w-full text-sm sortable-table" data-table-id="schedule">
                 <thead class="bg-nexora-slate-100 border-b border-nexora-corporate/30 sticky top-0 z-10">
                     <tr class="bg-white">
-                        <th class="text-left p-3 text-nexora-deep-navy font-semibold">Project ID</th>
-                        <th class="text-left p-3 text-nexora-deep-navy font-semibold">Project Name</th>
-                        <th class="text-center p-3 text-nexora-deep-navy font-semibold">Status</th>
-                        <th class="text-center p-3 text-nexora-deep-navy font-semibold">Due Date</th>
-                        <th class="text-center p-3 text-nexora-deep-navy font-semibold">Time Remaining</th>
-                        <th class="text-center p-3 text-nexora-deep-navy font-semibold">Priority</th>
+                        <th class="text-left p-3 text-nexora-deep-navy font-semibold sortable" data-sort-type="text">Project ID</th>
+                        <th class="text-left p-3 text-nexora-deep-navy font-semibold sortable" data-sort-type="text">Project Name</th>
+                        <th class="text-center p-3 text-nexora-deep-navy font-semibold sortable" data-sort-type="text">Status</th>
+                        <th class="text-center p-3 text-nexora-deep-navy font-semibold sortable" data-sort-type="text">Due Date</th>
+                        <th class="text-center p-3 text-nexora-deep-navy font-semibold sortable" data-sort-type="number">Time Remaining</th>
+                        <th class="text-center p-3 text-nexora-deep-navy font-semibold sortable" data-sort-type="text">Priority</th>
                         <th class="p-3 text-nexora-deep-navy font-semibold">Timeline</th>
                     </tr>
                 </thead>
@@ -120,15 +120,15 @@ $counts = [
                         data-priority="{{ $project['priority'] }}"
                         data-name="{{ $project['name'] }}"
                         onclick="location.href='?page=orders&sub=status&order={{ $originalIndex }}'">
-                        <td class="p-3 font-mono text-xs text-nexora-slate-500">{{ $project['id'] }}</td>
-                        <td class="p-3 font-medium text-nexora-deep-navy">{{ $project['name'] }}</td>
-                        <td class="p-3 text-center">
+                        <td class="p-3 font-mono text-xs text-nexora-slate-500" data-sort-value="{{ $project['id'] }}">{{ $project['id'] }}</td>
+                        <td class="p-3 font-medium text-nexora-deep-navy" data-sort-value="{{ $project['name'] }}">{{ $project['name'] }}</td>
+                        <td class="p-3 text-center" data-sort-value="{{ $project['status'] }}">
                             <span class="px-2 py-0.5 rounded-full text-xs font-medium {{ $statusStyle['pill'] }}">
                                 {{ $project['status'] }}
                             </span>
                         </td>
-                        <td class="p-3 text-center text-nexora-deep-navy">{{ $project['due'] }}</td>
-                        <td class="p-3 text-center font-medium">
+                        <td class="p-3 text-center text-nexora-deep-navy" data-sort-value="{{ $project['due'] }}">{{ $project['due'] }}</td>
+                        <td class="p-3 text-center font-medium" data-sort-value="{{ $days }}">
                             @if($project['priority'] === 'completed')
                                 <span class="text-nexora-corporate font-semibold">Completed</span>
                             @elseif($days < 0)
@@ -139,7 +139,7 @@ $counts = [
                                 <span class="text-nexora-deep-navy">{{ $days }} day{{ $days !== 1 ? 's' : '' }}</span>
                             @endif
                         </td>
-                        <td class="p-3 text-center">
+                        <td class="p-3 text-center" data-sort-value="{{ $project['priority'] }}">
                             <span class="px-2.5 py-1 rounded text-xs font-semibold {{ $project['priority_class'] }}">
                                 {{ $project['priority_label'] }}
                             </span>
@@ -187,3 +187,5 @@ $counts = [
     </div>
 
 </div>
+
+<script>initSortableTables();</script>

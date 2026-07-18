@@ -7,12 +7,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    protected $connection = 'manufacturing';
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('workers', function (Blueprint $table) {
+        if (Schema::connection('manufacturing')->hasTable('workers')) {
+            return;
+        }
+
+        Schema::connection('manufacturing')->create('workers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 100);
             $table->string('role', 100)->nullable();
@@ -27,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('workers');
+        Schema::connection('manufacturing')->dropIfExists('workers');
     }
 };

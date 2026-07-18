@@ -51,14 +51,14 @@
                 </div>
     </div>
     <div class="rounded-xl h-full bg-nexora-slate-200 overflow-auto [&::-webkit-scrollbar]:hidden mt-8 p-4 pt-0">
-        <table class="w-full text-xs">
+        <table class="w-full text-xs sortable-table" data-table-id="allorder">
             <thead class="z-10 sticky top-0 bg-nexora-slate-200">
                 <tr>
-                    <th class="text-left px-4 py-2.5 text-nexora-deep-navy font-medium text-base">Build Name</th>
-                    <th class="text-left px-4 py-2.5 text-nexora-deep-navy font-medium text-base">Build ID</th>
-                    <th class="text-left px-4 py-2.5 text-nexora-deep-navy font-medium text-base">Build Specs</th>
-                    <th class="text-left px-4 py-2.5 text-nexora-deep-navy font-medium text-base">Scheduled date</th>
-                    <th class="text-left px-4 py-2.5 text-nexora-deep-navy font-medium text-base">Status</th>
+                    <th class="text-left px-4 py-2.5 text-nexora-deep-navy font-medium text-base sortable" data-sort-type="text">Build Name</th>
+                    <th class="text-left px-4 py-2.5 text-nexora-deep-navy font-medium text-base sortable" data-sort-type="text">Build ID</th>
+                    <th class="text-left px-4 py-2.5 text-nexora-deep-navy font-medium text-base sortable" data-sort-type="text">Build Specs</th>
+                    <th class="text-left px-4 py-2.5 text-nexora-deep-navy font-medium text-base sortable" data-sort-type="text">Scheduled date</th>
+                    <th class="text-left px-4 py-2.5 text-nexora-deep-navy font-medium text-base sortable" data-sort-type="text">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -69,14 +69,14 @@
                     @endphp
                     <tr class="border-b border-nexora-slate-200 hover:bg-nexora-slate-500/20 transition-colors duration-300 row-animate"
                         data-index="{{ $loop->index }}"
-                        id="card-" 
+                        id="card-{{ $loop->index }}"
                         data-status="{{ $order['status'] }}"
                         data-name="{{ $order['name'] }}">
-                        <td class="px-4 py-2.5 text-black">{{ $order['name'] }}</td>
-                        <td class="px-4 py-2.5 text-black font-['Courier_New']">{{ $order['id'] }}</td>
-                        <td class="px-4 py-2.5 text-black">{{ $order['specs'] }}</td>
-                        <td class="px-4 py-2.5 text-black">{{ $order['due'] }}</td>
-                        <td class="px-4 py-2.5">
+                        <td class="px-4 py-2.5 text-black" data-sort-value="{{ $order['name'] }}">{{ $order['name'] }}</td>
+                        <td class="px-4 py-2.5 text-black font-['Courier_New']" data-sort-value="{{ $order['id'] }}">{{ $order['id'] }}</td>
+                        <td class="px-4 py-2.5 text-black" data-sort-value="{{ $order['specs'] }}">{{ $order['specs'] }}</td>
+                        <td class="px-4 py-2.5 text-black" data-sort-value="{{ $order['due'] }}">{{ $order['due'] }}</td>
+                        <td class="px-4 py-2.5" data-sort-value="{{ $order['status'] }}">
                             <span class="px-3 py-1 rounded-full text-xs font-black {{ $style['pill'] }}">
                                 {{ $order['status'] }}
                             </span>
@@ -89,3 +89,5 @@
 </div>
 
 <script>initRowAnimations();</script>
+
+<script>initSortableTables();</script>

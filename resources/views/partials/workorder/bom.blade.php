@@ -113,14 +113,41 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
                 <span class="text-xs text-nexora-navy">Assigned: {{ $order['assigned'] }}</span>
             </div>
             <div class="rounded-xl h-full bg-nexora-steel-blue overflow-auto [&::-webkit-scrollbar]:hidden mt-8 p-4 pt-2">
-                <table class="w-full text-xs">
+                <table class="w-full text-xs sortable-table" data-table-id="bom-{{ $i }}">
                     <thead class="sticky top-0 bg-nexora-steel-blue">
                         <tr>
-                            <th class="table-header px-8 text-center text-nexora-deep-navy">Product ID</th>
-                            <th class="table-header px-8 text-center text-nexora-deep-navy">Product Name</th>
-                            <th class="table-header px-8 text-center text-nexora-deep-navy">Product Prize</th>
+                            <th class="table-header px-8 text-center text-nexora-deep-navy sortable" data-sort-type="text">Product ID</th>
+                            <th class="table-header px-8 text-center text-nexora-deep-navy sortable" data-sort-type="text">Product Name</th>
+                            <th class="table-header px-8 text-center text-nexora-deep-navy sortable" data-sort-type="text">Category</th>
+                            <th class="table-header px-8 text-center text-nexora-deep-navy sortable" data-sort-type="text">Status</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        @forelse($order['parts'] as $part)
+                            @php $ps = $partStyles[$part['status']] ?? ['dot' => 'bg-gray-400', 'text' => 'text-gray-400']; @endphp
+                            <tr class="border-b border-nexora-corporate/10 hover:bg-nexora-steel-blue/60 transition-colors duration-150">
+                                <td class="px-8 py-2 text-center font-['Courier_New'] text-nexora-navy-mid" data-sort-value="{{ $part['productId'] ?? '—' }}">
+                                    {{ $part['productId'] ?? '—' }}
+                                </td>
+                                <td class="px-8 py-2 text-center text-nexora-deep-navy font-medium" data-sort-value="{{ $part['name'] }}">
+                                    {{ $part['name'] }}
+                                </td>
+                                <td class="px-8 py-2 text-center text-nexora-navy-mid" data-sort-value="{{ $part['category'] }}">
+                                    {{ $part['category'] }}
+                                </td>
+                                <td class="px-8 py-2 text-center" data-sort-value="{{ $part['status'] }}">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold {{ $ps['text'] }}">
+                                        <span class="w-1.5 h-1.5 rounded-full {{ $ps['dot'] }}"></span>
+                                        {{ $part['status'] }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-8 py-4 text-center text-nexora-navy-mid">No parts listed for this build.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -129,3 +156,5 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
 </div>
 
 <script>initRowAnimations();</script>
+
+<script>initSortableTables();</script>

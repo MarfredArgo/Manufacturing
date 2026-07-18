@@ -183,3 +183,44 @@ async function saveBenchmarkResults() {
         console.error(err);
     }
 }
+
+function openSendToInventoryModal() {
+    document.getElementById('req-part-name').value = '';
+    document.getElementById('req-quantity').value = 1;
+    document.getElementById('req-notes').value = '';
+    openModal('inventory-backdrop');
+}
+
+async function submitInventoryRequest() {
+    const payload = {
+        woId:        benchmarkData.woId,
+        partName:    document.getElementById('req-part-name').value.trim(),
+        quantity:    document.getElementById('req-quantity').value,
+        requestedBy: benchmarkData.assigned,
+        notes:       document.getElementById('req-notes').value.trim(),
+        _token:      document.querySelector('meta[name="csrf-token"]').content,
+    };
+
+    if (!payload.partName) {
+        alert('Please enter a part name.');
+        return;
+    }
+
+    try {
+        const res  = await fetch('/manufacturing/send-to-inventory', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': payload._token },
+            body:    JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (data.success) {
+            closeModal('inventory-backdrop');
+            alert(`Requisition ${data.reqId} sent to Inventory (${data.priority} priority).`);
+        } else {
+            alert('Failed: ' + (data.message ?? 'Unknown error'));
+        }
+    } catch (err) {
+        alert('Network error — could not send requisition.');
+        console.error(err);
+    }
+}

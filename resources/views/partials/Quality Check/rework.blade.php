@@ -124,14 +124,14 @@
             {{-- Failed benchmark checks --}}
             <div class="bg-nexora-slate-200 border border-nexora-corporate/50 rounded-xl p-4 flex-shrink-0">
                 <p class="text-[10px] font-semibold text-nexora-deep-navy uppercase tracking-wider mb-3">Failed / Warned Benchmark Checks</p>
-                <table class="w-full text-xs table-fixed">
+                <table class="w-full text-xs table-fixed sortable-table" data-table-id="rework-checks">
                     <thead>
                         <tr class="border-b border-nexora-corporate/30">
-                            <th class="text-left text-nexora-deep-navy font-medium px-3 py-2">Check</th>
-                            <th class="text-left text-nexora-deep-navy font-medium px-3 py-2 w-28">Result</th>
-                            <th class="text-left text-nexora-deep-navy font-medium px-3 py-2 w-28">Target</th>
-                            <th class="text-left text-nexora-deep-navy font-medium px-3 py-2 w-20">Verdict</th>
-                            <th class="text-left text-nexora-deep-navy font-medium px-3 py-2">Reason</th>
+                            <th class="text-left text-nexora-deep-navy font-medium px-3 py-2 sortable" data-sort-type="text">Check</th>
+                            <th class="text-left text-nexora-deep-navy font-medium px-3 py-2 w-28 sortable" data-sort-type="text">Result</th>
+                            <th class="text-left text-nexora-deep-navy font-medium px-3 py-2 w-28 sortable" data-sort-type="text">Target</th>
+                            <th class="text-left text-nexora-deep-navy font-medium px-3 py-2 w-20 sortable" data-sort-type="text">Verdict</th>
+                            <th class="text-left text-nexora-deep-navy font-medium px-3 py-2 sortable" data-sort-type="text">Reason</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -141,11 +141,11 @@
                                 $valColor = $fc['verdict'] === 'Fail' ? 'text-nexora-danger' : 'text-nexora-warning';
                             @endphp
                             <tr class="border-b border-nexora-corporate/10 hover:bg-nexora-steel-blue/20 transition-colors">
-                                <td class="px-3 py-2.5 font-medium text-nexora-deep-navy">{{ $fc['checkName'] }}</td>
-                                <td class="px-3 py-2.5 font-['Courier_New'] {{ $valColor }}">{{ $fc['result'] }}</td>
-                                <td class="px-3 py-2.5 text-nexora-navy-mid">{{ $fc['target'] }}</td>
-                                <td class="px-3 py-2.5"><span class="px-2.5 py-1 rounded-full text-[10px] font-semibold {{ $vPill }}">{{ $fc['verdict'] }}</span></td>
-                                <td class="px-3 py-2.5 text-nexora-navy-mid italic">{{ $fc['reason'] }}</td>
+                                <td class="px-3 py-2.5 font-medium text-nexora-deep-navy" data-sort-value="{{ $fc['checkName'] }}">{{ $fc['checkName'] }}</td>
+                                <td class="px-3 py-2.5 font-['Courier_New'] {{ $valColor }}" data-sort-value="{{ $fc['result'] }}">{{ $fc['result'] }}</td>
+                                <td class="px-3 py-2.5 text-nexora-navy-mid" data-sort-value="{{ $fc['target'] }}">{{ $fc['target'] }}</td>
+                                <td class="px-3 py-2.5" data-sort-value="{{ $fc['verdict'] }}"><span class="px-2.5 py-1 rounded-full text-[10px] font-semibold {{ $vPill }}">{{ $fc['verdict'] }}</span></td>
+                                <td class="px-3 py-2.5 text-nexora-navy-mid italic" data-sort-value="{{ $fc['reason'] }}">{{ $fc['reason'] }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -215,20 +215,20 @@
             </div>
 
             <div class="bg-nexora-slate-200 border border-nexora-corporate/50 rounded-xl p-4">
-                <p class="text-[10px] font-semibold text-nexora-deep-navy uppercase tracking-wider mb-3">Procurement</p>
-                @if($selectedRework['escalatedToProcurement'])
+                <p class="text-[10px] font-semibold text-nexora-deep-navy uppercase tracking-wider mb-3">Inventory Request</p>
+                @if($selectedRework['escalatedToInventory'])
                     <div class="rounded-lg border border-nexora-info/40 bg-nexora-info/10 px-2.5 py-2 mb-2">
-                        <p class="text-[10px] font-semibold text-nexora-info">Escalated</p>
-                        <p class="text-[10px] text-nexora-navy-mid mt-0.5">Defect report sent to procurement.</p>
+                        <p class="text-[10px] font-semibold text-nexora-info">Sent to Inventory</p>
+                        <p class="text-[10px] text-nexora-navy-mid mt-0.5">Defect report sent to inventory for replacement part.</p>
                     </div>
                 @else
                     <div class="rounded-lg border border-nexora-corporate/30 bg-nexora-slate-500/10 px-2.5 py-2 mb-2">
-                        <p class="text-[10px] text-nexora-navy-mid">Not yet escalated.</p>
+                        <p class="text-[10px] text-nexora-navy-mid">Not yet sent to inventory.</p>
                     </div>
-                    <button onclick="escalateToProcurement({{ $selectedIdx }})"
+                    <button onclick="escalateToInventory({{ $selectedIdx }})"
                             class="w-full py-1.5 rounded-lg text-[10px] font-semibold border border-nexora-corporate/50
                                    text-nexora-corporate bg-nexora-corporate/10 hover:bg-nexora-corporate hover:text-white transition-colors">
-                        Send to Procurement
+                        Send to Inventory
                     </button>
                 @endif
             </div>
@@ -240,7 +240,7 @@
                     $flowSteps = [
                         ['QC flagged',       'Benchmark flags an issue',       true],
                         ['Rework raised',    'Sent from QC benchmark',         true],
-                        ['Waiting for part', 'Procurement sourcing part',      in_array($fs, ['Waiting for Part','In Rework','Ready for QC'])],
+                        ['Waiting for part', 'Inventory sourcing replacement', in_array($fs, ['Waiting for Part','In Rework','Ready for QC'])],
                         ['In rework',        'Tech fixes or replaces part',    in_array($fs, ['In Rework','Ready for QC'])],
                         ['Ready for QC',     'Full benchmark re-run',          $fs === 'Ready for QC'],
                     ];
@@ -452,8 +452,8 @@ async function confirmMarkReadyForQC() {
     } catch(e) { alert('Network error'); console.error(e); }
 }
 
-// ── Escalate to procurement ──────────────────────────────────────────────────
-async function escalateToProcurement(i) {
+// ── Escalate to inventory ─────────────────────────────────────────────────────
+async function escalateToInventory(i) {
     const payload = { reworkIndex: i, escalate: true, _token: document.querySelector('meta[name="csrf-token"]').content };
     try {
         const res  = await fetch('/manufacturing/update-rework', { method:'POST', headers:{'Content-Type':'application/json','X-CSRF-TOKEN':payload._token}, body:JSON.stringify(payload) });
@@ -463,3 +463,5 @@ async function escalateToProcurement(i) {
     } catch(e) { alert('Network error'); console.error(e); }
 }
 </script>
+
+<script>initSortableTables();</script>
