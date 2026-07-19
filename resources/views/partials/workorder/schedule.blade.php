@@ -6,7 +6,7 @@ $scheduleData = collect($workOrders)
     ->map(function ($order) use ($today) {
         $rawDue  = preg_replace('/^(Due|Completed)\s+/i', '', $order['due']);
         $dueDate = \Carbon\Carbon::parse($rawDue);
-        $daysDiff = round($today->diffInDays($dueDate, false));
+        $daysDiff = ceil($today->diffInDays($dueDate, false))+0;
 
         if ($order['status'] === 'Finished') {
             $priority   = 'completed';

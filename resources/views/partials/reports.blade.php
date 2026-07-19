@@ -1,49 +1,124 @@
 @php
-    $total     = count($workOrders);
-    $building  = collect($workOrders)->where('status', 'Building')->count();
-    $qcCheck   = collect($workOrders)->where('status', 'QC Check')->count();
-    $pending   = collect($workOrders)->where('status', 'Pending')->count();
-    $finished  = collect($workOrders)->where('status', 'Finished')->count();
-    $cancelled = collect($workOrders)->where('status', 'Cancelled')->count();
+    $period = request()->get('period', '30d');
+    if (!in_array($period, ['7d', '30d', '1y'])) $period = '30d';
+
+    $periodDays = match($period) {
+        '7d'  => 7,
+        '1y'  => 365,
+        default => 30,
+    };
+
+    $now    = now();
+    $cutoff = $now->copy()->subDays($periodDays - 1)->startOfDay();
+
+    $filteredOrders = collect($workOrders)->filter(function ($wo) use ($cutoff) {
+        if (empty($wo['createdAt'])) return false;
+        return \Carbon\Carbon::parse($wo['createdAt'])->gte($cutoff);
+    })->values();
+
+    $total     = $filteredOrders->count();
+    $building  = $filteredOrders->where('status', 'Building')->count();
+    $qcCheck   = $filteredOrders->where('status', 'QC Check')->count();
+    $pending   = $filteredOrders->where('status', 'Pending')->count();
+    $finished  = $filteredOrders->where('status', 'Finished')->count();
+    $cancelled = $filteredOrders->where('status', 'Cancelled')->count();
 
     $qcDenom  = $finished + $cancelled;
     $qcRate   = $qcDenom > 0 ? round(($finished / $qcDenom) * 100) : 0;
 
-    $defectCount = collect($workOrders)
+    $defectCount = $filteredOrders
         ->flatMap(fn($wo) => $wo['parts'])
         ->where('status', 'Missing')
         ->count();
 
-    $avgParts = $total > 0 ? round(collect($workOrders)->sum(fn($wo) => count($wo['parts'])) / $total, 1) : 0;
+    $avgParts = $total > 0 ? round($filteredOrders->sum(fn($wo) => count($wo['parts'])) / $total, 1) : 0;
 
     $statusLabels = ['Building', 'QC Check', 'Pending', 'Finished', 'Cancelled'];
-    $statusCounts = array_map(fn($s) => collect($workOrders)->where('status', $s)->count(), $statusLabels);
+    $statusCounts = array_map(fn($s) => $filteredOrders->where('status', $s)->count(), $statusLabels);
     $statusColors = ['#D97706', '#0EA5E9', '#DC2626', '#16A34A', '#9D9D9D'];
 
-    $assignees = collect($workOrders)
+    $assignees = $filteredOrders
         ->groupBy('assigned')
         ->map(fn($group, $name) => ['name' => $name, 'count' => $group->count()])
         ->values()
         ->sortByDesc('count')
         ->values();
 
-    $allParts       = collect($workOrders)->flatMap(fn($wo) => $wo['parts']);
+    $allParts       = $filteredOrders->flatMap(fn($wo) => $wo['parts']);
     $partsReady     = $allParts->where('status', 'Ready')->count();
     $partsSourcing  = $allParts->where('status', 'Sourcing')->count();
     $partsMissing   = $allParts->where('status', 'Missing')->count();
     $partsTotal     = $allParts->count();
 
-    $recentOrders = collect($workOrders)
+    $recentOrders = $filteredOrders
         ->whereIn('status', ['Finished'])
         ->take(5)
         ->values();
 
-    $weekLabels  = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    $weekBuilds  = [4, 6, 5, 8, 7, 3, $finished];
-    $weekDefects = [1, 0, 2, 1, 0, 1, $cancelled];
+    // ── Dynamic chart bucketing based on selected period ──────────────────────
+    $bucketLabels  = [];
+    $bucketBuilds  = [];
+    $bucketDefects = [];
+
+    if ($period === '7d') {
+        for ($i = 6; $i >= 0; $i--) {
+            $day = $now->copy()->subDays($i);
+            $bucketLabels[] = $day->format('D');
+            $dayOrders = $filteredOrders->filter(fn($wo) => \Carbon\Carbon::parse($wo['createdAt'])->isSameDay($day));
+            $bucketBuilds[]  = $dayOrders->where('status', 'Finished')->count();
+            $bucketDefects[] = $dayOrders->where('status', 'Cancelled')->count();
+        }
+    } elseif ($period === '1y') {
+        for ($i = 11; $i >= 0; $i--) {
+            $month = $now->copy()->subMonths($i);
+            $bucketLabels[] = $month->format('M');
+            $monthOrders = $filteredOrders->filter(fn($wo) =>
+                \Carbon\Carbon::parse($wo['createdAt'])->isSameMonth($month)
+                && \Carbon\Carbon::parse($wo['createdAt'])->isSameYear($month)
+            );
+            $bucketBuilds[]  = $monthOrders->where('status', 'Finished')->count();
+            $bucketDefects[] = $monthOrders->where('status', 'Cancelled')->count();
+        }
+    } else {
+        $weeksCount = 5;
+        for ($i = $weeksCount - 1; $i >= 0; $i--) {
+            $weekEnd   = $now->copy()->subWeeks($i)->endOfDay();
+            $weekStart = $weekEnd->copy()->subDays(6)->startOfDay();
+            $bucketLabels[] = $weekStart->format('M j') . '–' . $weekEnd->format('j');
+            $weekOrders = $filteredOrders->filter(function ($wo) use ($weekStart, $weekEnd) {
+                $d = \Carbon\Carbon::parse($wo['createdAt']);
+                return $d->gte($weekStart) && $d->lte($weekEnd);
+            });
+            $bucketBuilds[]  = $weekOrders->where('status', 'Finished')->count();
+            $bucketDefects[] = $weekOrders->where('status', 'Cancelled')->count();
+        }
+    }
+
+    $weekLabels  = $bucketLabels;
+    $weekBuilds  = $bucketBuilds;
+    $weekDefects = $bucketDefects;
+
+    $periodTabs = [
+        '7d'  => '7 Days',
+        '30d' => '30 Days',
+        '1y'  => '1 Year',
+    ];
 @endphp
 <div class="flex flex-col h-full">
-<h1 class="flex-shrink-0 font-heading font-medium text-2xl text-nexora-deep-navy mb-4">Reports & Analytics</h1>
+<div class="flex items-center justify-between flex-shrink-0 mb-4">
+    <h1 class="font-heading font-medium text-2xl text-nexora-deep-navy">Reports & Analytics</h1>
+    <div class="flex items-center gap-1 bg-nexora-slate-200 border border-nexora-corporate/50 rounded-full p-1">
+        @foreach($periodTabs as $key => $label)
+            <a href="?page=reports&period={{ $key }}"
+               class="px-3 py-1.5 rounded-full text-xs font-semibold transition-colors duration-150
+                      {{ $period === $key
+                          ? 'bg-nexora-corporate text-white'
+                          : 'text-nexora-navy-mid hover:bg-nexora-corporate/10' }}">
+                {{ $label }}
+            </a>
+        @endforeach
+    </div>
+</div>
 <div class="flex-1 min-h-0 flex flex-col">
 <div class="grid grid-cols-4 gap-3 mb-4 flex-shrink-0">
     <div class="bg-nexora-slate-200 rounded-xl px-4 py-3 border border-nexora-corporate/50">
@@ -72,8 +147,7 @@
 
     <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 flex-1">
         <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-1">Work orders by status</p>
-        <p class="text-xs text-nexora-navy-mid mb-3">All orders · current snapshot</p>
-        {{-- Custom legend --}}
+        <p class="text-xs text-nexora-navy-mid mb-3">Selected period · {{ $periodTabs[$period] }}</p>
         <div class="flex flex-wrap gap-3 mb-3">
             @foreach($statusLabels as $i => $label)
                 <span class="flex items-center gap-1.5 text-xs text-nexora-navy-mid">
@@ -87,20 +161,18 @@
         </div>
     </div>
 
-    {{-- Weekly Output --}}
     <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 flex-1">
-        <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-1">Weekly builds vs defects</p>
-        <p class="text-xs text-nexora-navy-mid mb-3">Completed builds and cancelled/defect orders per day</p>
+        <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-1">Builds vs defects</p>
+        <p class="text-xs text-nexora-navy-mid mb-3">Completed builds and cancelled/defect orders · {{ $periodTabs[$period] }}</p>
         <div class="flex flex-wrap gap-3 mb-3">
             <span class="flex items-center gap-1.5 text-xs text-nexora-navy-mid"><span class="inline-block w-2.5 h-2.5 rounded-sm" style="background:#1B6FC8"></span>Builds done</span>
             <span class="flex items-center gap-1.5 text-xs text-nexora-navy-mid"><span class="inline-block w-2.5 h-2.5 rounded-sm" style="background:#DC2626"></span>Defects / cancelled</span>
         </div>
         <div class="relative" style="height:160px">
-            <canvas id="weeklyChart" aria-label="Line chart of weekly builds and defects"></canvas>
+            <canvas id="weeklyChart" aria-label="Line chart of builds and defects over the selected period"></canvas>
         </div>
     </div>
 
-    {{-- Parts Donut --}}
     <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 pt-1 w-[250px] flex flex-col items-center justify-center">
         <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-3 self-start">Parts status</p>
         <div class="relative" style="height:130px;width:130px">
@@ -126,7 +198,6 @@
 
 <div class="flex gap-3 mb-4 flex-1 min-h-0">
 
-    {{-- Work Order Summary Table --}}
     <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 flex-1 flex flex-col min-h-0">
         <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-3 flex-shrink-0">Recent Finished Work Orders</p>
         <div class="overflow-auto flex-1 min-h-0 [&::-webkit-scrollbar]:hidden">
@@ -142,7 +213,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-nexora-corporate/30">
-                    @foreach($recentOrders as $wo)
+                    @forelse($recentOrders as $wo)
                         @php
                             $woReady   = collect($wo['parts'])->where('status', 'Ready')->count();
                             $woTotal   = count($wo['parts']);
@@ -161,17 +232,20 @@
                             </td>
                             <td class="py-2 text-nexora-navy-mid" data-sort-value="{{ $wo['due'] }}">{{ $wo['due'] }}</td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="6" class="py-6 text-center text-nexora-navy-mid">No finished orders in this period.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
     </div>
 
-    {{-- Technician Order Tally --}}
     <div class="bg-nexora-slate-200 rounded-xl border border-nexora-corporate/50 p-4 w-[250px] flex flex-col min-h-0">
         <p class="text-xs font-medium text-nexora-slate-500 uppercase tracking-wider mb-3 flex-shrink-0">Orders per technician</p>
         <div class="overflow-auto flex-1 min-h-0 [&::-webkit-scrollbar]:hidden flex flex-wrap gap-6 content-start">
-            @foreach($assignees as $a)
+            @forelse($assignees as $a)
                 @php $pct = $total > 0 ? round(($a['count'] / $total) * 100) : 0; @endphp
                 <div class="flex items-center gap-3 min-w-[180px]">
                     <div class="w-8 h-8 rounded-full bg-nexora-corporate flex items-center justify-center text-xs font-medium text-nexora-deep-navy flex-shrink-0">
@@ -187,7 +261,9 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <p class="text-xs text-nexora-navy-mid">No data for this period.</p>
+            @endforelse
         </div>
     </div>
 </div>

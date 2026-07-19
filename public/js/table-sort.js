@@ -1,5 +1,10 @@
 function initSortableTables() {
     document.querySelectorAll('table.sortable-table').forEach(table => {
+        if (!table._originalOrder) {
+            const tbody = table.querySelector('tbody');
+            table._originalOrder = Array.from(tbody.children);
+        }
+
         const headers = table.querySelectorAll('th.sortable');
         headers.forEach((th, colIndex) => {
             if (th.dataset.sortBound === '1') return;
@@ -20,11 +25,13 @@ function initSortableTables() {
 }
 
 function sortTableByColumn(table, th, colIndex) {
-    const type      = th.dataset.sortType || 'text';
-    const tbody     = table.querySelector('tbody');
+    const type       = th.dataset.sortType || 'text';
+    const tbody      = table.querySelector('tbody');
     const allHeaders = table.querySelectorAll('th.sortable');
 
-    const currentDir = th.dataset.sortDir === 'asc' ? 'desc' : 'asc';
+    const nextDir = th.dataset.sortDir === 'asc' ? 'desc'
+                   : th.dataset.sortDir === 'desc' ? ''
+                   : 'asc';
 
     allHeaders.forEach(h => {
         h.dataset.sortDir = '';
@@ -32,22 +39,30 @@ function sortTableByColumn(table, th, colIndex) {
         if (arrow) { arrow.textContent = '↕'; arrow.style.opacity = '0.4'; }
     });
 
-    th.dataset.sortDir = currentDir;
+    th.dataset.sortDir = nextDir;
     const arrow = th.querySelector('.sort-arrow');
+
+    if (nextDir === '') {
+        if (arrow) { arrow.textContent = '↕'; arrow.style.opacity = '0.4'; }
+        restoreOriginalOrder(table);
+        return;
+    }
+
     if (arrow) {
-        arrow.textContent = currentDir === 'asc' ? '↑' : '↓';
+        arrow.textContent = nextDir === 'asc' ? '↑' : '↓';
         arrow.style.opacity = '1';
     }
 
     const realColIndex = getRealColumnIndex(table, colIndex);
 
-    const rows      = Array.from(tbody.querySelectorAll('tr:not(.no-sort)'));
     const groupRows = Array.from(tbody.querySelectorAll('tr.no-sort'));
 
     if (groupRows.length > 0) {
-        sortFlatWithGroups(tbody, type, realColIndex, currentDir);
+        sortFlatWithGroups(tbody, type, realColIndex, nextDir);
         return;
     }
+
+    const rows = Array.from(tbody.querySelectorAll('tr'));
 
     rows.sort((a, b) => {
         const cellA = a.children[realColIndex];
@@ -64,10 +79,16 @@ function sortTableByColumn(table, th, colIndex) {
             result = String(valA).localeCompare(String(valB), undefined, { numeric: true, sensitivity: 'base' });
         }
 
-        return currentDir === 'asc' ? result : -result;
+        return nextDir === 'asc' ? result : -result;
     });
 
     rows.forEach(row => tbody.appendChild(row));
+}
+
+function restoreOriginalOrder(table) {
+    const tbody = table.querySelector('tbody');
+    if (!table._originalOrder) return;
+    table._originalOrder.forEach(row => tbody.appendChild(row));
 }
 
 function sortFlatWithGroups(tbody, type, colIndex, dir) {
@@ -115,8 +136,8 @@ function sortFlatWithGroups(tbody, type, colIndex, dir) {
 }
 
 function getRealColumnIndex(table, sortableIndex) {
-    const headerRow = table.querySelector('thead tr');
-    const allThs    = Array.from(headerRow.children);
+    const headerRow  = table.querySelector('thead tr');
+    const allThs     = Array.from(headerRow.children);
     const sortableTh = table.querySelectorAll('th.sortable')[sortableIndex];
     return allThs.indexOf(sortableTh);
 }

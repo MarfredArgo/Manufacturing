@@ -11,7 +11,11 @@ class WorkOrder extends Model
     public    $incrementing = false;
     protected $keyType      = 'string';
 
-    protected $fillable = ['id','name','specs','status','due','source','assigned','range'];
+    protected $fillable = ['id','name','specs','status','due','due_date','source','assigned','range'];
+
+    protected $casts = [
+        'due_date' => 'date',
+    ];
 
     public function parts()
     {

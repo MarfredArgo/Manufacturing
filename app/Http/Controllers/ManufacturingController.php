@@ -9,6 +9,7 @@ use App\Models\ReworkOrder;
 use App\Models\Requisition;
 use App\Services\ManufacturingDataService;
 use App\Services\BenchmarkTargetService;
+use App\Services\DueDateService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -291,15 +292,12 @@ class ManufacturingController extends Controller
         $order   = WorkOrder::find($woId);
 
         $priority = 'Low';
-        if ($order && $order->due) {
-            $due = strtotime($order->due);
-            if ($due !== false) {
-                $daysLeft = ceil(($due - time()) / 86400);
-                if ($daysLeft <= 0)      $priority = 'Critical';
-                elseif ($daysLeft <= 3)  $priority = 'High';
-                elseif ($daysLeft <= 7)  $priority = 'Medium';
-                else                     $priority = 'Low';
-            }
+        if ($order && $order->due_date) {
+            $daysLeft = now()->startOfDay()->diffInDays($order->due_date->copy()->startOfDay(), false);
+            if ($daysLeft <= 0)      $priority = 'Critical';
+            elseif ($daysLeft <= 3)  $priority = 'High';
+            elseif ($daysLeft <= 7)  $priority = 'Medium';
+            else                     $priority = 'Low';
         }
 
         $reqCount = Requisition::count() + 1;
@@ -320,5 +318,40 @@ class ManufacturingController extends Controller
         ]);
 
         return response()->json(['success' => true, 'reqId' => $reqId, 'priority' => $priority]);
+    }
+
+    public function receiveOrderFromEcommerce(Request $request): JsonResponse
+    {
+        $orderDate = $request->has('orderDate')
+            ? \Carbon\Carbon::parse($request->input('orderDate'))
+            : now();
+
+        $dueDate = (new DueDateService())->calculate($orderDate);
+
+        $order = WorkOrder::create([
+            'id'       => $request->input('id'),
+            'name'     => $request->input('name'),
+            'specs'    => $request->input('specs'),
+            'status'   => $request->input('status', 'Pending'),
+            'due_date' => $dueDate->toDateString(),
+            'source'   => $request->input('source'),
+            'assigned' => $request->input('assigned'),
+            'range'    => $request->input('range'),
+        ]);
+
+        foreach ($request->input('parts', []) as $part) {
+            $order->parts()->create([
+                'product_id' => $part['productId'] ?? null,
+                'name'       => $part['name'] ?? '',
+                'category'   => $part['category'] ?? '',
+                'status'     => $part['status'] ?? 'Sourcing',
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'id'      => $order->id,
+            'dueDate' => $dueDate->toDateString(),
+        ]);
     }
 }

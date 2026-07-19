@@ -25,6 +25,9 @@ Route::post('/manufacturing/add-qc-note',        [ManufacturingController::class
 // Requisitions / inventory
 Route::post('/manufacturing/send-to-inventory', [ManufacturingController::class, 'sendToInventory']);
 
+// E-commerce intake
+Route::post('/manufacturing/receive-order', [ManufacturingController::class, 'receiveOrderFromEcommerce']);
+
 // Workers
 Route::post('/manufacturing/update-worker',      [ManufacturingController::class, 'updateWorker']);
 Route::post('/manufacturing/delete-worker',      [ManufacturingController::class, 'deleteWorker']);

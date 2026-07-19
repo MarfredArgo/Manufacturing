@@ -24,15 +24,19 @@ class ManufacturingDataService
 
     public function workOrders(): array
     {
-        return WorkOrder::with('parts')->orderBy('due', 'asc')->get()->map(fn ($wo) => [
+        return WorkOrder::with('parts')->orderBy('due_date', 'asc')->get()->map(fn ($wo) => [
             'id'       => $wo->id,
             'name'     => $wo->name,
             'specs'    => $wo->specs,
             'status'   => $wo->status,
-            'due'      => $wo->due,
+            'due'      => $wo->due_date
+                ? 'Due ' . $wo->due_date->format('M j')
+                : $wo->due,
+            'dueDate'  => optional($wo->due_date)->toDateString(),
             'source'   => $wo->source,
             'assigned' => $wo->assigned,
             'range'    => $wo->range,
+            'createdAt'=> optional($wo->created_at)->toDateTimeString(),
             'parts'    => $wo->parts->map(fn ($p) => [
                 'productId' => $p->product_id,
                 'name'      => $p->name,
