@@ -112,14 +112,14 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
                 </span>
                 <span class="text-xs text-nexora-navy">Assigned: {{ $order['assigned'] }}</span>
             </div>
-            <div class="rounded-xl h-full bg-nexora-slate-200 overflow-auto [&::-webkit-scrollbar]:hidden mt-8 p-4 pt-2">
+            <div class="rounded-xl h-full bg-nexora-steel-blue overflow-auto [&::-webkit-scrollbar]:hidden mt-8 p-4 pt-2">
                 <table class="w-full text-xs sortable-table" data-table-id="bom-{{ $i }}">
-                    <thead class="sticky top-0 bg-nexora-slate-200 z-5">
+                    <thead class="sticky top-0 bg-nexora-steel-blue">
                         <tr>
                             <th class="table-header px-8 text-center text-nexora-deep-navy sortable" data-sort-type="text">Product ID</th>
                             <th class="table-header px-8 text-center text-nexora-deep-navy sortable" data-sort-type="text">Product Name</th>
                             <th class="table-header px-8 text-center text-nexora-deep-navy sortable" data-sort-type="text">Category</th>
-                            <th class="table-header px-8 text-center text-nexora-deep-navy sortable" data-sort-type="number">Price</th>
+                            <th class="table-header px-8 text-center text-nexora-deep-navy sortable" data-sort-type="text">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -135,8 +135,12 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
                                 <td class="px-8 py-2 text-center text-nexora-navy-mid" data-sort-value="{{ $part['category'] }}">
                                     {{ $part['category'] }}
                                 </td>
-                                <td class="px-8 py-2 text-center">
-                                </td>    
+                                <td class="px-8 py-2 text-center" data-sort-value="{{ $part['status'] }}">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold {{ $ps['text'] }}">
+                                        <span class="w-1.5 h-1.5 rounded-full {{ $ps['dot'] }}"></span>
+                                        {{ $part['status'] }}
+                                    </span>
+                                </td>
                             </tr>
                         @empty
                             <tr>

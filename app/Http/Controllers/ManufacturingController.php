@@ -43,13 +43,14 @@ class ManufacturingController extends Controller
         $orderIndex  = (int)  $request->input('orderIndex');
         $partChanges = (array) $request->input('partChanges', []);
         $sendToQC    = (bool)  $request->input('sendToQC', false);
+        $cancelOrder = (bool)  $request->input('cancelOrder', false);
 
-        $order = WorkOrder::with('parts')->orderBy('id', 'desc')->get()->values()->get($orderIndex);
+        $order = WorkOrder::with('parts')->orderBy('due_date', 'asc')->get()->values()->get($orderIndex);
         if (!$order) {
             return response()->json(['success' => false, 'message' => 'Order not found.'], 404);
         }
 
-        DB::connection('manufacturing')->transaction(function () use ($order, $partChanges, $sendToQC) {
+        DB::connection('manufacturing')->transaction(function () use ($order, $partChanges, $sendToQC, $cancelOrder) {
             $partsByPosition = $order->parts->values();
 
             foreach ($partChanges as $position => $newStatus) {
@@ -69,6 +70,10 @@ class ManufacturingController extends Controller
 
             if ($sendToQC && in_array($order->status, ['Finished', 'Building'])) {
                 $order->status = 'QC Check';
+            }
+
+            if  ($cancelOrder) {
+                $order->status = 'Cancelled';
             }
 
             $order->save();
@@ -318,6 +323,24 @@ class ManufacturingController extends Controller
         ]);
 
         return response()->json(['success' => true, 'reqId' => $reqId, 'priority' => $priority]);
+    }
+
+    public function cancelOrder(Request $request): JsonResponse
+    {
+        $orderIndex = (int) $request->input('orderIndex');
+        $order = WorkOrder::orderBy('due_date', 'asc')->get()->values()->get($orderIndex);
+
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found.'], 404);
+        }
+
+        if ($order->status === 'Cancelled') {
+            return response()->json(['success' => false, 'message' => 'Order is already cancelled.'], 422);
+        }
+
+        $order->update(['status' => 'Cancelled']);
+
+        return response()->json(['success' => true]);
     }
 
     public function receiveOrderFromEcommerce(Request $request): JsonResponse

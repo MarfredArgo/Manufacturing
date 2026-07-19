@@ -23,6 +23,8 @@ function openEditModal(i) {
     const showQCBtn = order.status === 'Finished' || (order.status === 'Building' && allPartsAlreadyReady);
     document.getElementById('section-order-status').classList.toggle('hidden', !showQCBtn);
 
+    document.getElementById('section-cancel-order').classList.toggle('hidden', order.status === 'Cancelled');
+
     renderPartsList(order.parts);
     document.getElementById('modal-save-msg').classList.add('hidden');
     openModal('edit-backdrop');
@@ -153,4 +155,42 @@ function getStatusPill(status) {
         'Cancelled':'bg-gray-400 text-gray-900',
     };
     return map[status] ?? 'bg-gray-300 text-gray-800';
+}
+
+function confirmCancelOrder() {
+    if (editingOrderIndex === null) return;
+    const order = workOrdersData[editingOrderIndex];
+
+    openConfirmModal(
+        `This will mark "${order.name}" (${order.id}) as Cancelled. This cannot be undone from here.`,
+        () => cancelOrder(editingOrderIndex),
+        { title: 'Cancel this build?', confirmLabel: 'Yes, Cancel Order', dangerous: true }
+    );
+}
+
+async function cancelOrder() {
+    const payload = {
+        cancelOrder: true,
+        orderIndex:  editingOrderIndex,
+        _token: document.querySelector('meta[name="csrf-token"]').content,
+    };
+
+    try {
+        const res  = await fetch('/manufacturing/cancel-order', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': payload._token },
+            body:    JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (data.success) {
+            closeModal('edit-backdrop');
+            showSuccess('Build cancelled.');
+            setTimeout(() => window.location.reload(), 800);
+        } else {
+            alert('Failed to cancel: ' + (data.message ?? 'Unknown error'));
+        }
+    } catch (err) {
+        alert('Network error — could not cancel order.');
+        console.error(err);
+    }
 }

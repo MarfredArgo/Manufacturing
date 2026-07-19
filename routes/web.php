@@ -10,6 +10,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Work orders
 Route::post('/manufacturing/update-order',       [ManufacturingController::class, 'updateOrder']);
+Route::post('/manufacturing/cancel-order',       [ManufacturingController::class, 'cancelOrder']);
 
 // QC benchmark
 Route::post('/manufacturing/update-qc',          [ManufacturingController::class, 'updateQC']);

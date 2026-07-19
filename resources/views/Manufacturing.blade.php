@@ -243,6 +243,49 @@
             </div>
         </main>
     </div>
+
+    {{-- ── UNIVERSAL CONFIRM MODAL ─────────────────────────────────────────── --}}
+    <div id="universal-confirm-backdrop"
+         class="modal-backdrop fixed inset-0 z-[999] flex items-center justify-center hidden"
+         onclick="handleBackdropClick(event, 'universal-confirm-backdrop')">
+        <div class="absolute inset-0 bg-nexora-deep-navy/40 backdrop-blur-sm pointer-events-none"></div>
+        <div onclick="event.stopPropagation()"
+             class="relative z-10 bg-nexora-off-white border border-nexora-corporate/50 rounded-2xl shadow-2xl w-full max-w-sm mx-4 flex flex-col">
+            <div class="px-5 pt-5 pb-3">
+                <h2 id="universal-confirm-title" class="text-base font-bold text-nexora-deep-navy">Are you sure?</h2>
+                <p id="universal-confirm-message" class="text-xs text-nexora-navy-mid mt-1.5 leading-relaxed"></p>
+            </div>
+            <div class="flex gap-2 justify-end px-5 pb-5">
+                <button onclick="closeModal('universal-confirm-backdrop')"
+                        class="px-4 py-1.5 rounded-full text-xs font-medium border border-nexora-corporate/50
+                               text-nexora-navy-mid hover:bg-nexora-slate-200 transition-colors">
+                    Cancel
+                </button>
+                <button id="universal-confirm-btn"
+                        onclick="runConfirmedAction()"
+                        class="px-4 py-1.5 rounded-full text-xs font-semibold bg-nexora-corporate text-white
+                               hover:bg-nexora-navy-mid transition-colors">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- ── UNIVERSAL SUCCESS NOTIFICATION ──────────────────────────────────── --}}
+    <div id="success-notif" class="fixed inset-0 bg-black/50 flex items-center justify-center z-[999] hidden">
+        <div class="bg-white rounded-2xl shadow-2xl px-6 py-5 flex flex-col items-center gap-3 max-w-xs mx-4">
+            <div class="w-10 h-10 rounded-full bg-nexora-success/15 flex items-center justify-center">
+                <span class="text-nexora-success text-xl">✓</span>
+            </div>
+            <p id="success-text" class="text-sm text-nexora-deep-navy text-center"></p>
+            <button onclick="closeSuccessNotif()"
+                    class="px-4 py-1.5 rounded-full text-xs font-semibold bg-nexora-corporate text-white
+                           hover:bg-nexora-navy-mid transition-colors">
+                OK
+            </button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </body>
 </html>

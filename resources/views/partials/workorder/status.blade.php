@@ -35,12 +35,6 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
                             text-nexora-deep-navy hover:bg-nexora-corporate hover:text-white transition-colors duration-150">
                     Building
                 </button>
-                <button data-filter="Pending"
-                        onclick="filterOrders('Pending')"
-                        class="filter-btn px-3 py-1 rounded-full text-xs border border-nexora-corporate
-                            text-nexora-deep-navy hover:bg-nexora-corporate hover:text-white transition-colors duration-150">
-                    Pending
-                </button>
                 <button data-filter="Finished"
                         onclick="filterOrders('Finished')"
                         class="filter-btn px-3 py-1 rounded-full text-xs border border-nexora-corporate
@@ -54,7 +48,7 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
         <div class="flex-1 rounded-lg bg-nexora-slate-200 border border-nexora-corporate/50
                     px-1 py-3 overflow-y-auto [&::-webkit-scrollbar]:hidden">
             @foreach($workOrders as $i => $order)
-            @if (strtolower($order['status']) != 'qc check' && strtolower($order['status']) != 'cancelled')
+            @if (strtolower($order['status']) != 'qc check' && strtolower($order['status']) != 'cancelled' && strtolower($order['assigned']) != 'unassigned')
                 @php
                     $style    = $statusStyles[$order['status']] ?? ['pill' => 'bg-gray-400 text-white'];
                     $isActive = $i === $selectedIndex;
@@ -207,12 +201,12 @@ $selectedOrder = $workOrders[$selectedIndex] ?? $workOrders[0];
                         </button>
                     </div>
                 </div>
-                <div class="bg-nexora-slate-200 border border-nexora-corporate/30 rounded-xl p-4 flex items-center justify-between">
+                <div id="section-cancel-order" class="bg-nexora-slate-200 border border-nexora-corporate/30 rounded-xl p-4 flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-nexora-deep-navy">Cancel Build</p>
                         <p class="text-xs text-nexora-navy-mid mt-0.5">Mark this as cancelled build</p>
                     </div>
-                    <button onclick="closeModal('edit-backdrop')"
+                    <button onclick="confirmCancelOrder(); closeModal('edit-backdrop');"
                             class="px-4 py-1.5 rounded-full text-xs font-medium bg-nexora-danger border border-nexora-stat-red/50
                                 text-nexora-off-white hover:bg-nexora-stat-red hover:text-white transition-colors">
                         Cancel Order

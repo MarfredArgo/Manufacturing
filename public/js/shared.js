@@ -97,4 +97,26 @@ function initRowAnimations() {
     reanimateRows();
 }
 
+// ── Universal Confirm Modal ────────────────────────────────────────────────
+let _confirmCallback = null;
 
+function openConfirmModal(message, callback, options = {}) {
+    document.getElementById('universal-confirm-title').textContent   = options.title || 'Are you sure?';
+    document.getElementById('universal-confirm-message').textContent = message;
+
+    const confirmBtn = document.getElementById('universal-confirm-btn');
+    confirmBtn.textContent = options.confirmLabel || 'Confirm';
+    confirmBtn.className = options.dangerous
+        ? 'px-4 py-1.5 rounded-full text-xs font-semibold bg-nexora-danger text-white hover:opacity-90 transition-colors'
+        : 'px-4 py-1.5 rounded-full text-xs font-semibold bg-nexora-corporate text-white hover:bg-nexora-navy-mid transition-colors';
+
+    _confirmCallback = callback;
+    openModal('universal-confirm-backdrop');
+}
+
+function runConfirmedAction() {
+    closeModal('universal-confirm-backdrop');
+    const callback = _confirmCallback;
+    _confirmCallback = null;
+    if (typeof callback === 'function') callback();
+}

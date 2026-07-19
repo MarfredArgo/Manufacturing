@@ -18,7 +18,7 @@ $workerRole = request()->get('role','');
             <input type="text" id="searchWO" placeholder="Search orders..." oninput="filterAssignmentSearch()"
                    class="w-full pl-8 pr-3 py-1.5 rounded-md bg-nexora-steel-blue/50 text-nexora-deep-navy text-xs placeholder-nexora-navy/50 border border-nexora-corporate focus:outline-none focus:border-nexora-deep-navy">
         </div>
-        <div class="flex-1 rounded-lg bg-nexora-slate-200 border border-nexora-corporate/50 px-1 py-3 overflow-y-auto">
+        <div class="flex-1 rounded-lg bg-nexora-slate-200 border border-nexora-corporate/50 px-1 py-3 overflow-y-auto [&::-webkit-scrollbar]:hidden">
             @foreach($workOrders as $i => $order)
                 @if ($order['assigned']=='Unassigned')
                     @php
@@ -80,7 +80,7 @@ $workerRole = request()->get('role','');
 
             <p id="assign-instructions" class="hidden text-sm text-nexora-slate-500 mb-4">Click a worker to select them, then hit Confirm Assignment</p>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-4 overflow-y-auto [&::-webkit-scrollbar]:hidden">
                 @foreach($workers as $i => $worker)
                     <div id="worker-card-{{ $i }}"
                          class="worker-item p-3 rounded-lg bg-white border border-nexora-corporate/30 hover:shadow-md hover:border-nexora-corporate/60 cursor-pointer transition-all"
@@ -101,15 +101,7 @@ $workerRole = request()->get('role','');
 </div>
 
 {{-- Modals & Scripts --}}
-<div id="success-notif" class="fixed inset-0 bg-black/50 flex items-center justify-center z-[999] hidden">
-    <div class="bg-white rounded-lg p-6 w-full max-w-sm shadow-xl text-center">
-        <p id="success-text" class="text-base text-gray-800"></p>
-        <button onclick="closeSuccessNotif()" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">OK</button>
-    </div>
-</div>
-
 <script>
-// Page data handed off to functions.js — same pattern as workOrdersData in Status.blade.php
 const workOrdersData = @json($workOrders);
 const workersData = @json($workers);
 const CURRENT_SELECTED = {{ $selectedIndex ?? -1 }};
