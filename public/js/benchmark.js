@@ -3,6 +3,7 @@
 
 let bmRows = {};
 
+// ── Modal open ──────────────────────────────────────────────────────────
 function openBenchmarkModal() {
     bmRows = {};
     renderBenchmarkChecks();
@@ -11,6 +12,7 @@ function openBenchmarkModal() {
     openModal('benchmark-backdrop');
 }
 
+// ── Render checks ───────────────────────────────────────────────────────
 function renderBenchmarkChecks() {
     const list    = document.getElementById('bm-check-list');
     const checks  = benchmarkData.checks;
@@ -151,6 +153,7 @@ function updateBenchmarkCounts() {
     document.getElementById('bm-count-fail').textContent = fail + ' Fail';
 }
 
+// ── Save ────────────────────────────────────────────────────────────────
 async function saveBenchmarkResults() {
     const results = Object.entries(bmRows).map(([checkId, data]) => ({
         checkId,
@@ -184,6 +187,7 @@ async function saveBenchmarkResults() {
     }
 }
 
+// ── Send to inventory ───────────────────────────────────────────────────
 function openSendToInventoryModal() {
     document.getElementById('req-part-name').value = '';
     document.getElementById('req-quantity').value = 1;

@@ -11,12 +11,14 @@ class BenchmarkTargetService
         'office'    => 'OF',
     ];
 
+    // ── Targets for a build range ────────────────────────────────────────────
     public function targetsFor(?string $range): array
     {
         $key = self::RANGE_MAP[$range] ?? 'MR';
         return config("nexora.benchmarkTargets.$key", []);
     }
 
+    // ── Pass / Warn / Fail verdict ───────────────────────────────────────────
     public function verdictFor(string $checkId, ?string $range, ?float $value): string
     {
         if ($value === null) return '';

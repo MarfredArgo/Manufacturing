@@ -1,3 +1,5 @@
+// table-sort.js
+// Makes any table.sortable-table clickable-sortable by column.
 function initSortableTables() {
     document.querySelectorAll('table.sortable-table').forEach(table => {
         if (!table._originalOrder) {

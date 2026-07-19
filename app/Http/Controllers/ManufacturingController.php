@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class ManufacturingController extends Controller
 {
+    // ── Page load ────────────────────────────────────────────────────────────
     public function index()
     {
         $data = (new ManufacturingDataService())->loadAll();
@@ -38,6 +39,7 @@ class ManufacturingController extends Controller
         ]);
     }
 
+    // ── Work orders ──────────────────────────────────────────────────────────
     public function updateOrder(Request $request): JsonResponse
     {
         $orderIndex  = (int)  $request->input('orderIndex');
@@ -82,6 +84,7 @@ class ManufacturingController extends Controller
         return response()->json(['success' => true]);
     }
 
+    // ── QC benchmark ─────────────────────────────────────────────────────────
     public function updateQC(Request $request): JsonResponse
     {
         $woId    = $request->input('woId');
@@ -165,6 +168,7 @@ class ManufacturingController extends Controller
         return response()->json(['success' => true]);
     }
 
+    // ── Rework ───────────────────────────────────────────────────────────────
     public function updateRework(Request $request): JsonResponse
     {
         $reworkIndex = (int) $request->input('reworkIndex');
@@ -227,6 +231,7 @@ class ManufacturingController extends Controller
         return response()->json(['success' => true]);
     }
 
+    // ── Analytics ────────────────────────────────────────────────────────────
     public function addQcNote(Request $request): JsonResponse
     {
         $woId = $request->input('woId');
@@ -247,6 +252,7 @@ class ManufacturingController extends Controller
         return response()->json(['success' => true]);
     }
 
+    // ── Workers ──────────────────────────────────────────────────────────────
     public function addWorker(Request $request): JsonResponse
     {
         Worker::create([
@@ -291,6 +297,7 @@ class ManufacturingController extends Controller
         return response()->json(['success' => true]);
     }
 
+    // ── Requisitions / inventory ─────────────────────────────────────────────
     public function sendToInventory(Request $request): JsonResponse
     {
         $woId    = $request->input('woId');
@@ -325,6 +332,7 @@ class ManufacturingController extends Controller
         return response()->json(['success' => true, 'reqId' => $reqId, 'priority' => $priority]);
     }
 
+    // ── Work orders (cont.) ──────────────────────────────────────────────────
     public function cancelOrder(Request $request): JsonResponse
     {
         $orderIndex = (int) $request->input('orderIndex');
@@ -343,6 +351,7 @@ class ManufacturingController extends Controller
         return response()->json(['success' => true]);
     }
 
+    // ── E-commerce intake ────────────────────────────────────────────────────
     public function receiveOrderFromEcommerce(Request $request): JsonResponse
     {
         $orderDate = $request->has('orderDate')

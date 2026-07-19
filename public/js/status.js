@@ -5,6 +5,7 @@ let editingOrderIndex = null;
 let pendingChanges    = {};
 let pendingQC         = false;
 
+// ── Modal open ──────────────────────────────────────────────────────────
 function openEditModal(i) {
     editingOrderIndex = i;
     pendingChanges    = {};
@@ -30,6 +31,7 @@ function openEditModal(i) {
     openModal('edit-backdrop');
 }
 
+// ── Parts list ──────────────────────────────────────────────────────────
 function renderPartsList(parts) {
     const list = document.getElementById('modal-parts-list');
     list.innerHTML = '';
@@ -100,6 +102,7 @@ function markReady(partIdx) {
     }
 }
 
+// ── Send to QC ──────────────────────────────────────────────────────────
 function sendToQC() {
     pendingQC = true;
     const statusEl = document.getElementById('modal-order-status');
@@ -108,6 +111,7 @@ function sendToQC() {
     document.getElementById('section-order-status').classList.add('hidden');
 }
 
+// ── Save ────────────────────────────────────────────────────────────────
 async function saveChanges() {
     if (editingOrderIndex === null) return;
     if (Object.keys(pendingChanges).length === 0 && !pendingQC) {
@@ -146,6 +150,7 @@ async function saveChanges() {
     }
 }
 
+// ── Helpers ─────────────────────────────────────────────────────────────
 function getStatusPill(status) {
     const map = {
         'Building': 'bg-yellow-400 text-yellow-900',
@@ -157,6 +162,7 @@ function getStatusPill(status) {
     return map[status] ?? 'bg-gray-300 text-gray-800';
 }
 
+// ── Cancel order ────────────────────────────────────────────────────────
 function confirmCancelOrder() {
     if (editingOrderIndex === null) return;
     const order = workOrdersData[editingOrderIndex];

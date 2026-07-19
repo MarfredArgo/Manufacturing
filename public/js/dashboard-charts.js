@@ -1,3 +1,5 @@
+// dashboard-charts.js
+// Renders the weekly builds bar chart on the Dashboard.
 function initDashboardChart() {
     const ctx = document.getElementById('dashWeekChart');
     if (!ctx || !window.dashboardData || !window.Chart) return;

@@ -1,3 +1,5 @@
+// reports-charts.js
+// Renders the status/weekly/parts charts on the Reports page.
 function initReportsCharts() {
     if (!window.reportsData || !window.Chart) return;
 

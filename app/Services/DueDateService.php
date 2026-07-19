@@ -11,13 +11,9 @@ class DueDateService
     private const EXTRA_DAYS         = 3;
     private const CAPACITY_THRESHOLD = 70;
 
-    /**
-     * Calculate the due date for an incoming work order.
-     *
-     * Default is order date + 7 days. If 70 or more orders already have a
-     * due date falling within that same 7-day window, the queue is
-     * considered congested and 3 extra days are added (10 days total).
-     */
+    // ── Due date calc ────────────────────────────────────────────────────────
+    // Default: order date + 7 days. +3 extra days if 70+ orders already fall
+    // in that window (queue congestion).
     public function calculate(?Carbon $orderDate = null): Carbon
     {
         $orderDate = ($orderDate ?? now())->copy();

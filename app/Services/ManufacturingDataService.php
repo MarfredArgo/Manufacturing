@@ -10,6 +10,7 @@ use App\Models\Requisition;
 
 class ManufacturingDataService
 {
+    // ── Load everything ──────────────────────────────────────────────────────
     public function loadAll(): array
     {
         return [
@@ -22,6 +23,7 @@ class ManufacturingDataService
         ];
     }
 
+    // ── Work orders ──────────────────────────────────────────────────────────
     public function workOrders(): array
     {
         return WorkOrder::with('parts')->orderBy('due_date', 'asc')->get()->map(fn ($wo) => [
@@ -46,6 +48,7 @@ class ManufacturingDataService
         ])->values()->all();
     }
 
+    // ── Workers ──────────────────────────────────────────────────────────────
     public function workers(): array
     {
         return Worker::orderBy('id')->get()->map(fn ($w) => [
@@ -56,6 +59,7 @@ class ManufacturingDataService
         ])->values()->all();
     }
 
+    // ── QC sessions ──────────────────────────────────────────────────────────
     public function qcSessions(): array
     {
         return QcSession::with('results')->get()->map(fn ($s) => [
@@ -71,6 +75,7 @@ class ManufacturingDataService
         ])->values()->all();
     }
 
+    // ── Rework orders ────────────────────────────────────────────────────────
     public function reworkOrders(): array
     {
         return ReworkOrder::with(['failedChecks', 'requiredParts'])->orderBy('id')->get()->map(fn ($rw) => [
@@ -100,6 +105,7 @@ class ManufacturingDataService
         ])->values()->all();
     }
 
+    // ── Requisitions ─────────────────────────────────────────────────────────
     public function requisitions(): array
     {
         return Requisition::orderBy('created_at', 'desc')->get()->map(fn ($r) => [
