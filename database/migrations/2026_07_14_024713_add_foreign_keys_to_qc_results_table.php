@@ -24,6 +24,9 @@ return new class extends Migration
             if (!$this->fkExists('manufacturing', 'qc_results_session_id_fkey')) {
                 $table->foreign(['session_id'], 'qc_results_session_id_fkey')->references(['id'])->on('qc_sessions')->onUpdate('no action')->onDelete('cascade');
             }
+            if (!$this->fkExists('manufacturing', 'qc_results_wo_part_id_fkey')) {
+                $table->foreign(['wo_part_id'], 'qc_results_wo_part_id_fkey')->references(['id'])->on('work_order_parts')->onUpdate('no action')->onDelete('set null');
+            }
         });
     }
 
@@ -32,6 +35,9 @@ return new class extends Migration
         Schema::connection('manufacturing')->table('qc_results', function (Blueprint $table) {
             if ($this->fkExists('manufacturing', 'qc_results_session_id_fkey')) {
                 $table->dropForeign('qc_results_session_id_fkey');
+            }
+            if ($this->fkExists('manufacturing', 'qc_results_wo_part_id_fkey')) {
+                $table->dropForeign('qc_results_wo_part_id_fkey');
             }
         });
     }

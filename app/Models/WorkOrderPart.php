@@ -13,4 +13,9 @@ class WorkOrderPart extends Model
     {
         return $this->belongsTo(WorkOrder::class, 'wo_id');
     }
+
+    public function qcResults()
+    {
+        return $this->hasMany(QcResult::class, 'wo_part_id');
+    }
 }

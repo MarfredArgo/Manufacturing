@@ -90,13 +90,17 @@ class ManufacturingController extends Controller
         $woId    = $request->input('woId');
         $results = $request->input('results', []);
 
-        $order = WorkOrder::find($woId);
+        $order = WorkOrder::with('parts')->find($woId);
         $range = $order->range ?? null;
 
         $targetService   = new BenchmarkTargetService();
         $allowedVerdicts = ['Pass', 'Warn', 'Fail', ''];
 
-        $cleanResults = array_map(function ($r) use ($targetService, $range, $allowedVerdicts) {
+        // Checks are prefixed by the part category they test (e.g. "GPU_temp" -> "GPU"),
+        // so look up the matching physical part on this work order once per category.
+        $partsByCategory = $order ? $order->parts->keyBy('category') : collect();
+
+        $cleanResults = array_map(function ($r) use ($targetService, $range, $allowedVerdicts, $partsByCategory) {
             $checkId = (string) ($r['checkId'] ?? '');
             $value   = isset($r['value']) && $r['value'] !== null ? (float) $r['value'] : null;
             $verdict = $r['verdict'] ?? '';
@@ -105,15 +109,19 @@ class ManufacturingController extends Controller
                 $verdict = $targetService->verdictFor($checkId, $range, $value);
             }
 
+            [$category] = explode('_', $checkId, 2);
+            $part = $partsByCategory->get($category);
+
             return [
-                'checkId' => $checkId,
-                'value'   => $value,
-                'verdict' => in_array($verdict, $allowedVerdicts) ? $verdict : '',
-                'note'    => (string) ($r['note'] ?? ''),
+                'checkId'  => $checkId,
+                'woPartId' => $part->id ?? null,
+                'value'    => $value,
+                'verdict'  => in_array($verdict, $allowedVerdicts) ? $verdict : '',
+                'note'     => (string) ($r['note'] ?? ''),
             ];
         }, $results);
 
-        DB::connection('manufacturing')->transaction(function () use ($woId, $cleanResults, $range, $targetService, $order) {
+        DB::connection('manufacturing')->transaction(function () use ($woId, $cleanResults, $range) {
             $session = QcSession::where('wo_id', $woId)->first();
             if (!$session) {
                 $session = QcSession::create(['wo_id' => $woId, 'build_type' => $range ?? 'mid-range', 'tech' => '']);
@@ -122,46 +130,12 @@ class ManufacturingController extends Controller
             $session->results()->delete();
             foreach ($cleanResults as $r) {
                 $session->results()->create([
-                    'check_id' => $r['checkId'],
-                    'value'    => $r['value'],
-                    'verdict'  => $r['verdict'],
-                    'note'     => $r['note'],
+                    'check_id'   => $r['checkId'],
+                    'wo_part_id' => $r['woPartId'],
+                    'value'      => $r['value'],
+                    'verdict'    => $r['verdict'],
+                    'note'       => $r['note'],
                 ]);
-            }
-
-            $flagged = array_values(array_filter($cleanResults, fn ($r) => in_array($r['verdict'], ['Warn', 'Fail'])));
-            if (count($flagged) > 0 && !ReworkOrder::where('wo_id', $woId)->exists()) {
-                $targets = $targetService->targetsFor($range);
-
-                $rwCount  = ReworkOrder::count() + 1;
-                $reworkId = 'RW-2024-' . str_pad((string) $rwCount, 3, '0', STR_PAD_LEFT);
-
-                $rework = ReworkOrder::create([
-                    'id'                       => $reworkId,
-                    'wo_id'                    => $woId,
-                    'build_name'               => $order->name ?? $woId,
-                    'assigned_tech'            => $order->assigned ?? '',
-                    'raised_by'                => $order->assigned ?? '',
-                    'raised_date'              => now()->format('M d, Y'),
-                    'status'                   => 'In Rework',
-                    'priority'                 => 'Medium',
-                    'notes'                    => 'Auto-created from QC benchmark flags.',
-                    'escalated_to_inventory' => false,
-                ]);
-
-                foreach ($flagged as $r) {
-                    $def = $targets[$r['checkId']] ?? null;
-                    $rework->failedChecks()->create([
-                        'check_id'   => $r['checkId'],
-                        'check_name' => $def['name'] ?? $r['checkId'],
-                        'verdict'    => $r['verdict'],
-                        'result'     => $r['value'] !== null
-                            ? number_format($r['value']) . ' ' . ($def['unit'] ?? '')
-                            : '—',
-                        'target'     => ($def['operator'] ?? '') . ' ' . number_format($def['target'] ?? 0) . ' ' . ($def['unit'] ?? ''),
-                        'reason'     => $r['note'] ?: 'Flagged during QC benchmark',
-                    ]);
-                }
             }
         });
 
@@ -315,19 +289,64 @@ class ManufacturingController extends Controller
         $reqCount = Requisition::count() + 1;
         $reqId    = 'REQ-' . str_pad((string) $reqCount, 4, '0', STR_PAD_LEFT);
 
-        Requisition::create([
-            'req_id'         => $reqId,
-            'part_name'      => $request->input('partName'),
-            'quantity'       => (int) $request->input('quantity', 1),
-            'department'     => 'Manufacturing',
-            'destination'    => 'Inventory',
-            'requested_by'   => $request->input('requestedBy'),
-            'priority'       => $priority,
-            'wo_id'          => $woId,
-            'notes'          => $request->input('notes'),
-            'date_requested' => now()->toDateString(),
-            'status'         => 'Pending',
-        ]);
+        DB::connection('manufacturing')->transaction(function () use ($woId, $order, $request, $reqId, $priority) {
+            Requisition::create([
+                'req_id'         => $reqId,
+                'part_name'      => $request->input('partName'),
+                'quantity'       => (int) $request->input('quantity', 1),
+                'department'     => 'Manufacturing',
+                'destination'    => 'Inventory',
+                'requested_by'   => $request->input('requestedBy'),
+                'priority'       => $priority,
+                'wo_id'          => $woId,
+                'notes'          => $request->input('notes'),
+                'date_requested' => now()->toDateString(),
+                'status'         => 'Pending',
+            ]);
+
+            // A build only moves into rework once a defect has actually been sent to inventory.
+            if (!$order || ReworkOrder::where('wo_id', $woId)->exists()) {
+                return;
+            }
+
+            $session = QcSession::where('wo_id', $woId)->first();
+            $failed  = $session ? $session->results()->where('verdict', 'Fail')->get() : collect();
+            if ($failed->isEmpty()) {
+                return;
+            }
+
+            $targets = (new BenchmarkTargetService())->targetsFor($order->range);
+
+            $rwCount  = ReworkOrder::count() + 1;
+            $reworkId = 'RW-2024-' . str_pad((string) $rwCount, 3, '0', STR_PAD_LEFT);
+
+            $rework = ReworkOrder::create([
+                'id'                     => $reworkId,
+                'wo_id'                  => $woId,
+                'build_name'             => $order->name ?? $woId,
+                'assigned_tech'          => $order->assigned ?? '',
+                'raised_by'              => $order->assigned ?? '',
+                'raised_date'            => now()->format('M d, Y'),
+                'status'                 => 'In Rework',
+                'priority'               => 'Medium',
+                'notes'                  => 'Raised after defect sent to inventory.',
+                'escalated_to_inventory' => true,
+            ]);
+
+            foreach ($failed as $r) {
+                $def = $targets[$r->check_id] ?? null;
+                $rework->failedChecks()->create([
+                    'check_id'   => $r->check_id,
+                    'check_name' => $def['name'] ?? $r->check_id,
+                    'verdict'    => $r->verdict,
+                    'result'     => $r->value !== null
+                        ? number_format($r->value) . ' ' . ($def['unit'] ?? '')
+                        : '—',
+                    'target'     => ($def['operator'] ?? '') . ' ' . number_format($def['target'] ?? 0) . ' ' . ($def['unit'] ?? ''),
+                    'reason'     => $r->note ?: 'Flagged during QC benchmark',
+                ]);
+            }
+        });
 
         return response()->json(['success' => true, 'reqId' => $reqId, 'priority' => $priority]);
     }

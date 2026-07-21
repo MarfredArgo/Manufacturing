@@ -62,15 +62,18 @@ class ManufacturingDataService
     // ── QC sessions ──────────────────────────────────────────────────────────
     public function qcSessions(): array
     {
-        return QcSession::with('results')->get()->map(fn ($s) => [
+        return QcSession::with('results.part')->get()->map(fn ($s) => [
             'woId'     => $s->wo_id,
             'template' => $s->build_type,
             'tech'     => $s->tech,
             'results'  => $s->results->map(fn ($r) => [
-                'checkId' => $r->check_id,
-                'value'   => $r->value !== null ? $r->value + 0 : null,
-                'verdict' => $r->verdict,
-                'note'    => $r->note,
+                'checkId'     => $r->check_id,
+                'woPartId'    => $r->wo_part_id,
+                'partName'    => $r->part->name ?? null,
+                'partCategory'=> $r->part->category ?? null,
+                'value'       => $r->value !== null ? $r->value + 0 : null,
+                'verdict'     => $r->verdict,
+                'note'        => $r->note,
             ])->values()->all(),
         ])->values()->all();
     }

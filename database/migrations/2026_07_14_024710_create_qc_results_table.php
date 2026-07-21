@@ -22,6 +22,7 @@ return new class extends Migration
             $table->increments('id');
             $table->integer('session_id');
             $table->string('check_id', 10);
+            $table->unsignedInteger('wo_part_id')->nullable();
             $table->decimal('value')->nullable();
             $table->string('verdict', 10)->nullable();
             $table->text('note')->nullable();

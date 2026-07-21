@@ -228,41 +228,9 @@
                     <button onclick="escalateToInventory({{ $selectedIdx }})"
                             class="w-full py-1.5 rounded-lg text-[10px] font-semibold border border-nexora-corporate/50
                                    text-nexora-corporate bg-nexora-corporate/10 hover:bg-nexora-corporate hover:text-white transition-colors">
-                        Send to Inventory
+                        Request Replacement from Inventory
                     </button>
                 @endif
-            </div>
-
-            <div class="bg-nexora-slate-200 border border-nexora-corporate/50 rounded-xl p-4">
-                <p class="text-[10px] font-semibold text-nexora-deep-navy uppercase tracking-wider mb-3">Rework Flow</p>
-                @php
-                    $fs = $selectedRework['status'];
-                    $flowSteps = [
-                        ['QC flagged',       'Benchmark flags an issue',       true],
-                        ['Rework raised',    'Sent from QC benchmark',         true],
-                        ['Waiting for part', 'Inventory sourcing replacement', in_array($fs, ['Waiting for Part','In Rework','Ready for QC'])],
-                        ['In rework',        'Tech fixes or replaces part',    in_array($fs, ['In Rework','Ready for QC'])],
-                        ['Ready for QC',     'Full benchmark re-run',          $fs === 'Ready for QC'],
-                    ];
-                @endphp
-                @foreach($flowSteps as $si => [$sname, $ssub, $sdone])
-                    <div class="flex gap-2 items-start">
-                        <div class="flex flex-col items-center flex-shrink-0">
-                            <div class="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-semibold
-                                {{ $sdone ? 'bg-nexora-success/20 text-nexora-success border border-nexora-success/50'
-                                          : 'bg-nexora-slate-500/20 text-nexora-navy-mid border border-nexora-corporate/30' }}">
-                                {{ $sdone ? '✓' : $si+1 }}
-                            </div>
-                            @if($si < count($flowSteps)-1)
-                                <div class="w-px h-4 bg-nexora-corporate/20 my-0.5"></div>
-                            @endif
-                        </div>
-                        <div class="pt-0.5 pb-3">
-                            <p class="text-[10px] font-semibold text-nexora-deep-navy">{{ $sname }}</p>
-                            <p class="text-[10px] text-nexora-navy-mid">{{ $ssub }}</p>
-                        </div>
-                    </div>
-                @endforeach
             </div>
 
             <button onclick="openMarkReadyForQCModal({{ $selectedIdx }})"

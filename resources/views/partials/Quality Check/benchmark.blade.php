@@ -36,6 +36,7 @@
 
     $checkMap = $checks->keyBy('id');
     $flagged  = $results->filter(fn($r) => in_array($r['verdict'], ['Warn','Fail']) && $r['note'] !== '');
+    $failedParts = $results->filter(fn($r) => $r['verdict'] === 'Fail');
 
     $rangePill = $rangeStyles[$range] ?? 'bg-nexora-slate-500/80 text-white';
 @endphp
@@ -269,12 +270,14 @@
                         </div>
                     @endforeach
                 </div>
+                @if($failedParts->count())
                 <button onclick="openSendToInventoryModal()"
                         class="mt-3 w-full py-1.5 rounded-lg text-[10px] font-semibold
                                border border-nexora-danger/50 bg-nexora-danger/10 text-nexora-danger
                                hover:bg-nexora-danger/20 transition-colors duration-150">
                     Send to Inventory
                 </button>
+                @endif
             </div>
             @endif
 
@@ -313,12 +316,6 @@
                     @endforeach
                 </div>
             </div>
-
-            <button class="w-full py-2 rounded-xl text-xs font-semibold
-                           border border-nexora-corporate bg-nexora-corporate text-white
-                           hover:bg-nexora-navy-mid transition-colors duration-150">
-                Submit QC Report
-            </button>
 
         </div>
     </div>
